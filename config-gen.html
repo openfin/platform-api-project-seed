@@ -1,0 +1,34 @@
+<!doctype html>
+<html>
+
+<head>
+
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="https://zvakanaka.github.io/view-json/view-json.js"></script>
+    <script type="text/javascript" src="https://golden-layout.com/files/latest/js/goldenlayout.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://golden-layout.com/files/latest/css/goldenlayout-base.css" />
+    <link type="text/css" rel="stylesheet"
+        href="https://golden-layout.com/files/latest/css/goldenlayout-dark-theme.css" />
+    <link rel="stylesheet" href="styles/styles.css">
+    <link rel="stylesheet" href="styles/frame-styles.css">
+
+</head>
+
+<body>
+
+    <div class="container">
+        <div id='layout' style="height: 100%; flex:3;"></div>
+        <div id='sidebar' style="height: 100%; flex:1;">
+            <div id="buttons">
+                <button id="addView">Add View</button>
+                <button id="copyConfig">Copy Config</button>
+                <button id="makeinstaller">Launch in OpenFin</button>
+            </div>
+            <view-json id="state"></view-json>
+        </div>
+    </div>
+    <script type="text/javascript" src="js/config-gen.js"></script>
+
+</body>
+
+</html>
