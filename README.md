@@ -1,4 +1,4 @@
-## Platform API project seed
+# Platform API project seed
 
 This project seed includes the following Platform API capabilites:
 
@@ -10,7 +10,7 @@ This project seed includes the following Platform API capabilites:
 * Examples of behavioural customization by overriding the Platform APIs
 
 
-## How to use this repository: ##
+## How to use this repository:
 
 * Clone this repository
 * Install the dependencies: `npm install`
