@@ -1,4 +1,4 @@
-Platform API project seed
+## Platform API project seed
 
 This project seed includes the following Platform API capabilites:
 
