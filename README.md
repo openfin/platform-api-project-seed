@@ -1,6 +1,6 @@
-Platform API technical demo
+Platform API Project seed
 
-Technical demonstration of OpenFin's Platform API capabilites. This technical demo highlights:
+This project seed includes the following Platform API capabilites:
 
 * Configuration required to use the Platform API
 * Use of the Platforms API to group, tab, and rearrange application windows

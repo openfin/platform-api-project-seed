@@ -1,6 +1,6 @@
-Platform API Customization technical demo
+Platform API Customization seed
 
-Technical demonstration of OpenFin's Platform API capabilites. This technical demo highlights:
+This project seed includes the following Platform API capabilites:
 
 * Configuration required to use the Platform API and apply customizations
 * Use of the Platforms API to group, tab, and rearrange application windows
