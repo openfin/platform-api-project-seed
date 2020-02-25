@@ -1,29 +1,30 @@
-
  :root {
-    --white: #e5e5e5;
-    --light-gray: #cccccc;
-    --gray: #737373;
-    --dark-gray: #333333;
+    --active-tab: #3A3A3A;
+    --tab-bar-background: #262626;
+    --frame-background: #121212;
+    --title-bar: #000000;
+    --tab-text: #FFFFFF;
+
 
     --title-bar-height: 22px;
     --corners-radius: 5px;
     --splitter-width: 4px;
 
-    --layout-container-padding-top: 8px;
+    --layout-container-padding-top: 0px;
     --layout-container-padding-bottom: 5px;
     --layout-container-padding-left: 5px;
     --layout-container-padding-right: 5px;
     --layout-container-from-top: calc(var(--title-bar-height) + var(--layout-container-padding-top));
 
 
-    --frame-background-color: var(--gray);
-    --title-bar-background-color: var(--dark-gray);
-    --tabs-bar-background-color: var(--light-gray);
-    --tab-background-color: var(--gray);
-    --tab-background-color-active: var(--white);
-    --tab-text-color: var(--dark-gray);
-    --splitter-color: var(--gray);
-    --color-behind-views: var(--white); /* only seen if there's a problem with the view */
+    --frame-background-color: var(--frame-background);
+    --title-bar-background-color: var(--title-bar);
+    --tabs-bar-background-color: var(--tab-bar-background);
+    --tab-background-color: var(--frame-background);
+    --tab-background-color-active: var(--active-tab);
+    --tab-text-color: var(--tab-text);
+    --splitter-color: var(--frame-background);
+    --color-behind-views: var(--active-tab); /* only seen if there's a problem with the view */
 }
 
 body {
@@ -43,184 +44,23 @@ body {
     height: 100%;
     margin-left: -10%;
 }
+
 .left-menu ul {
     list-style: none;
-    padding-inline-start: 10px;
+    padding-inline-start: 0px;
+    width: 100%;
+    margin-block-start: 20px;
 }
 
-/* #of-frame-main { */
-/*     height: 100%; */
-/*     width: 100%; */
-/*     padding: 0px; */
-/*     margin: 0; */
-/*     position: absolute; */
-/*     overflow: hidden; */
-/*     background-color: var(--frame-background-color); */
-/* } */
+.left-menu li {
+    width: 100%;
+}
 
-/* #title-bar { */
-/*     background: var(--title-bar-background-color); */
-/*     width: 100%; */
-/*     height: var(--title-bar-height); */
-/*     display: flex; */
-/* } */
-
-/* .title-bar-draggable { */
-/*     position: relative; */
-/*     flex-grow: 1; */
-/*     margin: 7px 0 0 7px; /\* leave grabbable margin for resize *\/ */
-/*     -webkit-app-region: drag; */
-/*     -webkit-user-select: none; */
-/* } */
-
-/* div.wrapper_title { */
-/*     position: absolute; */
-/*     top: 50%; */
-/*     left: 50%; */
-/*     transform: translate(-50%, -50%); */
-/*     font-size: 3vw; */
-/*     opacity: 0.3; */
-/*     color: var(--tab-background-color); /\* this is the text you see when a view isn't showing *\/ */
-/* } */
-
-/* #buttons-wrapper { */
-/*     -webkit-app-region: none; */
-/*     cursor: pointer; */
-/*     user-select: none; */
-/*     display: flex; */
-/*     justify-content: space-between; */
-/*     align-items: center; */
-/* } */
-
-/* .button { */
-/*     -webkit-app-region: no-drag; */
-/*     margin-right: 16px; */
-/*     vertical-align: middle; */
-/*     height: 12px; */
-/*     width: 12px; */
-/* } */
-
-/* .button:hover { */
-/*     transform: scale(1.2); */
-/* } */
-
-/* #layout-container { */
-/*     height: calc(100% - var(--title-bar-height) - var(--layout-container-padding-top) - var(--layout-container-padding-bottom)); */
-/*     width: calc(100% - var(--layout-container-padding-left) - var(--layout-container-padding-right)); */
-/*     padding: var(--layout-container-padding-top) var(--layout-container-padding-right) var(--layout-container-padding-bottom) var(--layout-container-padding-left); */
-/* } */
-
-/* .tab-button { */
-/*     position: relative; */
-/*     height: 10px; */
-/*     width: 10px; */
-/*     right: 0px; */
-/*     font-weight: bold; */
-/*     z-index: 9999; */
-/*     padding: 0px 10px 0px 0; */
-/*     margin: 0px auto; */
-/*     display: inline-block; */
-/*     vertical-align: middle; */
-/* } */
-
-/* .tab-button:hover { */
-/*     transform: scale(1.2); */
-/* } */
-
-/* #close-button { */
-/*     background-image: var(--close-button-url); */
-/*     background-repeat: no-repeat; */
-/* } */
-
-/* #expand-button { */
-/*     background-image: var(--expand-button-url); */
-/*     background-repeat: no-repeat; */
-/* } */
-
-/* #minimize-button { */
-/*     background-image: var(--minimize-button-url); */
-/*     background-repeat: no-repeat; */
-/* } */
-
-/* #close-tab-icon { */
-/*     background-image: var(--tab-close-url); */
-/*     background-repeat: no-repeat; */
-/* } */
-
-/* .lm_goldenlayout { */
-/*     background-color: var(--frame-background-color); */
-/* } */
-
-/* .lm_header { */
-/*     -webkit-app-region: no-drag; */
-/*     box-shadow: none; */
-/* } */
-
-/* .lm_tabs { */
-/*     -webkit-app-region: no-drag; */
-/*     background-color: var(--tabs-bar-background-color); */
-/*     border-top-left-radius: var(--corners-radius); */
-/*     border-top-right-radius: var(--corners-radius); */
-/*     width: 100%; */
-/* } */
-
-/* .lm_header .lm_tab { */
-/*     box-shadow: none !important; */
-/*     border-top-right-radius: var(--corners-radius); */
-/*     border-top-left-radius: var(--corners-radius); */
-/*     background-color: var(--tab-background-color); */
-/*     color: var(--tab-text-color); */
-/*     padding-right: 0px; */
-/* } */
-
-/* .lm_header .lm_tab .lm_title { */
-/*     margin-right: 10px; */
-/*     vertical-align: middle; */
-/*     padding: 0; */
-/* } */
-
-/* .lm_header .lm_tab.lm_active { */
-/*     background-color: var(--tab-background-color-active); */
-/* } */
-
-/* .lm_content { */
-/*     background-color: var(--color-behind-views); */
-/*     border-bottom-left-radius: 5px; */
-/*     border-bottom-right-radius: 5px; */
-/* } */
-
-/* .lm_splitter { */
-/*     background-color: var(--splitter-color); */
-/*     opacity: 1; */
-/* } */
-
-/* .lm_splitter:hover,.lm_splitter.lm_dragging { */
-/*     background-color: var(--splitter-color); */
-/*     opacity: 1; */
-/* } */
-
-/* .lm_splitter.lm_dragging { */
-/*     background-color: var(--splitter-color); */
-/*     opacity: 1; */
-/* } */
-
-/* .lm_dropTargetIndicator .lm_inner { */
-/*     background: rgb(237, 240, 247); */
-/*     opacity: .2 */
-/* } */
-
-/* .tab-text { */
-/*     font: ariel; */
-/*     size: 12px; */
-/*     font-weight: regular; */
-/*     line-height: 14; */
-/*     letter-spacing: -0.06; */
-/* } */
-
-/* .lm_header .lm_controls li.lm_tabdropdown:before{ */
-/*     color:var(--tab-text-color) */
-/* } */
-
-/* .lm_header .lm_controls .lm_close { */
-/*     display: none !important */
-/* } */
+.left-menu button {
+    width: 100%;
+    padding: 0px;
+    height: 25px;
+    background-color: var(--active-tab);
+    color: var(--tab-text);
+    border-color: var(--frame-background);
+}

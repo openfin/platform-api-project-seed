@@ -1,34 +1,30 @@
-# Hadouken Application Template
+Platform API technical demo
 
-A simple unopinionated Hadouken application template. The purpose of this repository is to allow users to get started with Hadouken immediately by providing a development setup that does not require initial configuration. The setup has minimal dependencies and the feature set is intentionally limited. Any further configuration can be achieved by editing the `app.json` file: [Application Config](https://openfin.co/application-config/).
+Technical demonstration of OpenFin's Platform API capabilites. This technical demo highlights:
 
-### What you get:
+* Configuration required to use the Platform API
+* Use of the Platforms API to group, tab, and rearrange application windows
+* API examples of creating and managing Views, saving and appliying snapshots
+* Customizations
 
-#### [Hadouken download and instal](https://github.com/hadoukenio/js-adapter)
+## How to use this repository: ##
 
-* Automates the downloading and launching of the Hadouken Runtime.
-
-#### Development server
-
-* [Live-server](https://www.npmjs.com/package/live-server) with built-in live reloading after changes to files.
-
-#### Basic HTML/Javascript Template
-
-* HTML 5 and ES6 Template with Hadouken integration.
-
-#### Service Worker
-
-* Uses the [network and cache](https://serviceworke.rs/strategy-network-or-cache.html) recipe found on the [Mozilla Service Worker Cookbok](https://serviceworke.rs/) to implement offline browsing.
-
-#### [Visual Studio code](https://code.visualstudio.com/) integration, thanks to @jcarter
-
-* Attach to debugger for in-editor break points, call stacks, and an interactive console
-* Hadouken configuration ( `app.json` ) smart completion based on available parameters
-* Hadouken API smart completions based on variable types and function definitions
-
-### How to use this:
-
-* Clone this repository: `git clone https://github.com/HadoukenIO/app-template`
-* Install the dependencies: `cd app-template` & `npm install`
+* Clone this repository
+* Install the dependencies: `npm install`
 * Start the live-server and launch the application: `npm start`
-* Add your Javascript code to `main.js` and your HTML to `index.html`
+
+## Understanding the code
+
+* [Platform configuration](https://developers.openfin.co/docs/platform-api#section-1-launching-a-platform) has been included in the provided [app.json](app.json) file.
+* [view-form.js](js/view-form.js) file Includes code examples for:
+..* Create new Windows with pre configured Layotus
+..* Add Views to existing Widnows
+..* Saving and restoring of Platform Snapshots
+
+## Config Generator
+
+Co-hosted with this project is the [config generator](https://openfin.github.io/golden-prototype/config-gen), this provides an easy WYSIWYG interface to create [Platform configuration files](https://developers.openfin.co/docs/platform-api#section-1-launching-a-platform)
+
+## Customizations
+
+For ease of use, all customization related information is in the [customization Readme](customization/Readme.md)

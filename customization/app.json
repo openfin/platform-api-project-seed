@@ -1,7 +1,7 @@
 {
     "runtime": {
         "arguments": "--v=1 --inspect",
-        "version": "15.80.49.16"
+        "version": "canary"
     },
     "shortcut": {
         "company": "OpenFin",
@@ -20,7 +20,7 @@
         "commands": [
             {
                 "command": "stack.nextTab",
-                "keys": "Ctrl+T"
+                "keys": "Ctrl+Tab"
             }
         ]
     },
@@ -46,6 +46,7 @@
                                     "componentName": "view",
                                     "componentState": {
                                         "name": "component_A1",
+                                        "processAffinity": "ps_1",
                                         "url": "https://cdn.openfin.co/embed-web/chart.html"
                                     }
                                 }
