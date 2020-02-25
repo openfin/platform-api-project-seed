@@ -20,17 +20,17 @@ Important, the npm start command needs an extra parameter to start the customiza
 ## Understanding the code
 
 ### Platform configuration
-* [Platform configuration](https://developers.openfin.co/docs/platform-api#section-1-launching-a-platform) have been included in the provided [app.json](customization/app.json) file.
-* A [defaultWindowOptions](https://developers.openfin.co/docs/platform-api#section-standard-window-customization) key has been added and will replace our Standard Window with the provided [platform-window.html](customization/platform-window.html) file.
+* [Platform configuration](https://developers.openfin.co/docs/platform-api#section-1-launching-a-platform) have been included in the provided [app.json](app.json) file.
+* A [defaultWindowOptions](https://developers.openfin.co/docs/platform-api#section-standard-window-customization) key has been added and will replace our Standard Window with the provided [platform-window.html](platform-window.html) file.
 * A [commands](https://developers.openfin.co/docs/platform-api#section-5-3-using-keyboard-commands) key has been added and will provide keyboard access to the next tab command.
-* A [providerUrl]() key has been added and will allow Changes to the Platform APIs (STARTING IN v15.80.50.x), the [provider.html](customization/provider.html) file provided will make minor changes to the Platform API
+* A [providerUrl]() key has been added and will allow Changes to the Platform APIs (STARTING IN v15.80.50.x), the [provider.html](provider.html) file provided will make minor changes to the Platform API
 
 
 ### CSS Customization
-* A [stylesheet](https://developers.openfin.co/docs/platform-api#section-standard-window-customization) is linked in the [platform-window.html](customization/platform-window.html) file that provides some [visual customizations](customization/styles/frame-styles.css) for a complete view of all properties please refer to the [example stylesheet](https://github.com/openfin/layouts-v2-style-examples)
+* A [stylesheet](https://developers.openfin.co/docs/platform-api#section-standard-window-customization) is linked in the [platform-window.html](platform-window.html) file that provides some [visual customizations](styles/frame-styles.css) for a complete view of all properties please refer to the [example stylesheet](https://github.com/openfin/layouts-v2-style-examples)
 
 ### Platform Window
-The [js/platform-window.js](customization/platform-window.html) file is composed of the [layout-container](https://developers.openfin.co/docs/platform-api#section-5-2-complete-window-customization) element and two custom elements (`left-menu`, `title-bar`):
+The [js/platform-window.js](platform-window.html) file is composed of the [layout-container](https://developers.openfin.co/docs/platform-api#section-5-2-complete-window-customization) element and two custom elements (`left-menu`, `title-bar`):
 
 ##### left-menu
 Provides the examples of the following functionality:
@@ -46,6 +46,6 @@ Provides the examples of the following functionality:
 * Close/Maximise/Minimize buttons
 
 ### Provider
-The [provider.html](customization/provider.html) file provided will change the Platform API in the following ways:
+The [provider.html](provider.html) file provided will change the Platform API in the following ways:
 * Override getSnapshot to include [hostSpecs](https://cdn.openfin.co/docs/javascript/15.80.49.21/tutorial-System.getHostSpecs.html)
 * Override applySnapshot to reject if 3 or more Windows have been created.
