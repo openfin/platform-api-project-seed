@@ -66,18 +66,18 @@ class LeftMenu extends HTMLElement {
     }
 
     async toGrid() {
-        await fin.Platform.getCurrentSync().applyPresetLayout(fin.me.identity, {
+        await fin.Platform.Layout.getCurrentSync().applyPreset({
             presetType: 'grid'
         });
     }
 
     async toTabbed() {
-        await fin.Platform.getCurrentSync().applyPresetLayout(fin.me.identity, {
+        await fin.Platform.Layout.getCurrentSync().applyPreset({
             presetType: 'tabs'
         });
     }
     async toRows() {
-        await fin.Platform.getCurrentSync().applyPresetLayout(fin.me.identity, {
+        await fin.Platform.Layout.getCurrentSync().applyPreset({
             presetType: 'rows'
         });
     }
