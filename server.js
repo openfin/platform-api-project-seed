@@ -10,8 +10,10 @@ const serverParams = {
     cache: -1
 };
 
+const configToUse = `${process.argv[2] ? '/customization/': ''}app.json`;
+
 //To Launch the OpenFin Application we need a manifestUrl.
-const manifestUrl = `http://localhost:${serverParams.port}/app.json`;
+const manifestUrl = `http://localhost:${serverParams.port}/${configToUse}`;
 
 //Start the server server
 const server = httpServer.createServer(serverParams);
