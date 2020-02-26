@@ -1,6 +1,6 @@
 # Platform API project seed
 
-This project seed includes the following Platform API capabilites:
+This project seed includes the following [Platform API](https://openfin.co/platform-api) capabilites:
 
 * Configuration required to use the Platform API and apply customizations
 * Use of the Platforms API to group, tab, and rearrange application windows
