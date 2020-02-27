@@ -20,6 +20,8 @@ class LeftMenu extends HTMLElement {
         this.toRows = this.toRows.bind(this);
         this.newWindow = this.newWindow.bind(this);
         this.nonLayoutWindow = this.nonLayoutWindow.bind(this);
+        this.saveWindowLayout = this.saveWindowLayout.bind(this);
+        this.restoreWindowLayout = this.restoreWindowLayout.bind(this);
 
         this.render();
     }
@@ -28,14 +30,16 @@ class LeftMenu extends HTMLElement {
         const menuItems = html`
         <div class="left-menu">
             <ul>
-                <li><button @click=${() => this.createChart().catch(console.error)}>Chart</button></li>
-                <li><button @click=${() => this.saveSnapshot().catch(console.error)}>Save</button></li>
-                <li><button @click=${() => this.restoreSnapshot().catch(console.error)}>Restore</button></li>
+                <li><button @click=${() => this.createChart().catch(console.error)}>New chart</button></li>
+                <li><button @click=${() => this.saveWindowLayout().catch(console.error)}>Save Layout</button></li>
+                <li><button @click=${() => this.restoreWindowLayout().catch(console.error)}>Restore Layout</button></li>
                 <li><button @click=${() => this.toGrid().catch(console.error)}>Grid</button></li>
                 <li><button @click=${() => this.toTabbed().catch(console.error)}>Tab</button></li>
                 <li><button @click=${() => this.toRows().catch(console.error)}>Rows</button></li>
-                <li><button @click=${() => this.newWindow().catch(console.error)}>Window</button></li>
-                <li><button @click=${() => this.nonLayoutWindow().catch(console.error)}>Standard</button></li>
+                <li><button @click=${() => this.newWindow().catch(console.error)}>New chart Window</button></li>
+                <li><button @click=${() => this.nonLayoutWindow().catch(console.error)}>New standard Window</button></li>
+                <li><button @click=${() => this.saveSnapshot().catch(console.error)}>Save workpace</button></li>
+                <li><button @click=${() => this.restoreSnapshot().catch(console.error)}>Restore workspace</button></li>
             <ul>
         </div>`;
         return render(menuItems, this);
@@ -47,6 +51,20 @@ class LeftMenu extends HTMLElement {
             url: chartUrl,
             name : componentNameRandomizer()
         }, fin.me.identity);
+    }
+
+    async saveWindowLayout() {
+        const winLayoutConfig = await fin.Platform.Layout.getCurrentSync().getConfig();
+        localStorage.setItem(fin.me.identity.name, JSON.stringify(winLayoutConfig));
+    }
+
+    async restoreWindowLayout() {
+        const storedWinLayout = localStorage.getItem(fin.me.identity.name);
+        if (storedWinLayout) {
+            return fin.Platform.Layout.getCurrentSync().replace(JSON.parse(storedWinLayout));
+        } else {
+            throw new Error("No snapshot found in localstorage");
+        }
     }
 
     async saveSnapshot() {
