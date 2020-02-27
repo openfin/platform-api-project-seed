@@ -35,6 +35,8 @@ The [js/platform-window.js](platform-window.html) file is composed of the [layou
 Provides the examples of the following functionality:
 * Adding a View to an existing window
 * Adding a View in a new Window
+* Saving the Window's current Layout
+* Restoring the Window's current Layout
 * Creating a regular OpenFin Window
 * Saving/Restoring Platform Snapshots
 * Appliying a preset arrangement on the current window (Grid, Tabs, Rows)
