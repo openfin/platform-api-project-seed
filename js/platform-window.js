@@ -37,9 +37,9 @@ class LeftMenu extends HTMLElement {
                 <li><button @click=${() => this.toTabbed().catch(console.error)}>Tab</button></li>
                 <li><button @click=${() => this.toRows().catch(console.error)}>Rows</button></li>
                 <li><button @click=${() => this.newWindow().catch(console.error)}>New chart Window</button></li>
-                <li><button @click=${() => this.nonLayoutWindow().catch(console.error)}>New standard Window</button></li>
-                <li><button @click=${() => this.saveSnapshot().catch(console.error)}>Save workpace</button></li>
-                <li><button @click=${() => this.restoreSnapshot().catch(console.error)}>Restore workspace</button></li>
+                <li><button @click=${() => this.nonLayoutWindow().catch(console.error)}>New Window</button></li>
+                <li><button @click=${() => this.saveSnapshot().catch(console.error)}>Save Platform snapshot</button></li>
+                <li><button @click=${() => this.restoreSnapshot().catch(console.error)}>Restore Platform snapshot</button></li>
             <ul>
         </div>`;
         return render(menuItems, this);
