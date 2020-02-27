@@ -14,7 +14,7 @@
         </div>
         <script>
             //TODO: Move this into a file
-            fin.Platform.init(async (Provider) => {
+            fin.Platform.init({ overrideCallback:async (Provider) => {
                 class Override extends Provider {
                     async getSnapshot() {
                         const snapshot = await super.getSnapshot();
@@ -36,7 +36,7 @@
                     }
                 };
                 return new Override();
-            });
+            }});
         </script>
     </body>
 
