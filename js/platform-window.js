@@ -18,7 +18,7 @@ class LeftMenu extends HTMLElement {
         this.toGrid = this.toGrid.bind(this);
         this.toTabbed = this.toTabbed.bind(this);
         this.toRows = this.toRows.bind(this);
-        this.newWindow = this.newWindow.bind(this);
+        this.newWindow = this.newDefaultWindow.bind(this);
         this.nonLayoutWindow = this.nonLayoutWindow.bind(this);
         this.saveWindowLayout = this.saveWindowLayout.bind(this);
         this.restoreWindowLayout = this.restoreWindowLayout.bind(this);
@@ -36,7 +36,7 @@ class LeftMenu extends HTMLElement {
                 <li><button @click=${() => this.toGrid().catch(console.error)}>Grid</button></li>
                 <li><button @click=${() => this.toTabbed().catch(console.error)}>Tab</button></li>
                 <li><button @click=${() => this.toRows().catch(console.error)}>Rows</button></li>
-                <li><button @click=${() => this.newWindow().catch(console.error)}>New chart Window</button></li>
+                <li><button @click=${() => this.newDefaultWindow().catch(console.error)}>New chart Window</button></li>
                 <li><button @click=${() => this.nonLayoutWindow().catch(console.error)}>New Window</button></li>
                 <li><button @click=${() => this.saveSnapshot().catch(console.error)}>Save Platform snapshot</button></li>
                 <li><button @click=${() => this.restoreSnapshot().catch(console.error)}>Restore Platform snapshot</button></li>
@@ -67,22 +67,6 @@ class LeftMenu extends HTMLElement {
         }
     }
 
-    async saveSnapshot() {
-        const snapshot = await fin.Platform.getCurrentSync().getSnapshot();
-        localStorage.setItem('snapShot', JSON.stringify(snapshot));
-    }
-
-    async restoreSnapshot() {
-        const storedSnapshot = localStorage.getItem('snapShot');
-        if (storedSnapshot) {
-            return fin.Platform.getCurrentSync().applySnapshot(JSON.parse(storedSnapshot), {
-                closeExistingWindows: true
-            });
-        } else {
-            throw new Error("No snapshot found in localstorage");
-        }
-    }
-
     async toGrid() {
         await fin.Platform.Layout.getCurrentSync().applyPreset({
             presetType: 'grid'
@@ -100,12 +84,12 @@ class LeftMenu extends HTMLElement {
         });
     }
 
-    async newWindow() {
+    async newDefaultWindow() {
         //we want to add a chart to the current window.
         return fin.Platform.getCurrentSync().createView({
             url: chartUrl,
             name : componentNameRandomizer()
-        }, void 0);
+        }, undefined);
     }
 
     async nonLayoutWindow() {
@@ -120,6 +104,22 @@ class LeftMenu extends HTMLElement {
                 contextMenu: true
             }]
         });
+    }
+
+    async saveSnapshot() {
+        const snapshot = await fin.Platform.getCurrentSync().getSnapshot();
+        localStorage.setItem('snapShot', JSON.stringify(snapshot));
+    }
+
+    async restoreSnapshot() {
+        const storedSnapshot = localStorage.getItem('snapShot');
+        if (storedSnapshot) {
+            return fin.Platform.getCurrentSync().applySnapshot(JSON.parse(storedSnapshot), {
+                closeExistingWindows: true
+            });
+        } else {
+            throw new Error("No snapshot found in localstorage");
+        }
     }
 }
 
