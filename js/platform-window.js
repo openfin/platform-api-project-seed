@@ -85,7 +85,7 @@ class LeftMenu extends HTMLElement {
     }
 
     async newDefaultWindow() {
-        //we want to add a chart to the current window.
+        //we want to add a chart in a new window.
         return fin.Platform.getCurrentSync().createView({
             url: chartUrl,
             name : componentNameRandomizer()
