@@ -30,16 +30,16 @@ class LeftMenu extends HTMLElement {
         const menuItems = html`
         <div class="left-menu">
             <ul>
-                <li><button @click=${() => this.createChart().catch(console.error)}>New chart</button></li>
+                <li><button @click=${() => this.createChart().catch(console.error)}>New Chart</button></li>
                 <li><button @click=${() => this.saveWindowLayout().catch(console.error)}>Save Layout</button></li>
                 <li><button @click=${() => this.restoreWindowLayout().catch(console.error)}>Restore Layout</button></li>
                 <li><button @click=${() => this.toGrid().catch(console.error)}>Grid</button></li>
                 <li><button @click=${() => this.toTabbed().catch(console.error)}>Tab</button></li>
                 <li><button @click=${() => this.toRows().catch(console.error)}>Rows</button></li>
-                <li><button @click=${() => this.newDefaultWindow().catch(console.error)}>New chart Window</button></li>
+                <li><button @click=${() => this.newDefaultWindow().catch(console.error)}>New Chart Window</button></li>
                 <li><button @click=${() => this.nonLayoutWindow().catch(console.error)}>New Window</button></li>
-                <li><button @click=${() => this.saveSnapshot().catch(console.error)}>Save Platform snapshot</button></li>
-                <li><button @click=${() => this.restoreSnapshot().catch(console.error)}>Restore Platform snapshot</button></li>
+                <li><button @click=${() => this.saveSnapshot().catch(console.error)}>Save Platform Snapshot</button></li>
+                <li><button @click=${() => this.restoreSnapshot().catch(console.error)}>Restore Platform Snapshot</button></li>
             <ul>
         </div>`;
         return render(menuItems, this);
