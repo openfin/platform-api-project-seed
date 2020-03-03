@@ -22,8 +22,7 @@
             "defaultLeft": 0,
             "defaultTop": 0,
             "saveWindowState": false,
-            "backgroundThrottling": true,
-            "contextMenu": true
+            "backgroundThrottling": true
         },
         "commands": [
             {
