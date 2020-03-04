@@ -26,7 +26,7 @@ class LeftMenu extends HTMLElement {
         this.render();
     }
 
-     async render() {
+    async render() {
         const menuItems = html`
         <div class="left-menu">
             <ul>
@@ -45,13 +45,13 @@ class LeftMenu extends HTMLElement {
             <ul>
         </div>`;
         return render(menuItems, this);
-     }
+    }
 
     async createChart() {
         //we want to add a chart to the current window.
         return fin.Platform.getCurrentSync().createView({
             url: chartUrl,
-            name : componentNameRandomizer()
+            name: componentNameRandomizer()
         }, fin.me.identity);
     }
 
@@ -61,18 +61,39 @@ class LeftMenu extends HTMLElement {
         const winLayoutConfig = await layoutApi.getConfig();
         const firstLevelColumnIndex = this.getIndexFor("column", winLayoutConfig.content);
         let insertedChart = false;
-        let newChart = {"type":"stack","isClosable":true,"reorderEnabled":true,"title":"","activeItemIndex":0,"content":[{"type":"component","componentName":"view","componentState":{"name":"component_A1","processAffinity":"ps_1","url":"https://cdn.openfin.co/embed-web/chart.html","componentName":"view","uuid":"platform_customization_local","initialUrl":"https://cdn.openfin.co/embed-web/chart.html"},"isClosable":true,"reorderEnabled":true,"title":"OpenFin Template"}]};
-        // this example only search
-        if(firstLevelColumnIndex !== -1) {
-            // we have the first column add it to the column
+        let newChart = {
+            type: "stack",
+            isClosable: true,
+            reorderEnabled: true,
+            title: "",
+            activeItemIndex: 0,
+            content: [
+                {
+                    type: "component",
+                    componentName: "view",
+                    componentState:
+                    {
+                        name: componentNameRandomizer(),
+                        processAffinity: "ps_1",
+                        url: chartUrl,
+                        componentName: "view"
+                    },
+                    isClosable: true,
+                    reorderEnabled: true,
+                    title: "Added To Column Chart"
+                }]
+        };
+        // this example only searches two levels deep
+        if (firstLevelColumnIndex !== -1) {
+            // we have the first column so lets add the chart to it
             winLayoutConfig.content[firstLevelColumnIndex].content = this.insertColumnItem(newChart, winLayoutConfig.content[firstLevelColumnIndex].content);
             insertedChart = true;
         } else {
-            // search for a column the next level down
-            for(let i = 0; i < winLayoutConfig.content.length; i++) {
+            // check to see if a column exists one level lower
+            for (let i = 0; i < winLayoutConfig.content.length; i++) {
                 let entry = winLayoutConfig.content[i];
                 let secondLevelIndex = this.getIndexFor("column", entry.content);
-                if(secondLevelIndex !== -1) {
+                if (secondLevelIndex !== -1) {
                     entry.content[secondLevelIndex].content = this.insertColumnItem(newChart, entry.content[secondLevelIndex].content);
                     insertedChart = true;
                     break;
@@ -80,7 +101,7 @@ class LeftMenu extends HTMLElement {
             }
         }
 
-        if(insertedChart) {
+        if (insertedChart) {
             return layoutApi.replace(winLayoutConfig);
         }
     }
@@ -141,7 +162,7 @@ class LeftMenu extends HTMLElement {
         //we want to add a chart in a new window.
         return fin.Platform.getCurrentSync().createView({
             url: chartUrl,
-            name : componentNameRandomizer()
+            name: componentNameRandomizer()
         }, undefined);
     }
 
