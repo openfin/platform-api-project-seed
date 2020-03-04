@@ -37,6 +37,7 @@ class LeftMenu extends HTMLElement {
                 <li><button @click=${() => this.toTabbed().catch(console.error)}>Tab</button></li>
                 <li><button @click=${() => this.toRows().catch(console.error)}>Rows</button></li>
                 <li><button @click=${() => this.toColumns().catch(console.error)}>Columns</button></li>
+                <li><button @click=${() => this.addChartToColumn().catch(console.error)}>Add Chart To Column</button></li>
                 <li><button @click=${() => this.newDefaultWindow().catch(console.error)}>New Chart Window</button></li>
                 <li><button @click=${() => this.nonLayoutWindow().catch(console.error)}>New Window</button></li>
                 <li><button @click=${() => this.saveSnapshot().catch(console.error)}>Save Platform Snapshot</button></li>
@@ -52,6 +53,51 @@ class LeftMenu extends HTMLElement {
             url: chartUrl,
             name : componentNameRandomizer()
         }, fin.me.identity);
+    }
+
+    async addChartToColumn() {
+        //we want to add a chart to the current window.
+        const layoutApi = await fin.Platform.Layout.getCurrentSync();
+        const winLayoutConfig = await layoutApi.getConfig();
+        const firstLevelColumnIndex = this.getIndexFor("column", winLayoutConfig.content);
+        let insertedChart = false;
+        let newChart = {"type":"stack","isClosable":true,"reorderEnabled":true,"title":"","activeItemIndex":0,"content":[{"type":"component","componentName":"view","componentState":{"name":"component_A1","processAffinity":"ps_1","url":"https://cdn.openfin.co/embed-web/chart.html","componentName":"view","uuid":"platform_customization_local","initialUrl":"https://cdn.openfin.co/embed-web/chart.html"},"isClosable":true,"reorderEnabled":true,"title":"OpenFin Template"}]};
+        // this example only search
+        if(firstLevelColumnIndex !== -1) {
+            // we have the first column add it to the column
+            winLayoutConfig.content[firstLevelColumnIndex].content = this.insertColumnItem(newChart, winLayoutConfig.content[firstLevelColumnIndex].content);
+            insertedChart = true;
+        } else {
+            // search for a column the next level down
+            for(let i = 0; i < winLayoutConfig.content.length; i++) {
+                let entry = winLayoutConfig.content[i];
+                let secondLevelIndex = this.getIndexFor("column", entry.content);
+                if(secondLevelIndex !== -1) {
+                    entry.content[secondLevelIndex].content = this.insertColumnItem(newChart, entry.content[secondLevelIndex].content);
+                    insertedChart = true;
+                    break;
+                }
+            }
+        }
+
+        if(insertedChart) {
+            return layoutApi.replace(winLayoutConfig);
+        }
+    }
+
+    getIndexFor(type, content) {
+        return content.findIndex(entry => entry.type === type);
+    }
+
+    insertColumnItem(item, arrayOfItems) {
+        let newHeight = 100 / (arrayOfItems.length + 1);
+        let newContent = arrayOfItems.flatMap(entry => {
+            entry.height = newHeight;
+            return entry;
+        });
+        item.height = newHeight;
+        newContent.push(item);
+        return newContent;
     }
 
     async saveWindowLayout() {
