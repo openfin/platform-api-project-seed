@@ -29,7 +29,7 @@ This project seed includes the following [Platform API](https://openfin.co/platf
 * A [stylesheet](https://developers.openfin.co/docs/platform-api#section-standard-window-customization) is linked in the [platform-window.html](platform-window.html) file, and allows for [visual customization](styles/frame-styles.css). For a complete view of all properties, please refer to the [example stylesheet](https://github.com/openfin/layouts-v2-style-examples)
 
 ### Platform Window
-The [platform-window.html](platform-window.html) file contains the [layout-container](https://developers.openfin.co/docs/platform-api#section-5-2-complete-window-customization) element and two custom elements: `left-menu` and `title-bar`. These elements, in conjunction with the [js/platform-window.js](js/platform-window.js) file, enable the following functionality: 
+The [platform-window.html](platform-window.html) file contains the [layout-container](https://developers.openfin.co/docs/platform-api#section-5-2-complete-window-customization) element and two custom elements: `left-menu` and `title-bar`. These elements, in conjunction with the [js/platform-window.js](js/platform-window.js) file, enable the following functionality:
 
 ##### left-menu
 Provides examples of the following functionality:
@@ -47,6 +47,7 @@ Provides examples of the following functionality:
 * Close/Maximize/Minimize buttons
 
 ### Provider
-The [provider.html](provider.html) file, when set with the `providerUrl` key, will change the Platform API in the following ways:
-* Override `getSnapshot` to include [hostSpecs](https://cdn.openfin.co/docs/javascript/15.80.49.21/tutorial-System.getHostSpecs.html)
-* Override `applySnapshot` to reject if 3 or more Windows have been created.
+Provider level customizations can be achieved by setting the url to the custom provider on the `providerUrl` property under the `platform` configuration. Our [custom Provider](js/platform-provider.js) includes an [extension](js/external-window-snapshot.js) that will look for a pre-configured list of [externalWindows](https://cdn.openfin.co/docs/javascript/15.80.49.21/ExternalWindow.html) (the default being the provided [my_platform_notes.txt](my_platform_notes.txt) file opened in notepad.exe) and:
+
+* Override `getSnapshot` to include a [externalWindows](https://cdn.openfin.co/docs/javascript/15.80.49.21/ExternalWindow.html) section containing information on our notepad instance
+* Override `applySnapshot` to look for an [externalWindows](https://cdn.openfin.co/docs/javascript/15.80.49.21/ExternalWindow.html) section and restore the position and state of any external window configured.
