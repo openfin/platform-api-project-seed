@@ -5,15 +5,15 @@
     },
     "shortcut": {
         "company": "OpenFin",
-        "description": "Platform app seed local",
+        "description": "Platform app seed hosted",
         "icon": "https://openfin.github.io/golden-prototype/favicon.ico",
-        "name": "Platform app seed local"
+        "name": "Platform app seed hosted"
     },
     "platform": {
-        "uuid": "platform_customization_local",
+        "uuid": "platform_customization_hosted",
         "applicationIcon": "https://openfin.github.io/golden-prototype/favicon.ico",
         "autoShow": false,
-        "providerUrl": "http://localhost:5555/provider.html",
+        "providerUrl": "https://openfin.github.io/platform-api-project-seed/provider.html",
         "permissions": {
             "ExternalWindow": {
               	"wrap": true
@@ -26,7 +26,7 @@
             }
         },
         "defaultWindowOptions": {
-            "url": "http://localhost:5555/platform-window.html",
+            "url": "https://openfin.github.io/platform-api-project-seed/platform-window.html",
             "contextMenu": true,
             "defaultWidth": 600,
             "defaultHeight": 600,
