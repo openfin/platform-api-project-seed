@@ -35,6 +35,11 @@
             "saveWindowState": false,
             "backgroundThrottling": true
         },
+        "defaultViewOptions": {
+            "experimental": {
+                "childWindows": true
+            }
+        },
         "commands": [
             {
                 "command": "stack.nextTab",
