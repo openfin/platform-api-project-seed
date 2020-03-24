@@ -53,7 +53,11 @@ Our [custom Provider](js/platform-provider.js) includes an [extension](js/extern
 * Override `getSnapshot` to include a [externalWindows](https://cdn.openfin.co/docs/javascript/15.80.49.21/ExternalWindow.html) section containing information on any any external window included in the configuration.
 * Override `applySnapshot` to look for an [externalWindows](https://cdn.openfin.co/docs/javascript/15.80.49.21/ExternalWindow.html) section and restore the position and state of any external window included in the configuration.
 
-## Understanding the code - Main Window Example
+## Understanding the second example- Main Window Example
+
+This is similar to the main example but is configured to act like an application that has a main window and child windows that may or may not use the platform layout.
+
+This example also shows how you can automatically capture layout when the main window closes (to local storage but it could be any store) and have the main window support a layout but not close if the last view is removed.
 
 ### Platform configuration
 * [Platform configuration](https://developers.openfin.co/docs/platform-api#section-1-launching-a-platform) has been included in the provided [app-window-main.json](app-window-main.json) file. This config does not include a default window as this is managed by the custom provider: [provider-window-main.html](provider-window-main.html)
