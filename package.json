@@ -1,10 +1,13 @@
 {
-  "name": "openfin-template",
-  "version": "0.0.0",
-  "devDependencies": {
-    "@types/openfin": "^34.0.0",
-    "hadouken-js-adapter": "^0.34.3",
-    "http-server": "^0.12.1"
-  },
-  "license": "Apache-2.0"
+    "name": "openfin-template",
+    "version": "0.0.0",
+    "devDependencies": {
+        "@types/openfin": "^34.0.0",
+        "hadouken-js-adapter": "^0.34.3",
+        "http-server": "^0.12.1"
+    },
+    "license": "Apache-2.0",
+    "scripts": {
+        "mainwindow": "node server-window-main.js"
+    }
 }

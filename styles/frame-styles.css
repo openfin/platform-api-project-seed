@@ -68,3 +68,7 @@ body {
 .wrapper_title {
     visibility: hidden;
 }
+
+.last-tab-button {
+    visibility: hidden;
+}

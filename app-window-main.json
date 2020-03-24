@@ -1,0 +1,50 @@
+{
+    "runtime": {
+        "arguments": "--v=1 --inspect",
+        "version": "canary"
+    },
+    "shortcut": {
+        "company": "OpenFin",
+        "description": "Platform app seed local with a main window",
+        "icon": "https://openfin.github.io/golden-prototype/favicon.ico",
+        "name": "Platform app seed local main window"
+    },
+    "platform": {
+        "uuid": "platform_main_window_customization_local",
+        "applicationIcon": "https://openfin.github.io/golden-prototype/favicon.ico",
+        "autoShow": false,
+        "providerUrl": "http://localhost:5556/provider-window-main.html",
+        "permissions": {
+            "ExternalWindow": {
+              	"wrap": true
+            },
+            "System": {
+                "getAllExternalWindows": true,
+                "launchExternalProcess": true,
+                "readRegistryValue": false,
+                "terminateExternalProcess": true
+            }
+        },
+        "defaultWindowOptions": {
+            "url": "http://localhost:5556/platform-window-common.html",
+            "contextMenu": true,
+            "defaultWidth": 600,
+            "defaultHeight": 600,
+            "defaultLeft": 0,
+            "defaultTop": 0,
+            "saveWindowState": false,
+            "backgroundThrottling": true
+        },
+        "commands": [
+            {
+                "command": "stack.nextTab",
+                "keys": "Ctrl+Tab"
+            }
+        ]
+    },
+    "snapshot": {
+        "windows": [
+
+        ]
+    }
+}

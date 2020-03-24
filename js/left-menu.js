@@ -1,9 +1,5 @@
 import { html, render } from 'https://unpkg.com/lit-html@1.0.0/lit-html.js';
-
-//TODO: write this as a util somewhere.
-function componentNameRandomizer() {
-    return `component_A${Date.now() + Math.floor(Math.random() * 10000)}`;
-}
+import { componentNameGenerator } from './component-name-generator.js';
 
 const chartUrl = 'https://cdn.openfin.co/embed-web/chart.html';
 
@@ -37,7 +33,6 @@ class LeftMenu extends HTMLElement {
                 <li><button @click=${() => this.toTabbed().catch(console.error)}>Tab</button></li>
                 <li><button @click=${() => this.toRows().catch(console.error)}>Rows</button></li>
                 <li><button @click=${() => this.toColumns().catch(console.error)}>Columns</button></li>
-                <li><button @click=${() => this.addChartToColumn().catch(console.error)}>Add Chart To Column</button></li>
                 <li><button @click=${() => this.newDefaultWindow().catch(console.error)}>New Chart Window</button></li>
                 <li><button @click=${() => this.nonLayoutWindow().catch(console.error)}>New Window</button></li>
                 <li><button @click=${() => this.saveSnapshot().catch(console.error)}>Save Platform Snapshot</button></li>
@@ -51,83 +46,17 @@ class LeftMenu extends HTMLElement {
         //we want to add a chart to the current window.
         return fin.Platform.getCurrentSync().createView({
             url: chartUrl,
-            name: componentNameRandomizer()
+            name: componentNameGenerator()
         }, fin.me.identity);
-    }
-
-    async addChartToColumn() {
-        //we want to add a chart to the current window.
-        const layoutApi = await fin.Platform.Layout.getCurrentSync();
-        const winLayoutConfig = await layoutApi.getConfig();
-        const firstLevelColumnIndex = this.getIndexFor("column", winLayoutConfig.content);
-        let insertedChart = false;
-        let newChart = {
-            type: "stack",
-            isClosable: true,
-            reorderEnabled: true,
-            title: "",
-            activeItemIndex: 0,
-            content: [
-                {
-                    type: "component",
-                    componentName: "view",
-                    componentState:
-                    {
-                        name: componentNameRandomizer(),
-                        processAffinity: "ps_1",
-                        url: chartUrl,
-                        componentName: "view"
-                    },
-                    isClosable: true,
-                    reorderEnabled: true,
-                    title: "Added To Column Chart"
-                }]
-        };
-        // this example only searches two levels deep
-        if (firstLevelColumnIndex !== -1) {
-            // we have the first column so lets add the chart to it
-            winLayoutConfig.content[firstLevelColumnIndex].content = this.insertColumnItem(newChart, winLayoutConfig.content[firstLevelColumnIndex].content);
-            insertedChart = true;
-        } else {
-            // check to see if a column exists one level lower
-            for (let i = 0; i < winLayoutConfig.content.length; i++) {
-                let entry = winLayoutConfig.content[i];
-                let secondLevelIndex = this.getIndexFor("column", entry.content);
-                if (secondLevelIndex !== -1) {
-                    entry.content[secondLevelIndex].content = this.insertColumnItem(newChart, entry.content[secondLevelIndex].content);
-                    insertedChart = true;
-                    break;
-                }
-            }
-        }
-
-        if (insertedChart) {
-            return layoutApi.replace(winLayoutConfig);
-        }
-    }
-
-    getIndexFor(type, content) {
-        return content.findIndex(entry => entry.type === type);
-    }
-
-    insertColumnItem(item, arrayOfItems) {
-        let newHeight = 100 / (arrayOfItems.length + 1);
-        let newContent = arrayOfItems.flatMap(entry => {
-            entry.height = newHeight;
-            return entry;
-        });
-        item.height = newHeight;
-        newContent.push(item);
-        return newContent;
     }
 
     async saveWindowLayout() {
         const winLayoutConfig = await fin.Platform.Layout.getCurrentSync().getConfig();
-        localStorage.setItem(fin.me.identity.name, JSON.stringify(winLayoutConfig));
+        sessionStorage.setItem(fin.me.identity.name, JSON.stringify(winLayoutConfig));
     }
 
     async restoreWindowLayout() {
-        const storedWinLayout = localStorage.getItem(fin.me.identity.name);
+        const storedWinLayout = sessionStorage.getItem(fin.me.identity.name);
         if (storedWinLayout) {
             return fin.Platform.Layout.getCurrentSync().replace(JSON.parse(storedWinLayout));
         } else {
@@ -162,7 +91,7 @@ class LeftMenu extends HTMLElement {
         //we want to add a chart in a new window.
         return fin.Platform.getCurrentSync().createView({
             url: chartUrl,
-            name: componentNameRandomizer()
+            name: componentNameGenerator()
         }, undefined);
     }
 
@@ -197,39 +126,4 @@ class LeftMenu extends HTMLElement {
     }
 }
 
-//Our Title bar element
-class TitleBar extends HTMLElement {
-    constructor() {
-        super();
-        this.render = this.render.bind(this);
-
-        this.render();
-        this.maxOrRestore = this.maxOrRestore.bind(this);
-    }
-
-    async render() {
-        const titleBar = html`
-        <div id="title-bar">
-                <div class="title-bar-draggable">
-                    <div id="title"></div>
-                </div>
-                <div id="buttons-wrapper">
-                    <div class="button" id="minimize-button" @click=${() => fin.me.minimize().catch(console.error)}></div>
-                    <div class="button" id="expand-button" @click=${() => this.maxOrRestore().catch(console.error)}></div>
-                    <div class="button" id="close-button" @click=${() => fin.me.close().catch(console.error)}></div>
-                </div>
-            </div>`;
-        return render(titleBar, this);
-    }
-
-    async maxOrRestore() {
-        if (await fin.me.getState() === "normal") {
-            return await fin.me.maximize();
-        }
-
-        return fin.me.restore();
-    }
-}
-
 customElements.define('left-menu', LeftMenu);
-customElements.define('title-bar', TitleBar);
