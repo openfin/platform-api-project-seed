@@ -23,6 +23,15 @@ class TitleBarMain extends HTMLElement {
         }
     }
 
+    closedBecauseOfSnapshotReplace() {
+        let key = 'action-replace-from-snapshot';
+        let snapShotAction =  sessionStorage.getItem(key) !== null;
+        if(snapShotAction) {
+            sessionStorage.removeItem(key);
+        }
+        return snapShotAction;
+    }
+
     async init() {
 
         const finWindow = await fin.Window.getCurrent();
@@ -31,9 +40,7 @@ class TitleBarMain extends HTMLElement {
 
         finWindow.on("view-detached", this.checkForLastView);
 
-        this.platformWin = fin.Window.getCurrentSync();
-        this.platformWin.on('close-requested', async () => {
-
+        finWindow.on('close-requested', async () => {
             let currentLayout = await fin.Platform.Layout.getCurrentSync().getConfig();
             if(currentLayout.content.length > 0) {
                 // close the platform
@@ -41,7 +48,7 @@ class TitleBarMain extends HTMLElement {
                 const platform = await fin.Platform.getCurrent();
                 platform.quit();
             } else {
-               const layout = fin.Platform.Layout.wrapSync(this.platformWin.identity);
+               const layout = fin.Platform.Layout.wrapSync(finWindow.identity);
 
                const newLayout = {
                    content: [
@@ -67,7 +74,7 @@ class TitleBarMain extends HTMLElement {
             }
         });
 
-        await this.platformWin.setAsForeground();
+        await finWindow.setAsForeground();
     }
 
     async render() {

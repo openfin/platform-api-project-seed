@@ -117,6 +117,9 @@ class LeftMenu extends HTMLElement {
     async restoreSnapshot() {
         const storedSnapshot = localStorage.getItem('snapShot');
         if (storedSnapshot) {
+            // this will prevent the reload event
+            await fin.Window.getCurrentSync().removeAllListeners('close-requested');
+
             return fin.Platform.getCurrentSync().applySnapshot(JSON.parse(storedSnapshot), {
                 closeExistingWindows: true
             });
