@@ -10,6 +10,7 @@ This project seed includes the following [Platform API](https://openfin.co/platf
 * Examples of visual customization by providing a custom Platform Window
 * Examples of behavioral customization by overriding the Platform APIs
 
+[Launch in OpenFin](https://openfin.github.io/start/?manifest=https%3A%2F%2Fopenfin.github.io%2Fplatform-api-project-seed%2Fpublic.json)
 
 ## How to use this repository:
 
