@@ -10,12 +10,16 @@
     --corners-radius: 5px;
     --splitter-width: 4px;
 
+    --body-container-padding-left: 4px;
+
     --layout-container-padding-top: 0px;
     --layout-container-padding-bottom: 5px;
-    --layout-container-padding-left: 5px;
+    --layout-container-padding-left: 4px;
     --layout-container-padding-right: 5px;
-    --layout-container-from-top: calc(var(--title-bar-height) + var(--layout-container-padding-top));
 
+    --sidebar-width: 120px;
+
+    --layout-container-width: calc(100% - var(--layout-container-padding-left) - var(--layout-container-padding-right) - var(--sidebar-width));
 
     --frame-background-color: var(--frame-background);
     --title-bar-background-color: var(--title-bar);
@@ -40,11 +44,6 @@ body {
     display:flex;
 }
 
-.left-menu {
-    height: 100%;
-    margin-left: -10%;
-}
-
 .left-menu ul {
     list-style: none;
     padding-inline-start: 0px;
@@ -57,10 +56,15 @@ body {
 }
 
 .left-menu button {
-    width: 100%;
-    padding: 0px;
+    width: var(--sidebar-width);
+    padding: 4px;
     height: 40px;
     background-color: var(--active-tab);
     color: var(--tab-text);
     border-color: var(--frame-background);
+}
+
+.left-menu button:hover {
+    cursor: pointer;
+    background-color: var(--tab-bar-background);
 }
