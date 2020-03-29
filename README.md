@@ -9,7 +9,10 @@ This project seed includes the following [Platform API](https://openfin.co/platf
 * Examples of visual customization via CSS
 * Examples of visual customization by providing a custom Platform Window
 * Examples of behavioral customization by overriding the Platform APIs
+* Examples of how to make use of the platform apis to treat views inside of a window as a group with shared context and how messages could be shared to views in a group and how you can maintain that relationship when you pull out a view from a window (so there is a linked relationship).
+* How your view can make use of knowledge of it being moved from window to window and how it can keep track of the number of views that exist so it can react to that.
 
+[![Click to watch on Vimeo](openfin-seed-project-first-demo-preview.png)](https://vimeo.com/401935037)
 
 ## How to use this repository:
 
@@ -35,6 +38,7 @@ The [platform-window.html](platform-window.html) file contains the [layout-conta
 ##### left-menu
 Provides examples of the following functionality:
 * Adding a View to an existing Window
+* Adding a View that makes use of shared context if there is more than one view of that type
 * Adding a View in a new Window
 * Saving the Window's current Layout
 * Restoring the Window's current Layout
@@ -58,6 +62,8 @@ Our [custom Provider](js/platform-provider.js) includes an [extension](js/extern
 This is similar to the main example but is configured to act like an application that has a main window and child windows that may or may not use the platform layout.
 
 This example also shows how you can automatically capture layout when the main window closes (to local storage but it could be any store) and have the main window support a layout but not close if the last view is removed.
+
+[![Click to watch on Vimeo](openfin-seed-project-second-demo-preview.png)](https://vimeo.com/401942382)
 
 ### Platform configuration
 * [Platform configuration](https://developers.openfin.co/docs/platform-api#section-1-launching-a-platform) has been included in the provided [app-window-main.json](app-window-main.json) file. This config does not include a default window as this is managed by the custom provider: [provider-window-main.html](provider-window-main.html)
@@ -85,7 +91,9 @@ The [platform-window-main.html](platform-window-main.html) file contains the [la
 ##### left-menu
 Provides examples of the following functionality:
 * Adding a View to an existing Window
+* Adding a Context View that makes use of shared context and shared messaging if there is more than one view of that type
 * Adding a View in a new Window
+* Adding a Context View in a new Window so that it is not linked to the main window.
 * Saving the Window's current Layout
 * Restoring the Window's current Layout
 * Creating a regular OpenFin Window
