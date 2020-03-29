@@ -49,6 +49,7 @@
                     "content": [
                         {
                             "type": "stack",
+                            "title":"tab a",
                             "id": "no-drop-target",
                             "content": [
                                 {
@@ -56,6 +57,22 @@
                                     "componentName": "view",
                                     "componentState": {
                                         "name": "component_A1",
+                                        "processAffinity": "ps_1",
+                                        "url": "https://cdn.openfin.co/embed-web/chart.html"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "type": "stack",
+                            "title":"tab b",
+                            "id": "no-drop-target2",
+                            "content": [
+                                {
+                                    "type": "component",
+                                    "componentName": "view",
+                                    "componentState": {
+                                        "name": "component_A12",
                                         "processAffinity": "ps_1",
                                         "url": "https://cdn.openfin.co/embed-web/chart.html"
                                     }

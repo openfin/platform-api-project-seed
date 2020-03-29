@@ -2,6 +2,7 @@ import { html, render } from 'https://unpkg.com/lit-html@1.0.0/lit-html.js';
 import { componentNameGenerator } from './component-name-generator.js';
 
 const chartUrl = 'https://cdn.openfin.co/embed-web/chart.html';
+const contextViewUrl = document.location.host + '/platform-view-context.html';
 
 //Our Left Menu element
 class LeftMenu extends HTMLElement {
@@ -18,7 +19,6 @@ class LeftMenu extends HTMLElement {
         this.nonLayoutWindow = this.nonLayoutWindow.bind(this);
         this.saveWindowLayout = this.saveWindowLayout.bind(this);
         this.restoreWindowLayout = this.restoreWindowLayout.bind(this);
-
         this.render();
     }
 
@@ -27,6 +27,7 @@ class LeftMenu extends HTMLElement {
         <div class="left-menu">
             <ul>
                 <li><button @click=${() => this.createChart().catch(console.error)}>New Chart</button></li>
+                <li><button @click=${() => this.createContextView().catch(console.error)}>New Context View</button></li>
                 <li><button @click=${() => this.saveWindowLayout().catch(console.error)}>Save Layout</button></li>
                 <li><button @click=${() => this.restoreWindowLayout().catch(console.error)}>Restore Layout</button></li>
                 <li><button @click=${() => this.toGrid().catch(console.error)}>Grid</button></li>
@@ -34,12 +35,21 @@ class LeftMenu extends HTMLElement {
                 <li><button @click=${() => this.toRows().catch(console.error)}>Rows</button></li>
                 <li><button @click=${() => this.toColumns().catch(console.error)}>Columns</button></li>
                 <li><button @click=${() => this.newDefaultWindow().catch(console.error)}>New Chart Window</button></li>
+                <li><button @click=${() => this.newContextWindow().catch(console.error)}>New Context Window</button></li>
                 <li><button @click=${() => this.nonLayoutWindow().catch(console.error)}>New Window</button></li>
                 <li><button @click=${() => this.saveSnapshot().catch(console.error)}>Save Platform Snapshot</button></li>
                 <li><button @click=${() => this.restoreSnapshot().catch(console.error)}>Restore Platform Snapshot</button></li>
             <ul>
         </div>`;
         return render(menuItems, this);
+    }
+
+    async createContextView() {
+        //we want to add a context view to the current window.
+        return fin.Platform.getCurrentSync().createView({
+            url: contextViewUrl,
+            name: componentNameGenerator()
+        }, fin.me.identity);
     }
 
     async createChart() {
@@ -91,6 +101,14 @@ class LeftMenu extends HTMLElement {
         //we want to add a chart in a new window.
         return fin.Platform.getCurrentSync().createView({
             url: chartUrl,
+            name: componentNameGenerator()
+        }, undefined);
+    }
+
+    async newContextWindow() {
+        //we want to add a context view in a new window.
+        return fin.Platform.getCurrentSync().createView({
+            url: contextViewUrl,
             name: componentNameGenerator()
         }, undefined);
     }
