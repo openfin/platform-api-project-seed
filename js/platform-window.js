@@ -1,5 +1,13 @@
 import { html, render } from 'https://unpkg.com/lit-html@1.0.0/lit-html.js';
 
+window.addEventListener('DOMContentLoaded', () => {
+    try {
+        fin.Platform.Layout.init();
+    } catch(e) {
+        // don't throw me - after .50/.51 it won't error anymore
+    }
+});
+
 //TODO: write this as a util somewhere.
 function componentNameRandomizer() {
     return `component_A${Date.now() + Math.floor(Math.random() * 10000)}`;
