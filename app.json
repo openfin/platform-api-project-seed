@@ -33,7 +33,9 @@
             "defaultLeft": 0,
             "defaultTop": 0,
             "saveWindowState": false,
-            "backgroundThrottling": true
+            "backgroundThrottling": true,
+            "minHeight": 445,
+            "minWidth": 308
         },
         "commands": [
             {
