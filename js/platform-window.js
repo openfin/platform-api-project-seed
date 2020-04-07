@@ -5,7 +5,7 @@ window.addEventListener('DOMContentLoaded', () => {
     try {
         fin.Platform.Layout.init({containerId});
     } catch(e) {
-        // don't throw me - after .50/.51 it won't error anymore
+        // don't throw me - after API version .50 it won't error anymore
     }
 });
 
@@ -24,6 +24,7 @@ class LeftMenu extends HTMLElement {
         this.createChart = this.createChart.bind(this);
         this.saveSnapshot = this.saveSnapshot.bind(this);
         this.restoreSnapshot = this.restoreSnapshot.bind(this);
+        this.toggleFixedLayout = this.toggleFixedLayout.bind(this);
         this.toGrid = this.toGrid.bind(this);
         this.toTabbed = this.toTabbed.bind(this);
         this.toRows = this.toRows.bind(this);
@@ -42,6 +43,7 @@ class LeftMenu extends HTMLElement {
                 <li><button @click=${() => this.createChart().catch(console.error)}>New Chart</button></li>
                 <li><button @click=${() => this.saveWindowLayout().catch(console.error)}>Save Layout</button></li>
                 <li><button @click=${() => this.restoreWindowLayout().catch(console.error)}>Restore Layout</button></li>
+                <li><button @click=${() => this.toggleFixedLayout().catch(console.error)}>Toggle Fixed</button></li>
                 <li><button @click=${() => this.toGrid().catch(console.error)}>Grid</button></li>
                 <li><button @click=${() => this.toTabbed().catch(console.error)}>Tab</button></li>
                 <li><button @click=${() => this.toRows().catch(console.error)}>Rows</button></li>
@@ -75,6 +77,35 @@ class LeftMenu extends HTMLElement {
             throw new Error("No snapshot found in localstorage");
         }
     }
+
+    async toggleFixedLayout() {
+        const wrappedLayout = fin.Platform.Layout.getCurrentSync();
+        const oldLayout = await wrappedLayout.getConfig();
+        const { settings, dimensions } = oldLayout;
+        if(settings.hasHeaders && settings.reorderEnabled) {
+            wrappedLayout.replace({
+                ...oldLayout,
+                settings: {
+                    ...settings,
+                    hasHeaders: false,
+                    reorderEnabled: false,
+                }
+            });
+        } else {
+            wrappedLayout.replace({
+                ...oldLayout,
+                settings: {
+                    ...settings,
+                    hasHeaders: true,
+                    reorderEnabled: true,
+                },
+                dimensions: {
+                    ...dimensions,
+                    headerHeight: 20
+                }
+            });
+        }
+    };
 
     async toGrid() {
         await fin.Platform.Layout.getCurrentSync().applyPreset({
