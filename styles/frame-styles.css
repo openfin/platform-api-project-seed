@@ -64,3 +64,41 @@ body {
     color: var(--tab-text);
     border-color: var(--frame-background);
 }
+
+.two-sided-container {
+    transition: 0.8s;
+    -webkit-transform-style: preserve-3d;
+    height: 100%;
+    width: 100%;
+    /* position: relative; */
+    /* height: 70%; */
+}
+.face {
+    -webkit-backface-visibility: hidden;
+
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    /* width: 100%; */
+    /* display: inline-block; */
+    /* min-height: 440px; */
+    z-index: 1;
+}
+.face.back {
+    -webkit-transform: rotateY(180deg);
+}
+.two-sided-container.flip {
+    -webkit-transform: rotateY(180deg);
+}
+
+.no-csstransforms3d .face.back {
+    visibility: hidden;
+}
+.no-csstransforms3d .flip .face {
+    visibility: hidden;
+}
+.no-csstransforms3d .flip .face.back {
+    visibility: visible;
+}

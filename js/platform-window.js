@@ -18,7 +18,7 @@ class LeftMenu extends HTMLElement {
         this.toGrid = this.toGrid.bind(this);
         this.toTabbed = this.toTabbed.bind(this);
         this.toRows = this.toRows.bind(this);
-        this.newWindow = this.newDefaultWindow.bind(this);
+        this.newChartWindow = this.newChartWindow.bind(this);
         this.nonLayoutWindow = this.nonLayoutWindow.bind(this);
         this.saveWindowLayout = this.saveWindowLayout.bind(this);
         this.restoreWindowLayout = this.restoreWindowLayout.bind(this);
@@ -36,7 +36,7 @@ class LeftMenu extends HTMLElement {
                 <li><button @click=${() => this.toGrid().catch(console.error)}>Grid</button></li>
                 <li><button @click=${() => this.toTabbed().catch(console.error)}>Tab</button></li>
                 <li><button @click=${() => this.toRows().catch(console.error)}>Rows</button></li>
-                <li><button @click=${() => this.newDefaultWindow().catch(console.error)}>New Chart Window</button></li>
+                <li><button @click=${() => this.newChartWindow().catch(console.error)}>New Chart Window</button></li>
                 <li><button @click=${() => this.nonLayoutWindow().catch(console.error)}>New Window</button></li>
                 <li><button @click=${() => this.saveSnapshot().catch(console.error)}>Save Platform Snapshot</button></li>
                 <li><button @click=${() => this.restoreSnapshot().catch(console.error)}>Restore Platform Snapshot</button></li>
@@ -48,8 +48,8 @@ class LeftMenu extends HTMLElement {
     async createChart() {
         //we want to add a chart to the current window.
         return fin.Platform.getCurrentSync().createView({
-            url: chartUrl,
-            name : componentNameRandomizer()
+            url: chartUrl
+            //name : componentNameRandomizer()
         }, fin.me.identity);
     }
 
@@ -84,11 +84,11 @@ class LeftMenu extends HTMLElement {
         });
     }
 
-    async newDefaultWindow() {
+    async newChartWindow() {
         //we want to add a chart in a new window.
         return fin.Platform.getCurrentSync().createView({
-            url: chartUrl,
-            name : componentNameRandomizer()
+            url: chartUrl
+            //name : componentNameRandomizer()
         }, undefined);
     }
 
@@ -159,3 +159,20 @@ class TitleBar extends HTMLElement {
 
 customElements.define('left-menu', LeftMenu);
 customElements.define('title-bar', TitleBar);
+
+
+
+
+async function hideFlip() {
+    var views = await fin.Window.getCurrentSync().getCurrentViews();
+    views.forEach(v => v.hide());
+    flipContainer.classList.toggle("flip");
+};
+
+async function showFlip() {
+    flipContainer.classList.toggle("flip");
+    setTimeout(async () => {
+        var views = await fin.Window.getCurrentSync().getCurrentViews();
+        views.forEach(v => v.show());
+    }, 300);
+}
