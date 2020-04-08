@@ -24,7 +24,7 @@ class LeftMenu extends HTMLElement {
         this.createChart = this.createChart.bind(this);
         this.saveSnapshot = this.saveSnapshot.bind(this);
         this.restoreSnapshot = this.restoreSnapshot.bind(this);
-        this.toggleFixedLayout = this.toggleFixedLayout.bind(this);
+        this.toggleLockedLayout = this.toggleLockedLayout.bind(this);
         this.toGrid = this.toGrid.bind(this);
         this.toTabbed = this.toTabbed.bind(this);
         this.toRows = this.toRows.bind(this);
@@ -43,7 +43,7 @@ class LeftMenu extends HTMLElement {
                 <li><button @click=${() => this.createChart().catch(console.error)}>New Chart</button></li>
                 <li><button @click=${() => this.saveWindowLayout().catch(console.error)}>Save Layout</button></li>
                 <li><button @click=${() => this.restoreWindowLayout().catch(console.error)}>Restore Layout</button></li>
-                <li><button @click=${() => this.toggleFixedLayout().catch(console.error)}>Toggle Fixed</button></li>
+                <li><button @click=${() => this.toggleLockedLayout().catch(console.error)}>Toggle Locked</button></li>
                 <li><button @click=${() => this.toGrid().catch(console.error)}>Grid</button></li>
                 <li><button @click=${() => this.toTabbed().catch(console.error)}>Tab</button></li>
                 <li><button @click=${() => this.toRows().catch(console.error)}>Rows</button></li>
@@ -78,7 +78,7 @@ class LeftMenu extends HTMLElement {
         }
     }
 
-    async toggleFixedLayout() {
+    async toggleLockedLayout() {
         const wrappedLayout = fin.Platform.Layout.getCurrentSync();
         const oldLayout = await wrappedLayout.getConfig();
         const { settings, dimensions } = oldLayout;
