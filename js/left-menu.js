@@ -1,6 +1,15 @@
 import { html, render } from 'https://unpkg.com/lit-html@1.0.0/lit-html.js';
 import { componentNameGenerator } from './component-name-generator.js';
 
+window.addEventListener('DOMContentLoaded', () => {
+    const containerId = 'layout-container';
+    try {
+        fin.Platform.Layout.init({containerId});
+    } catch(e) {
+        // don't throw me - after .50/.51 it won't error anymore
+    }
+});
+
 const chartUrl = 'https://cdn.openfin.co/embed-web/chart.html';
 const contextViewUrl = document.location.host + '/platform-view-context.html';
 
@@ -19,6 +28,8 @@ class LeftMenu extends HTMLElement {
         this.nonLayoutWindow = this.nonLayoutWindow.bind(this);
         this.saveWindowLayout = this.saveWindowLayout.bind(this);
         this.restoreWindowLayout = this.restoreWindowLayout.bind(this);
+        this.applySnapshot = this.applySnapshot.bind(this);
+
         this.render();
     }
 
@@ -39,6 +50,7 @@ class LeftMenu extends HTMLElement {
                 <li><button @click=${() => this.nonLayoutWindow().catch(console.error)}>New Window</button></li>
                 <li><button @click=${() => this.saveSnapshot().catch(console.error)}>Save Platform Snapshot</button></li>
                 <li><button @click=${() => this.restoreSnapshot().catch(console.error)}>Restore Platform Snapshot</button></li>
+                <li><button @click=${() => this.applySnapshot().catch(console.error)}>Apply Platform Snapshot</button></li>
             <ul>
         </div>`;
         return render(menuItems, this);
@@ -55,8 +67,7 @@ class LeftMenu extends HTMLElement {
     async createChart() {
         //we want to add a chart to the current window.
         return fin.Platform.getCurrentSync().createView({
-            url: chartUrl,
-            name: componentNameGenerator()
+            url: chartUrl
         }, fin.me.identity);
     }
 
@@ -100,16 +111,14 @@ class LeftMenu extends HTMLElement {
     async newDefaultWindow() {
         //we want to add a chart in a new window.
         return fin.Platform.getCurrentSync().createView({
-            url: chartUrl,
-            name: componentNameGenerator()
+            url: chartUrl
         }, undefined);
     }
 
     async newContextWindow() {
         //we want to add a context view in a new window.
         return fin.Platform.getCurrentSync().createView({
-            url: contextViewUrl,
-            name: componentNameGenerator()
+            url: contextViewUrl
         }, undefined);
     }
 
@@ -140,6 +149,17 @@ class LeftMenu extends HTMLElement {
 
             return fin.Platform.getCurrentSync().applySnapshot(JSON.parse(storedSnapshot), {
                 closeExistingWindows: true
+            });
+        } else {
+            throw new Error("No snapshot found in localstorage");
+        }
+    }
+
+    async applySnapshot() {
+        const storedSnapshot = localStorage.getItem('snapShot');
+        if (storedSnapshot) {
+            return fin.Platform.getCurrentSync().applySnapshot(JSON.parse(storedSnapshot), {
+                closeExistingWindows: false
             });
         } else {
             throw new Error("No snapshot found in localstorage");

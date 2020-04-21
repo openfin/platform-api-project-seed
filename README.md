@@ -13,6 +13,7 @@ This project seed includes the following [Platform API](https://openfin.co/platf
 * How your view can make use of knowledge of it being moved from window to window and how it can keep track of the number of views that exist so it can react to that.
 
 [![Click to watch on Vimeo](openfin-seed-project-first-demo-preview.png)](https://vimeo.com/401935037)
+[Launch in OpenFin](https://openfin.github.io/start/?manifest=https%3A%2F%2Fopenfin.github.io%2Fplatform-api-project-seed%2Fpublic.json)
 
 ## How to use this repository:
 
@@ -34,6 +35,7 @@ This project seed includes the following [Platform API](https://openfin.co/platf
 
 ### Platform Window
 The [platform-window.html](platform-window.html) file contains the [layout-container](https://developers.openfin.co/docs/platform-api#section-5-2-complete-window-customization) element and two custom elements: `left-menu` and `title-bar`. These elements, in conjunction with the [js/left-menu.js](js/left-menu.js) and [js/title-bar.js](js/title-bar.js) files, enable the following functionality:
+The [platform-window.html](platform-window.html) file contains the [layout-container](https://developers.openfin.co/docs/platform-api#section-5-2-complete-window-customization) element and two custom elements: `left-menu` and `title-bar`. These elements, in conjunction with the [js/platform-window.js](js/platform-window.js) file, enable the following functionality:
 
 ##### left-menu
 Provides examples of the following functionality:
