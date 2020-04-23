@@ -19,7 +19,7 @@
 
     --sidebar-width: 120px;
 
-    --layout-container-width: calc(100% - var(--layout-container-padding-left) - var(--layout-container-padding-right) - var(--sidebar-width));
+    --layout-container-width: calc(100% - var(--layout-container-padding-left) - var(--layout-container-padding-right));
 
     --frame-background-color: var(--frame-background);
     --title-bar-background-color: var(--title-bar);
@@ -44,25 +44,6 @@ body {
     display:flex;
 }
 
-.left-menu ul {
-    list-style: none;
-    padding-inline-start: 0px;
-    width: 100%;
-    margin-block-start: 20px;
-}
-
-.left-menu li {
-    width: 100%;
-}
-
-.left-menu button {
-    width: var(--sidebar-width);
-    padding: 4px;
-    height: 40px;
-    background-color: var(--active-tab);
-    color: var(--tab-text);
-    border-color: var(--frame-background);
-}
 
 .wrapper_title {
     visibility: hidden;
@@ -71,7 +52,21 @@ body {
 .last-tab-button {
     visibility: hidden;
 }
-.left-menu button:hover {
+
+maximize-minimize-close {
+    -webkit-app-region: none;
     cursor: pointer;
-    background-color: var(--tab-bar-background);
+    user-select: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+save-restore-layout {
+    -webkit-app-region: none;
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }

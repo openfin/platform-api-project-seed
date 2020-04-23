@@ -1,14 +1,4 @@
 import { html, render } from 'https://unpkg.com/lit-html@1.0.0/lit-html.js';
-import { componentNameGenerator } from './component-name-generator.js';
-
-window.addEventListener('DOMContentLoaded', () => {
-    const containerId = 'layout-container';
-    try {
-        fin.Platform.Layout.init({containerId});
-    } catch(e) {
-        // don't throw me - after API version .50 it won't error anymore
-    }
-});
 
 const chartUrl = 'https://cdn.openfin.co/embed-web/chart.html';
 const contextViewUrl = document.location.host + '/platform-view-context.html';
@@ -19,16 +9,16 @@ class LeftMenu extends HTMLElement {
         super();
         this.render = this.render.bind(this);
         this.createChart = this.createChart.bind(this);
-        this.saveSnapshot = this.saveSnapshot.bind(this);
-        this.restoreSnapshot = this.restoreSnapshot.bind(this);
-        this.toggleLockedLayout = this.toggleLockedLayout.bind(this);
+        this.createContextView = this.createContextView.bind(this);
         this.toGrid = this.toGrid.bind(this);
         this.toTabbed = this.toTabbed.bind(this);
         this.toRows = this.toRows.bind(this);
+        this.toColumns = this.toColumns.bind(this);
         this.newWindow = this.newDefaultWindow.bind(this);
+        this.newContextWindow = this.newContextWindow.bind(this);
         this.nonLayoutWindow = this.nonLayoutWindow.bind(this);
-        this.saveWindowLayout = this.saveWindowLayout.bind(this);
-        this.restoreWindowLayout = this.restoreWindowLayout.bind(this);
+        this.saveSnapshot = this.saveSnapshot.bind(this);
+        this.restoreSnapshot = this.restoreSnapshot.bind(this);
         this.applySnapshot = this.applySnapshot.bind(this);
 
         this.render();
@@ -40,9 +30,6 @@ class LeftMenu extends HTMLElement {
             <ul>
                 <li><button @click=${() => this.createChart().catch(console.error)}>New Chart</button></li>
                 <li><button @click=${() => this.createContextView().catch(console.error)}>New Context View</button></li>
-                <li><button @click=${() => this.saveWindowLayout().catch(console.error)}>Save Layout</button></li>
-                <li><button @click=${() => this.restoreWindowLayout().catch(console.error)}>Restore Layout</button></li>
-                <li><button @click=${() => this.toggleLockedLayout().catch(console.error)}>Toggle Locked</button></li>
                 <li><button @click=${() => this.toGrid().catch(console.error)}>Grid</button></li>
                 <li><button @click=${() => this.toTabbed().catch(console.error)}>Tab</button></li>
                 <li><button @click=${() => this.toRows().catch(console.error)}>Rows</button></li>
@@ -61,8 +48,7 @@ class LeftMenu extends HTMLElement {
     async createContextView() {
         //we want to add a context view to the current window.
         return fin.Platform.getCurrentSync().createView({
-            url: contextViewUrl,
-            name: componentNameGenerator()
+            url: contextViewUrl
         }, fin.me.identity);
     }
 
@@ -72,49 +58,6 @@ class LeftMenu extends HTMLElement {
             url: chartUrl
         }, fin.me.identity);
     }
-
-    async saveWindowLayout() {
-        const winLayoutConfig = await fin.Platform.Layout.getCurrentSync().getConfig();
-        sessionStorage.setItem(fin.me.identity.name, JSON.stringify(winLayoutConfig));
-    }
-
-    async restoreWindowLayout() {
-        const storedWinLayout = sessionStorage.getItem(fin.me.identity.name);
-        if (storedWinLayout) {
-            return fin.Platform.Layout.getCurrentSync().replace(JSON.parse(storedWinLayout));
-        } else {
-            throw new Error("No snapshot found in localstorage");
-        }
-    }
-
-    async toggleLockedLayout() {
-        const wrappedLayout = fin.Platform.Layout.getCurrentSync();
-        const oldLayout = await wrappedLayout.getConfig();
-        const { settings, dimensions } = oldLayout;
-        if(settings.hasHeaders && settings.reorderEnabled) {
-            wrappedLayout.replace({
-                ...oldLayout,
-                settings: {
-                    ...settings,
-                    hasHeaders: false,
-                    reorderEnabled: false,
-                }
-            });
-        } else {
-            wrappedLayout.replace({
-                ...oldLayout,
-                settings: {
-                    ...settings,
-                    hasHeaders: true,
-                    reorderEnabled: true,
-                },
-                dimensions: {
-                    ...dimensions,
-                    headerHeight: 20
-                }
-            });
-        }
-    };
 
     async toGrid() {
         await fin.Platform.Layout.getCurrentSync().applyPreset({
