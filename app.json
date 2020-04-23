@@ -37,6 +37,11 @@
             "minHeight": 445,
             "minWidth": 308
         },
+        "defaultViewOptions": {
+            "experimental": {
+                "childWindows": true
+            }
+        },
         "commands": [
             {
                 "command": "stack.nextTab",
