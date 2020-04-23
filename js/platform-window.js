@@ -173,7 +173,6 @@ class TitleBar extends HTMLElement {
                     <div id="title"></div>
                 </div>
                 <div id="buttons-wrapper">
-                    <div class="button" @click=${() => this.toggleMenu()}>M</div>
                     <div class="button" id="minimize-button" @click=${() => fin.me.minimize().catch(console.error)}></div>
                     <div class="button" id="expand-button" @click=${() => this.maxOrRestore().catch(console.error)}></div>
                     <div class="button" id="close-button" @click=${() => fin.me.close().catch(console.error)}></div>
@@ -189,6 +188,7 @@ class TitleBar extends HTMLElement {
         return fin.me.restore();
     }
 
+    //leave this for when we have a better menu icon.
     toggleMenu () {
         document.querySelector('left-menu').classList.toggle('hidden');
     }
