@@ -68,3 +68,14 @@ body {
     cursor: pointer;
     background-color: var(--tab-bar-background);
 }
+
+#lock-button {
+    margin-right: 12px;
+    height: 16px;
+    width: 16px;
+}
+
+#lock-button img {
+    width: 100%;
+    height: auto;
+}
