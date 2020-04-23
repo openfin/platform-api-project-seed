@@ -1,7 +1,7 @@
 {
     "runtime": {
-        "arguments": "--v=1 --inspect",
-        "version": "canary"
+        "arguments": "",
+        "version": "alpha"
     },
     "shortcut": {
         "company": "OpenFin",
@@ -33,7 +33,9 @@
             "defaultLeft": 0,
             "defaultTop": 0,
             "saveWindowState": false,
-            "backgroundThrottling": true
+            "backgroundThrottling": true,
+            "minHeight": 445,
+            "minWidth": 308
         },
         "commands": [
             {
@@ -55,7 +57,6 @@
                                     "type": "component",
                                     "componentName": "view",
                                     "componentState": {
-                                        "name": "component_A1",
                                         "processAffinity": "ps_1",
                                         "url": "https://cdn.openfin.co/embed-web/chart.html"
                                     }

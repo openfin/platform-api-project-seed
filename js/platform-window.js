@@ -1,70 +1,114 @@
 import { html, render } from 'https://unpkg.com/lit-html@1.0.0/lit-html.js';
+import { getTemplates, storeTemplate, getTemplateByName, onStoreUpdate } from './template-store.js';
 
-//TODO: write this as a util somewhere.
-function componentNameRandomizer() {
-    return `component_A${Date.now() + Math.floor(Math.random() * 10000)}`;
-}
+window.addEventListener('DOMContentLoaded', () => {
+    const containerId = 'layout-container';
+    try {
+        fin.Platform.Layout.init({containerId});
+    } catch(e) {
+        // don't throw me - after .50/.51 it won't error anymore
+    }
+});
 
-const chartUrl = 'https://cdn.openfin.co/embed-web/chart.html';
+const CHART_URL = 'https://cdn.openfin.co/embed-web/chart.html';
+const LAYOUT_STORE_KEY  = 'LayoutMenu';
+const WORKSPACE_STORE_KEY = 'WorkspaceMenu';
 
 //Our Left Menu element
 class LeftMenu extends HTMLElement {
     constructor() {
         super();
         this.render = this.render.bind(this);
-        this.createChart = this.createChart.bind(this);
-        this.saveSnapshot = this.saveSnapshot.bind(this);
-        this.restoreSnapshot = this.restoreSnapshot.bind(this);
+        this.addView = this.addView.bind(this);
         this.toGrid = this.toGrid.bind(this);
         this.toTabbed = this.toTabbed.bind(this);
         this.toRows = this.toRows.bind(this);
-        this.newChartWindow = this.newChartWindow.bind(this);
+        this.cloneWindow = this.cloneWindow.bind(this);
         this.nonLayoutWindow = this.nonLayoutWindow.bind(this);
-        this.saveWindowLayout = this.saveWindowLayout.bind(this);
-        this.restoreWindowLayout = this.restoreWindowLayout.bind(this);
+        this.toggleWorkspaceSaveMenu = this.toggleWorkspaceSaveMenu.bind(this);
+        this.toggleLayoutSaveMenu = this.toggleLayoutSaveMenu.bind(this);
+        this.replaceLayoutFromTemplate = this.replaceLayoutFromTemplate.bind(this);
+        this.applySnapshotFromTemplate = this.applySnapshotFromTemplate.bind(this);
+
+        //List of apps available in the menu.
+        this.appList = [
+            {
+                url: CHART_URL,
+                printName: 'Chart',
+                processAffinity: 'ps_1'
+            },
+            {
+                url: 'https://www.tradingview.com/chart/?symbol=NASDAQ:AAPL',
+                printName: 'TradeView',
+                processAffinity: 'tv_1'
+            },
+            {
+                url: 'https://www.google.com/search?q=INDEXDJX:+.DJI&stick=H4sIAAAAAAAAAONgecRozC3w8sc9YSmtSWtOXmNU4eIKzsgvd80rySypFBLjYoOyeKS4uDj0c_UNkgsry3kWsfJ5-rm4Rrh4RVgp6Ll4eQIAqJT5uUkAAAA&source=lnms&sa=X&ved=0ahUKEwii_NWT9fzoAhU3mHIEHWy3AWIQ_AUIDSgA&biw=1280&bih=1366&dpr=1',
+                printName: 'News',
+                processAffinity: 'mw_1'
+            }
+        ];
 
         this.render();
+
+        //Whenever the store updates we will want to render any new elements.
+        onStoreUpdate(() => { this.render(); });
     }
 
-     async render() {
+    async render() {
+        const layoutTemplates = getTemplates(LAYOUT_STORE_KEY);
+        const workspaceTemplates = getTemplates(WORKSPACE_STORE_KEY);
         const menuItems = html`
-        <div class="left-menu">
-            <ul>
-                <li><button @click=${() => this.createChart().catch(console.error)}>New Chart</button></li>
-                <li><button @click=${() => this.saveWindowLayout().catch(console.error)}>Save Layout</button></li>
-                <li><button @click=${() => this.restoreWindowLayout().catch(console.error)}>Restore Layout</button></li>
-                <li><button @click=${() => this.toGrid().catch(console.error)}>Grid</button></li>
-                <li><button @click=${() => this.toTabbed().catch(console.error)}>Tab</button></li>
-                <li><button @click=${() => this.toRows().catch(console.error)}>Rows</button></li>
-                <li><button @click=${() => this.newChartWindow().catch(console.error)}>New Chart Window</button></li>
-                <li><button @click=${() => this.nonLayoutWindow().catch(console.error)}>New Window</button></li>
-                <li><button @click=${() => this.saveSnapshot().catch(console.error)}>Save Platform Snapshot</button></li>
-                <li><button @click=${() => this.restoreSnapshot().catch(console.error)}>Restore Platform Snapshot</button></li>
-            <ul>
-        </div>`;
+        <span>Apps</span>
+        <ul>
+            ${this.appList.map((item) => html`<li>
+                  <button @click=${() => this.addView(item.printName)}>${item.printName}</button>
+              </li>`)}
+                <li><button @click=${() => this.nonLayoutWindow().catch(console.error)}>OF Window</button></li>
+        </ul>
+        <span>Layout</span>
+        <ul>
+            <li><button @click=${() => this.toGrid().catch(console.error)}>Grid</button></li>
+            <li><button @click=${() => this.toTabbed().catch(console.error)}>Tab</button></li>
+            ${layoutTemplates.map((item) => html`<li>
+                  <button @click=${() => this.replaceLayoutFromTemplate(item.name)}>${item.name}</button>
+              </li>`)}
+            <li><button @click=${() => this.cloneWindow().catch(console.error)}>Clone</button></li>
+            <li><button @click=${() => this.toggleLayoutSaveMenu().catch(console.error)}>Save</button></li>
+        </ul>
+        <span>Workspace</span>
+        <ul>
+            ${workspaceTemplates.map((item) => html`<li><button @click=${() => this.applySnapshotFromTemplate(item.name)}>${item.name}</button></li>`)}
+            <li><button @click=${() => this.toggleWorkspaceSaveMenu()}>Save</button></li>
+        </ul>`;
         return render(menuItems, this);
-     }
-
-    async createChart() {
-        //we want to add a chart to the current window.
-        return fin.Platform.getCurrentSync().createView({
-            url: chartUrl
-            //name : componentNameRandomizer()
-        }, fin.me.identity);
     }
 
-    async saveWindowLayout() {
-        const winLayoutConfig = await fin.Platform.Layout.getCurrentSync().getConfig();
-        localStorage.setItem(fin.me.identity.name, JSON.stringify(winLayoutConfig));
+    async applySnapshotFromTemplate(templateName) {
+        const template = getTemplateByName(WORKSPACE_STORE_KEY, templateName);
+        return fin.Platform.getCurrentSync().applySnapshot(template.snapshot, {
+            closeExistingWindows: template.close
+        });
+
     }
 
-    async restoreWindowLayout() {
-        const storedWinLayout = localStorage.getItem(fin.me.identity.name);
-        if (storedWinLayout) {
-            return fin.Platform.Layout.getCurrentSync().replace(JSON.parse(storedWinLayout));
-        } else {
-            throw new Error("No snapshot found in localstorage");
-        }
+    async replaceLayoutFromTemplate(templateName) {
+        const templates = getTemplates(LAYOUT_STORE_KEY);
+        const templateToUse = templates.find(i => i.name === templateName);
+        fin.Platform.Layout.getCurrentSync().replace(templateToUse.layout);
+    }
+
+    async toggleLayoutSaveMenu() {
+        document.querySelector('layout-menu').toggleVisibility();
+    }
+
+    async toggleWorkspaceSaveMenu() {
+        document.querySelector('workspace-menu').toggleVisibility();
+    }
+
+    async addView(printName) {
+        const viewOptions = this.appList.find(i => i.printName === printName);
+        return fin.Platform.getCurrentSync().createView(viewOptions, fin.me.identity);
     }
 
     async toGrid() {
@@ -84,12 +128,17 @@ class LeftMenu extends HTMLElement {
         });
     }
 
-    async newChartWindow() {
-        //we want to add a chart in a new window.
-        return fin.Platform.getCurrentSync().createView({
-            url: chartUrl
-            //name : componentNameRandomizer()
-        }, undefined);
+    async cloneWindow() {
+        const layout = await fin.Platform.Layout.getCurrentSync().getConfig();
+        const snapshot = {
+            windows: [
+                {
+                    layout
+                }
+            ]
+        };
+
+        return fin.Platform.getCurrentSync().applySnapshot(snapshot);
     }
 
     async nonLayoutWindow() {
@@ -100,26 +149,10 @@ class LeftMenu extends HTMLElement {
                 defaultLeft: 200,
                 defaultTop: 200,
                 saveWindowState: false,
-                url: chartUrl,
+                url: CHART_URL,
                 contextMenu: true
             }]
         });
-    }
-
-    async saveSnapshot() {
-        const snapshot = await fin.Platform.getCurrentSync().getSnapshot();
-        localStorage.setItem('snapShot', JSON.stringify(snapshot));
-    }
-
-    async restoreSnapshot() {
-        const storedSnapshot = localStorage.getItem('snapShot');
-        if (storedSnapshot) {
-            return fin.Platform.getCurrentSync().applySnapshot(JSON.parse(storedSnapshot), {
-                closeExistingWindows: true
-            });
-        } else {
-            throw new Error("No snapshot found in localstorage");
-        }
     }
 }
 
@@ -128,23 +161,23 @@ class TitleBar extends HTMLElement {
     constructor() {
         super();
         this.render = this.render.bind(this);
+        this.maxOrRestore = this.maxOrRestore.bind(this);
+        this.toggleMenu = this.toggleMenu.bind(this);
 
         this.render();
-        this.maxOrRestore = this.maxOrRestore.bind(this);
     }
 
     async render() {
         const titleBar = html`
-        <div id="title-bar">
                 <div class="title-bar-draggable">
                     <div id="title"></div>
                 </div>
                 <div id="buttons-wrapper">
+                    <div class="button" @click=${() => this.toggleMenu()}>M</div>
                     <div class="button" id="minimize-button" @click=${() => fin.me.minimize().catch(console.error)}></div>
                     <div class="button" id="expand-button" @click=${() => this.maxOrRestore().catch(console.error)}></div>
                     <div class="button" id="close-button" @click=${() => fin.me.close().catch(console.error)}></div>
-                </div>
-            </div>`;
+                </div>`;
         return render(titleBar, this);
     }
 
@@ -155,24 +188,98 @@ class TitleBar extends HTMLElement {
 
         return fin.me.restore();
     }
+
+    toggleMenu () {
+        document.querySelector('left-menu').classList.toggle('hidden');
+    }
+}
+
+class LayoutMenu extends HTMLElement {
+    constructor() {
+        super();
+        this.render = this.render.bind(this);
+        this.saveAsTemplate = this.saveAsTemplate.bind(this);
+        this.toggleVisibility = this.toggleVisibility.bind(this);
+        this.cancel = this.cancel.bind(this);
+
+        this.templateStorageKey = this.constructor.name;
+        this.render();
+    }
+
+    async saveAsTemplate() {
+        const name = this.querySelector('#template-name').value;
+        const templateObject = {
+            name,
+            layout: await fin.Platform.Layout.getCurrentSync().getConfig()
+        };
+
+        storeTemplate(this.templateStorageKey, templateObject);
+
+        this.toggleVisibility();
+        return;
+    }
+
+    toggleVisibility() {
+        this.classList.toggle('hidden');
+        document.querySelector('#layout-container').classList.toggle('hidden');
+    }
+
+    cancel() {
+        this.toggleVisibility();
+    }
+
+    async render() {
+        const titleBar = html`
+            <fieldset>
+                 <legend>Save as Layout template</legend>
+                 <input type="text" id="template-name" size="50"
+                     value="New template"/> <br>
+                 <button @click=${this.saveAsTemplate}>Save</button>
+                 <button @click=${this.cancel}>Cancel</button>
+             </fieldset>`;
+        return render(titleBar, this);
+    }
+}
+
+class WorkspaceMenu extends LayoutMenu {
+    constructor() {
+        super();
+    }
+
+    async saveAsTemplate() {
+        const name = this.querySelector('#template-name').value;
+        const close = this.querySelector('#close').checked;
+
+        console.log(name, close);
+        const templateObject = {
+            name,
+            snapshot: await fin.Platform.getCurrentSync().getSnapshot(),
+            close
+        };
+
+        storeTemplate(this.templateStorageKey, templateObject);
+
+        this.toggleVisibility();
+        return;
+    }
+
+    async render() {
+        const titleBar = html`
+            <fieldset>
+                 <legend>Save Workspace as template</legend>
+                 <input type="text" id="template-name" size="50"
+                     value="New template"/> <br>
+                 <input type="checkbox" id="close" name="close"
+                     checked>
+                 <label for="close">Close current Workspace on restore</label> <br>
+                 <button @click=${this.saveAsTemplate}>Save</button>
+                 <button @click=${this.cancel}>Cancel</button>
+             </fieldset>`;
+        return render(titleBar, this);
+    }
 }
 
 customElements.define('left-menu', LeftMenu);
 customElements.define('title-bar', TitleBar);
-
-
-
-
-async function hideFlip() {
-    var views = await fin.Window.getCurrentSync().getCurrentViews();
-    views.forEach(v => v.hide());
-    flipContainer.classList.toggle("flip");
-};
-
-async function showFlip() {
-    flipContainer.classList.toggle("flip");
-    setTimeout(async () => {
-        var views = await fin.Window.getCurrentSync().getCurrentViews();
-        views.forEach(v => v.show());
-    }, 300);
-}
+customElements.define('layout-menu', LayoutMenu);
+customElements.define('workspace-menu', WorkspaceMenu);
