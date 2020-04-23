@@ -34,7 +34,7 @@ class LeftMenu extends HTMLElement {
         this.appList = [
             {
                 url: CHART_URL,
-                printName: 'Chart',
+                printName: 'OF Chart',
                 processAffinity: 'ps_1'
             },
             {
