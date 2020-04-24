@@ -11,6 +11,9 @@ This project seed includes the following [Platform API](https://openfin.co/platf
 * Examples of behavioral customization by overriding the Platform APIs
 * Examples of how to make use of the platform apis to treat views inside of a window as a group with shared context and how messages could be shared to views in a group and how you can maintain that relationship when you pull out a view from a window (so there is a linked relationship).
 * How your view can make use of knowledge of it being moved from window to window and how it can keep track of the number of views that exist so it can react to that.
+* How you can lock all the views on a window (to prevent views from being pulled out or views dragged in and to also hide the tabs if they are not needed).
+* How you can pin platform windows so they are always on top.
+
 
 [![Click to watch on Vimeo](openfin-seed-project-first-demo-preview.png)](https://vimeo.com/401935037)
 [Launch in OpenFin](https://openfin.github.io/start/?manifest=https%3A%2F%2Fopenfin.github.io%2Fplatform-api-project-seed%2Fpublic.json)
@@ -42,8 +45,6 @@ Provides examples of the following functionality:
 * Adding a View to an existing Window
 * Adding a View that makes use of shared context if there is more than one view of that type
 * Adding a View in a new Window
-* Saving the Window's current Layout
-* Restoring the Window's current Layout
 * Creating a regular OpenFin Window
 * Saving/Restoring Platform Snapshots
 * Applying a preset arrangement on the current window (Grid, Tabs, Rows, Columns)
@@ -51,6 +52,9 @@ Provides examples of the following functionality:
 ##### title-bar
 Provides examples of the following functionality:
 * Draggable area
+* Save/Restore a layout
+* Lock/Unlock the current layout
+* Pin/Unpin window so it is always on top
 * Close/Maximize/Minimize buttons
 
 ### Provider
@@ -78,14 +82,16 @@ This example also shows how you can automatically capture layout when the main w
 * A [stylesheet](https://developers.openfin.co/docs/platform-api#section-standard-window-customization) is linked in the [platform-window-main.html](platform-window-main.html) file, and allows for [main window visual customization](styles/frame-styles-window-main.css) with some additional classes that only apply to the main window. For a complete view of all properties, please refer to the [example stylesheet](https://github.com/openfin/layouts-v2-style-examples)
 
 ### Platform Window Common
-The [platform-window-common.html](platform-window-common.html) file contains the [layout-container](https://developers.openfin.co/docs/platform-api#section-5-2-complete-window-customization) element and one custom element: `title-bar-save-restore`. This element, in conjunction with the [js/title-bar-save-restore.js](js/title-bar-save-restore.js) file, enable the following functionality:
+The [platform-window-common.html](platform-window-common.html) file contains the [layout-container](https://developers.openfin.co/docs/platform-api#section-5-2-complete-window-customization) element and one custom element: `title-bar-common`. This element, in conjunction with the [js/title-bar-common.js](js/title-bar-common.js) file, enable the following functionality:
 
-##### title-bar-save-restore
+##### title-bar-common
 Provides examples of the following functionality:
 * Draggable area
+* Save/Restore a layout
+* Lock/Unlock the current layout
+* Pin/Unpin window so it is always on top
+* Clone the current window (experimental)
 * Close/Maximize/Minimize buttons
-* Lets you save the layout of the current window (session storage for the lifetime of the window)
-* Lets you restore the saved layout to the current window (so you could add/remove views to this window by dragging them in/out and then restore to a previous layout)
 
 ### Platform Window Main
 The [platform-window-main.html](platform-window-main.html) file contains the [layout-container](https://developers.openfin.co/docs/platform-api#section-5-2-complete-window-customization) element and two custom elements: `left-menu` and `title-bar-main`. These elements, in conjunction with the [js/left-menu.js](js/left-menu.js) and [js/title-bar-main.js](js/title-bar-main.js) files, enable the following functionality:
@@ -93,19 +99,15 @@ The [platform-window-main.html](platform-window-main.html) file contains the [la
 ##### left-menu
 Provides examples of the following functionality:
 * Adding a View to an existing Window
-* Adding a Context View that makes use of shared context and shared messaging if there is more than one view of that type
+* Adding a View that makes use of shared context if there is more than one view of that type
 * Adding a View in a new Window
-* Adding a Context View in a new Window so that it is not linked to the main window.
-* Saving the Window's current Layout
-* Restoring the Window's current Layout
 * Creating a regular OpenFin Window
 * Saving/Restoring Platform Snapshots
 * Applying a preset arrangement on the current window (Grid, Tabs, Rows, Columns)
 
 ##### title-bar-main
 Provides examples of the following functionality:
-* Draggable area
-* Close/Maximize/Minimize buttons
+* Same button functionality as title-bar-common (except clone)
 * When you close the window it saves a snapshot of the layout for all windows before closing the whole application.
 * If the window is being closed because you have dragged the last view out of the main window into another window it adds a default view and doesn't close the window. If you want to have layout support in the main window then you must have at least one default view that you always want displayed or you have a main window without layout support.
 * If only one view remains in the main window then it removes the close icon via the custom class in the [main window visual customization](styles/frame-styles-window-main.css) stylesheet and removes it when more than one view exists.
