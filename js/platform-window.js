@@ -140,10 +140,13 @@ class LeftMenu extends HTMLElement {
     }
 
     async cloneWindow() {
+        const bounds = await fin.me.getBounds();
         const layout = await fin.Platform.Layout.getCurrentSync().getConfig();
         const snapshot = {
             windows: [
                 {
+                    defaultWidth: bounds.width,
+                    defaultHeight: bounds.height,
                     layout
                 }
             ]
