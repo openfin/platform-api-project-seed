@@ -53,15 +53,6 @@ body {
     visibility: hidden;
 }
 
-maximize-minimize-close {
-    -webkit-app-region: none;
-    cursor: pointer;
-    user-select: none;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
 save-restore-layout {
     -webkit-app-region: none;
     cursor: pointer;

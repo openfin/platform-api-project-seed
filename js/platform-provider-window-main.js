@@ -41,7 +41,7 @@ async function init() {
     }
 }
 
-window.addEventListener('DOMContentLoaded', (event) => {
-    // this is still required. Need a better event to listen to before we can use the platform api.
-    setTimeout(init, 1000);
+window.addEventListener('DOMContentLoaded', () => {
+    let platform = fin.Platform.getCurrentSync();
+    platform.once('platform-api-ready', init.bind(this));
 });

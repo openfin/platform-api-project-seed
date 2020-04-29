@@ -2,7 +2,9 @@ import { html, render } from 'https://unpkg.com/lit-html@1.0.0/lit-html.js';
 import './layout-container-binding.js';
 import './components/header/lock-unlock-component.js';
 import './components/header/pin-unpin-component.js';
-import './components/header/maximize-minimize-close-component.js';
+import './components/header/window-maximize-component.js';
+import './components/header/window-minimize-component.js';
+import './components/header/window-close-component.js';
 import './components/header/save-restore-layout-component.js';
 
 class TitleBar extends HTMLElement {
@@ -23,7 +25,9 @@ class TitleBar extends HTMLElement {
                 <save-restore-layout></save-restore-layout>
                 <lock-unlock></lock-unlock>
                 <pin-unpin></pin-unpin>
-                <maximize-minimize-close></maximize-minimize-close>
+                <window-minimize></window-minimize>
+                <window-maximize></window-maximize>
+                <window-close></window-close>
                 </div>
             </div>`;
         return render(titleBar, this);

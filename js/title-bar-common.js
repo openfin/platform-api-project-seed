@@ -5,7 +5,9 @@ import './components/header/save-restore-layout-component.js';
 import './components/header/lock-unlock-component.js';
 import './components/header/pin-unpin-component.js';
 import './components/header/clone-layout-component.js';
-import './components/header/maximize-minimize-close-component.js';
+import './components/header/window-maximize-component.js';
+import './components/header/window-minimize-component.js';
+import './components/header/window-close-component.js';
 
 
 class TitleBarCommon extends HTMLElement {
@@ -13,6 +15,11 @@ class TitleBarCommon extends HTMLElement {
     constructor() {
         super();
         this.render = this.render.bind(this);
+        this.addEventListener("maximize-minimize-close-clicked", (e)=>{
+            if(e.detail.controlType === "close") {
+                fin.me.close().catch(console.error);
+            }
+        });
         this.render();
     }
 
@@ -27,7 +34,9 @@ class TitleBarCommon extends HTMLElement {
                     <lock-unlock></lock-unlock>
                     <pin-unpin></pin-unpin>
                     <clone-layout></clone-layout>
-                    <maximize-minimize-close></maximize-minimize-close>
+                    <window-minimize></window-minimize>
+                    <window-maximize></window-maximize>
+                    <window-close></window-close>
                 </div>
             </div>`;
         return render(titleBar, this);

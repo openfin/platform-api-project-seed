@@ -14,9 +14,20 @@ class SaveRestoreLayoutComponent extends HTMLElement {
     }
 
     async saveWindowLayout() {
-        const winLayoutConfig = await fin.Platform.Layout.getCurrentSync().getConfig();
-        sessionStorage.setItem(fin.me.identity.name, JSON.stringify(winLayoutConfig));
-        this.render();
+        let winLayout;
+        let winLayoutConfig;
+
+        try {
+            console.log("About to capture and stored the current window layout.");
+            winLayout = fin.Platform.Layout.getCurrentSync();
+            winLayoutConfig = await winLayout.getConfig();
+            sessionStorage.setItem(fin.me.identity.name, JSON.stringify(winLayoutConfig));
+            console.log("Captured and stored the current window layout.");
+            this.render();
+        } catch (err) {
+            console.error("Error trying to capture the layout of this window.", err);
+        }
+
     }
 
     async restoreWindowLayout() {
@@ -34,9 +45,9 @@ class SaveRestoreLayoutComponent extends HTMLElement {
     async render() {
         const saveRestoreLayout = html`
 
-        <div class="button" style='height:unset'  title='Save this window layout' @click=${() => this.saveWindowLayout().catch(console.error)}>💾</div>
+        <div class="button" style='height:unset'  title='Save this window layout' @click=${async () => this.saveWindowLayout().catch(console.error)}>💾</div>
         ${ sessionStorage.getItem(fin.me.identity.name) !== null ? html`
-        <div class="button" style='height:unset' title='Restore this window layout' @click=${() => this.restoreWindowLayout().catch(console.error)}>📂</div>`
+        <div class="button" style='height:unset' title='Restore this window layout' @click=${async () => this.restoreWindowLayout().catch(console.error)}>📂</div>`
         : html``}
       `;
         return render(saveRestoreLayout, this);
