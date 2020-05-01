@@ -4,7 +4,7 @@
     --frame-background: #121212;
     --title-bar: #000000;
     --tab-text: #FFFFFF;
-    --body-background-color: #b8b8b8;
+    --body-font-color: #b8b8b8;
 
 
     --title-bar-height: 22px;
@@ -39,7 +39,7 @@ body {
     margin: 0;
     padding: 0px;
     overflow: hidden;
-    color:var(--body-background-color);
+    color:var(--body-font-color);
 }
 
 .container-container {
@@ -70,7 +70,7 @@ left-menu button {
   width: var(--sidebar-width);
   border: none;
   background:none;
-  color:var(--body-background-color);
+  color:var(--body-font-color);
   text-align: left;
 }
 
