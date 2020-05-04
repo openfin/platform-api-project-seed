@@ -69,14 +69,14 @@ class LeftMenu extends HTMLElement {
         const layoutTemplates = getTemplates(LAYOUT_STORE_KEY);
         const workspaceTemplates = getTemplates(WORKSPACE_STORE_KEY);
         const menuItems = html`
-        <span>Apps</span>
+        <span>Applications</span>
         <ul>
             ${this.appList.map((item) => html`<li>
                   <button @click=${() => this.addView(item.printName)}>${item.printName}</button>
               </li>`)}
                 <li><button @click=${() => this.nonLayoutWindow().catch(console.error)}>OF Window</button></li>
         </ul>
-        <span>Layout</span>
+        <span>Layouts</span>
         <ul>
             <li><button @click=${() => this.toGrid().catch(console.error)}>Grid</button></li>
             <li><button @click=${() => this.toTabbed().catch(console.error)}>Tab</button></li>
@@ -84,12 +84,12 @@ class LeftMenu extends HTMLElement {
                   <button @click=${() => this.replaceLayoutFromTemplate(item.name)}>${item.name}</button>
               </li>`)}
             <li><button @click=${() => this.cloneWindow().catch(console.error)}>Clone</button></li>
-            <li><button @click=${() => this.toggleLayoutSaveMenu().catch(console.error)}>Save</button></li>
+            <li><button @click=${() => this.toggleLayoutSaveMenu().catch(console.error)}>Save Layout</button></li>
         </ul>
-        <span>Workspace</span>
+        <span>Snapshots</span>
         <ul>
             ${workspaceTemplates.map((item) => html`<li><button @click=${() => this.applySnapshotFromTemplate(item.name)}>${item.name}</button></li>`)}
-            <li><button @click=${() => this.toggleWorkspaceSaveMenu()}>Save</button></li>
+            <li><button @click=${() => this.toggleWorkspaceSaveMenu()}>Save Snapshot</button></li>
         </ul>`;
         return render(menuItems, this);
     }
@@ -274,10 +274,10 @@ class LayoutMenu extends HTMLElement {
     async render() {
         const titleBar = html`
             <fieldset>
-                 <legend>Save as Layout template</legend>
+                 <legend>Save the current Views in this Window as a Layout template</legend>
                  <input type="text" id="template-name" size="50"
-                     value="New template"/> <br>
-                 <button @click=${this.saveAsTemplate}>Save</button>
+                     value="New Layout"/> <br>
+                 <button @click=${this.saveAsTemplate}>Save Layout</button>
                  <button @click=${this.cancel}>Cancel</button>
              </fieldset>`;
         return render(titleBar, this);
@@ -309,13 +309,13 @@ class WorkspaceMenu extends LayoutMenu {
     async render() {
         const titleBar = html`
             <fieldset>
-                 <legend>Save Workspace as template</legend>
+                 <legend>Save all current Platform Windows as a Snapshot</legend>
                  <input type="text" id="template-name" size="50"
-                     value="New template"/> <br>
+                     value="New Snapshot"/> <br>
                  <input type="checkbox" id="close" name="close"
                      checked>
-                 <label for="close">Close current Workspace on restore</label> <br>
-                 <button @click=${this.saveAsTemplate}>Save</button>
+                 <label for="close">Close Platform before restoring Snapshot</label> <br>
+                 <button @click=${this.saveAsTemplate}>Save Snapshot</button>
                  <button @click=${this.cancel}>Cancel</button>
              </fieldset>`;
         return render(titleBar, this);

@@ -1,11 +1,21 @@
  :root {
-    --main-background-color: #F4F5F8;
-    --secondary-background-color: #FFFFFF;
+     /* Setting some shared colors up top for organization */
+    --black: black;
+    --white: white;
+    --grey-light: #F4F5F8;
+    --grey: #D8D8D8;
+    --grey-dark: #A5AEBD;
+
+    /* Setting the colors on the main components I want to override. */ 
+    /* These will trickle down to other elements, as shown in frame-styles-template.css */
+    --main-background-color: var(--grey-light);
+    --secondary-background-color: var(--white);
+    --tab-button-hover-color: var(--grey);
+    --tab-button-active-color: var(--grey-dark);
+    --tab-font-color: var(--black);
+    
+    /* Setting colors that depend on my main component colors */
     --tab-background-color: var(--main-background-color);
-    --tab-button-hover-color: #D8D8D8;
-    --tab-button-active-color: #A5AEBD;
-    --tab-font-color: #000000;
-    --body-font-color: #000000;
     --drop-target-border-color: var(--tab-border-top-highlight-color);
     --top-bar-button-hover-color: var(--tab-button-hover-color);
     --top-bar-button-active-color: var(--tab-button-active-color);
@@ -22,76 +32,48 @@
     --menu-icon: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjwhRE9DVFlQRSBzdmcgIFBVQkxJQyAnLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4nICAnaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkJz48c3ZnIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDMyIDMyIiBoZWlnaHQ9IjMycHgiIGlkPSLQodC70L7QuV8xIiB2ZXJzaW9uPSIxLjEiIHZpZXdCb3g9IjAgMCAzMiAzMiIgd2lkdGg9IjMycHgiIHhtbDpzcGFjZT0icHJlc2VydmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPjxnIGlkPSJNZW51Ij48cGF0aCBkPSJNMSw3aDMwYzAuNTUyLDAsMS0wLjQ0OCwxLTFjMC0wLjU1Mi0wLjQ0OC0xLTEtMUgxQzAuNDQ4LDUsMCw1LjQ0OCwwLDZDMCw2LjU1MiwwLjQ0OCw3LDEsN3oiIGZpbGw9IiMxMjEzMTMiLz48cGF0aCBkPSJNMzEsMTVIMWMtMC41NTIsMC0xLDAuNDQ4LTEsMWMwLDAuNTUyLDAuNDQ4LDEsMSwxaDMwYzAuNTUyLDAsMS0wLjQ0OCwxLTFDMzIsMTUuNDQ4LDMxLjU1MiwxNSwzMSwxNXoiIGZpbGw9IiMxMjEzMTMiLz48cGF0aCBkPSJNMzEsMjVIMWMtMC41NTIsMC0xLDAuNDQ4LTEsMWMwLDAuNTUyLDAuNDQ4LDEsMSwxaDMwYzAuNTUyLDAsMS0wLjQ0OCwxLTFDMzIsMjUuNDQ4LDMxLjU1MiwyNSwzMSwyNXoiIGZpbGw9IiMxMjEzMTMiLz48L2c+PGcvPjxnLz48Zy8+PGcvPjxnLz48Zy8+PC9zdmc+');
 }
 
-body {
-    height: 100%;
-    min-height: 100%;
-    width: 100%;
-    margin: 0;
-    padding: 0px;
-    overflow: hidden;
-    color: var(--body-font-color);
-}
-
-.container-container {
-     width: var(--layout-container-width);
-}
-
 #body-container {
     display: flex;
+}
+
+.hidden {
+    display: none;
+}
+
+left-menu {
+    padding-left: 4px;
+    margin-top: 4px;
+    padding-right: 4px;
+    border-right: 1px solid var(--tab-button-hover-color);
 }
 
 left-menu ul {
     list-style: none;
     padding-inline-start: 0px;
-    width: 100%;
     margin-block-start: 20px;
 }
 
-.hidden {
-    display: none;
-    hidden: true;
-}
-
-left-menu li {
-    width: 100%;
-}
-
 left-menu button {
-  width: var(--sidebar-width);
-  border: none;
-  background:none;
-  color: var(--body-font-color);
-  text-align: left;
+    width: var(--sidebar-width);
+    border: none;
+    background-color: var(--main-background-color);
+    color: var(--body-font-color);
+    text-align: left;
 }
 
 left-menu button:hover {
     cursor: pointer;
-    background-color: var(--tab-background-color);
-}
-
-left-menu-uu_delete button {
-    width: var(--sidebar-width);
-    padding: 4px;
-    height: 40px;
-    background-color: var(--tab-background-color);
-    color: var(--tab-font-color);
-    border-color: var(--secondary-background-color);
-}
-
-
-advanced-menu {
-    color:white;
-}
-advanced-menu .advanced-content {
-    padding: 3%;
+    background-color: var(--tab-button-hover-color);
 }
 
 .two-sided-container {
     transition: 0.8s;
     -webkit-transform-style: preserve-3d;
+    transform-style: preserve-3d;
     height: 100%;
     width: 100%;
 }
+
 .face {
     width: 100%;
     height: 100%;
@@ -100,24 +82,25 @@ advanced-menu .advanced-content {
     left: 0;
     z-index: 1;
 }
-.left-menu button:hover {
-    cursor: pointer;
-    background-color: var(--secondary-background-color);
-}
 
 #menu-button {
     background-image: var(--menu-icon);
 }
 
-#lock-button {
+#lock-button:before {
     background-image: var(--locked-icon);
+    display: block;
+    content: ' ';
+    height: 30px;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+    background-size: 14px;
+}
+
+#lock-button.layout-unlocked:before {
     opacity: 30%;
 }
 
-#lock-button.layout-unlocked {
-    opacity: 30%;
-}
-
-#lock-button.layout-locked {
+#lock-button.layout-locked:before {
     opacity: 100%
 }
