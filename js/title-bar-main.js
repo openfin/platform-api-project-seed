@@ -19,12 +19,21 @@ class TitleBarMain extends HTMLElement {
 
     checkForLastView() {
         // could use the ability to return the views for a window but we want the tab element as we are adding/removing a class
-        if(window.document.querySelectorAll('.tab-button').length === 1){
-            window.document.querySelector('.tab-button').classList.add('last-tab-button');
+        let tabs = window.document.querySelectorAll('.lm_tab');
+        if(tabs.length === 1){
+            tabs[0].classList.add('last-tab');
+            if(!tabs[0].classList.contains('move-disabled')) {
+                tabs[0].style.cursor = 'default';
+                tabs[0].draggable = false;
+            }
         } else {
-            let markedTab = window.document.querySelector('.last-tab-button');
+            let markedTab = window.document.querySelector('.last-tab');
             if(markedTab !== undefined && markedTab !== null) {
-                markedTab.classList.remove('last-tab-button');
+                markedTab.classList.remove('last-tab');
+                if(!markedTab.classList.contains('move-disabled')) {
+                    markedTab.style.cursor = null;
+                    markedTab.draggable = true;
+                }
             }
         }
     }
@@ -45,7 +54,7 @@ class TitleBarMain extends HTMLElement {
             setTimeout(async () => {
                 await saveSnapShot();
                 console.log("Platform has detected a window blur event and saved a snapshot.");
-            }, 2000);
+            }, 1000);
         });
 
         finWindow.on('close-requested', async () => {

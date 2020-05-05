@@ -1,0 +1,8 @@
+
+.close-disabled .tab-button {
+    visibility: hidden;
+}
+
+.move-disabled {
+    cursor: pointer;
+}

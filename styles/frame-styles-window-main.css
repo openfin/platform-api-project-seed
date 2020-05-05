@@ -1,5 +1,5 @@
 @import 'frame-styles.css';
 
-.last-tab-button {
+.last-tab .tab-button {
     visibility: hidden;
 }

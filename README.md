@@ -48,6 +48,7 @@ Provides examples of the following functionality:
 * Creating a regular OpenFin Window
 * Saving/Restoring Platform Snapshots
 * Applying a preset arrangement on the current window (Grid, Tabs, Rows, Columns)
+* Added a view New View Tab Example that showed a way of preventing specific tabs from being moved or closed (this is just to give an idea of an approach if needed)
 
 ##### title-bar
 Provides examples of the following functionality:
@@ -104,6 +105,7 @@ Provides examples of the following functionality:
 * Creating a regular OpenFin Window
 * Saving/Restoring Platform Snapshots
 * Applying a preset arrangement on the current window (Grid, Tabs, Rows, Columns)
+* Added a view New View Tab Example that showed a way of preventing specific tabs from being moved or closed (this is just to give an idea of an approach if needed)
 
 ##### title-bar-main
 Provides examples of the following functionality:

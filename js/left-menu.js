@@ -2,6 +2,7 @@ import { html, render } from 'https://unpkg.com/lit-html@1.0.0/lit-html.js';
 
 const chartUrl = 'https://cdn.openfin.co/embed-web/chart.html';
 const contextViewUrl = document.location.host + '/platform-view-context.html';
+const tabViewUrl = document.location.host + '/platform-view-tab-example.html';
 
 //Our Left Menu element
 class LeftMenu extends HTMLElement {
@@ -30,6 +31,7 @@ class LeftMenu extends HTMLElement {
             <ul>
                 <li><button @click=${() => this.createChart().catch(console.error)}>New Chart</button></li>
                 <li><button @click=${() => this.createContextView().catch(console.error)}>New Context View</button></li>
+                <li><button @click=${() => this.createTabView().catch(console.error)}>New View Tab Example</button></li>
                 <li><button @click=${() => this.toGrid().catch(console.error)}>Grid</button></li>
                 <li><button @click=${() => this.toTabbed().catch(console.error)}>Tab</button></li>
                 <li><button @click=${() => this.toRows().catch(console.error)}>Rows</button></li>
@@ -51,6 +53,13 @@ class LeftMenu extends HTMLElement {
             url: contextViewUrl
         }, fin.me.identity);
     }
+
+    async createTabView() {
+        return fin.Platform.getCurrentSync().createView({
+            url: tabViewUrl
+        }, fin.me.identity);
+    }
+
 
     async createChart() {
         //we want to add a chart to the current window.
