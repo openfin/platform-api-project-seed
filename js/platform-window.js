@@ -21,7 +21,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
 const CHART_URL = 'https://cdn.openfin.co/embed-web/chart.html';
 const LAYOUT_STORE_KEY  = 'LayoutMenu';
-const WORKSPACE_STORE_KEY = 'WorkspaceMenu';
+const SNAPSHOT_STORE_KEY = 'SnapshotMenu';
 const CONTAINER_ID = 'layout-container';
 
 //Our Left Menu element
@@ -35,10 +35,9 @@ class LeftMenu extends HTMLElement {
         this.toRows = this.toRows.bind(this);
         this.cloneWindow = this.cloneWindow.bind(this);
         this.nonLayoutWindow = this.nonLayoutWindow.bind(this);
-        this.toggleWorkspaceSaveMenu = this.toggleWorkspaceSaveMenu.bind(this);
-        this.toggleLayoutSaveMenu = this.toggleLayoutSaveMenu.bind(this);
         this.replaceLayoutFromTemplate = this.replaceLayoutFromTemplate.bind(this);
         this.applySnapshotFromTemplate = this.applySnapshotFromTemplate.bind(this);
+        this.onclick = this.clickHandler.bind(this);
 
         //List of apps available in the menu.
         this.appList = [
@@ -59,15 +58,44 @@ class LeftMenu extends HTMLElement {
             }
         ];
 
+        this.snapshotMenu = document.querySelector('snapshot-menu');
+        this.layoutMenu = document.querySelector('layout-menu');
+        this.layoutContainer = document.querySelector('#layout-container');
+
         this.render();
 
         //Whenever the store updates we will want to render any new elements.
         onStoreUpdate(() => { this.render(); });
     }
 
+    clickHandler(e) {
+        const target = e.target;
+
+        if (target.className === 'snapshot-button' || target.className === 'layout-button') {
+            if (!this.layoutContainer.classList.contains('hidden')) {
+                this.layoutContainer.classList.toggle('hidden');
+            }
+        }
+
+        if (target.className === 'snapshot-button') {
+            this.snapshotMenu.showElement();
+            this.layoutMenu.hideElement();
+        } else if (target.className === 'layout-button') {
+            this.layoutMenu.showElement();
+            this.snapshotMenu.hideElement();
+        } else {
+            this.layoutMenu.hideElement();
+            this.snapshotMenu.hideElement();
+
+            if (this.layoutContainer.classList.contains('hidden')) {
+                this.layoutContainer.classList.toggle('hidden');
+            }
+        }
+    }
+
     async render() {
         const layoutTemplates = getTemplates(LAYOUT_STORE_KEY);
-        const workspaceTemplates = getTemplates(WORKSPACE_STORE_KEY);
+        const snapshotTemplates = getTemplates(SNAPSHOT_STORE_KEY);
         const menuItems = html`
         <span>Applications</span>
         <ul>
@@ -84,18 +112,18 @@ class LeftMenu extends HTMLElement {
                   <button @click=${() => this.replaceLayoutFromTemplate(item.name)}>${item.name}</button>
               </li>`)}
             <li><button @click=${() => this.cloneWindow().catch(console.error)}>Clone</button></li>
-            <li><button @click=${() => this.toggleLayoutSaveMenu().catch(console.error)}>Save Layout</button></li>
+            <li><button class="layout-button">Save Layout</button></li>
         </ul>
         <span>Snapshots</span>
         <ul>
-            ${workspaceTemplates.map((item) => html`<li><button @click=${() => this.applySnapshotFromTemplate(item.name)}>${item.name}</button></li>`)}
-            <li><button @click=${() => this.toggleWorkspaceSaveMenu()}>Save Snapshot</button></li>
+            ${snapshotTemplates.map((item) => html`<li><button @click=${() => this.applySnapshotFromTemplate(item.name)}>${item.name}</button></li>`)}
+            <li><button class="snapshot-button">Save Snapshot</button></li>
         </ul>`;
         return render(menuItems, this);
     }
 
     async applySnapshotFromTemplate(templateName) {
-        const template = getTemplateByName(WORKSPACE_STORE_KEY, templateName);
+        const template = getTemplateByName(SNAPSHOT_STORE_KEY, templateName);
         return fin.Platform.getCurrentSync().applySnapshot(template.snapshot, {
             closeExistingWindows: template.close
         });
@@ -106,14 +134,6 @@ class LeftMenu extends HTMLElement {
         const templates = getTemplates(LAYOUT_STORE_KEY);
         const templateToUse = templates.find(i => i.name === templateName);
         fin.Platform.Layout.getCurrentSync().replace(templateToUse.layout);
-    }
-
-    async toggleLayoutSaveMenu() {
-        document.querySelector('layout-menu').toggleVisibility();
-    }
-
-    async toggleWorkspaceSaveMenu() {
-        document.querySelector('workspace-menu').toggleVisibility();
     }
 
     async addView(printName) {
@@ -262,6 +282,18 @@ class LayoutMenu extends HTMLElement {
         return;
     }
 
+    hideElement() {
+        if (!this.classList.contains('hidden')) {
+            this.classList.toggle('hidden');            
+        }
+    }
+
+    showElement() {
+        if (this.classList.contains('hidden')) {
+            this.classList.toggle('hidden');
+        }
+    }
+
     toggleVisibility() {
         this.classList.toggle('hidden');
         document.querySelector('#layout-container').classList.toggle('hidden');
@@ -284,7 +316,7 @@ class LayoutMenu extends HTMLElement {
     }
 }
 
-class WorkspaceMenu extends LayoutMenu {
+class SnapshotMenu extends LayoutMenu {
     constructor() {
         super();
     }
@@ -325,4 +357,4 @@ class WorkspaceMenu extends LayoutMenu {
 customElements.define('left-menu', LeftMenu);
 customElements.define('title-bar', TitleBar);
 customElements.define('layout-menu', LayoutMenu);
-customElements.define('workspace-menu', WorkspaceMenu);
+customElements.define('snapshot-menu', SnapshotMenu);
