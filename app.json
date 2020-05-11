@@ -35,7 +35,7 @@
             "saveWindowState": false,
             "backgroundThrottling": true,
             "minHeight": 445,
-            "minWidth": 308
+            "minWidth": 354
         },
         "defaultViewOptions": {
             "experimental": {
@@ -53,6 +53,11 @@
         "windows": [
             {
                 "layout": {
+                    "settings": {
+                        "showPopoutIcon": true,
+                        "showCloseIcon": true,
+                        "showMaximiseIcon": true
+                    },
                     "content": [
                         {
                             "type": "stack",

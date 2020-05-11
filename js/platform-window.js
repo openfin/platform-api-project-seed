@@ -206,8 +206,8 @@ class TitleBar extends HTMLElement {
                     <div id="title"></div>
                 </div>
                 <div id="buttons-wrapper">
-                    <div class="button" id="menu-button" @click=${this.toggleMenu}></div>
-                    <div class="button" id="lock-button" @click=${this.toggleLockedLayout}></div>
+                    <div class="button" title="Toggle Sidebar" id="menu-button" @click=${this.toggleMenu}></div>
+                    <div class="button" title="Toggle Layout Lock" id="lock-button" @click=${this.toggleLockedLayout}></div>
                     <div class="button" id="minimize-button" @click=${() => fin.me.minimize().catch(console.error)}></div>
                     <div class="button" id="expand-button" @click=${() => this.maxOrRestore().catch(console.error)}></div>
                     <div class="button" id="close-button" @click=${() => fin.me.close().catch(console.error)}></div>
@@ -270,7 +270,7 @@ class LayoutMenu extends HTMLElement {
     }
 
     async saveAsTemplate() {
-        const name = this.querySelector('#template-name').value;
+        const name = this.querySelector('.template-name').value;
         const templateObject = {
             name,
             layout: await fin.Platform.Layout.getCurrentSync().getConfig()
@@ -307,7 +307,7 @@ class LayoutMenu extends HTMLElement {
         const titleBar = html`
             <fieldset>
                  <legend>Save the current Views in this Window as a Layout template</legend>
-                 <input type="text" id="template-name" size="50"
+                 <input type="text" class="template-name" size="50"
                      value="New Layout"/> <br>
                  <button @click=${this.saveAsTemplate}>Save Layout</button>
                  <button @click=${this.cancel}>Cancel</button>
@@ -322,7 +322,7 @@ class SnapshotMenu extends LayoutMenu {
     }
 
     async saveAsTemplate() {
-        const name = this.querySelector('#template-name').value;
+        const name = this.querySelector('.template-name').value;
         const close = this.querySelector('#close').checked;
 
         console.log(name, close);
@@ -342,7 +342,7 @@ class SnapshotMenu extends LayoutMenu {
         const titleBar = html`
             <fieldset>
                  <legend>Save all current Platform Windows as a Snapshot</legend>
-                 <input type="text" id="template-name" size="50"
+                 <input type="text" class="template-name" size="50"
                      value="New Snapshot"/> <br>
                  <input type="checkbox" id="close" name="close"
                      checked>
