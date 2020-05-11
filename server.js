@@ -1,5 +1,7 @@
 const httpServer = require('http-server');
 const path = require('path');
+const fs = require('fs');
+
 const { launch, connect } = require('hadouken-js-adapter');
 
 const serverParams = {
@@ -10,15 +12,28 @@ const serverParams = {
     cache: -1
 };
 
+const appJson = 'app.json';
+const localJson = 'local.json';
+
+if(process.argv.length > 2) {
+    const manifest = require(`./${appJson}`);
+    const runtimeVersion = process.argv[2];
+
+    manifest.runtime.version = runtimeVersion;
+    fs.writeFileSync(localJson, JSON.stringify(manifest, null, 4));
+}
+
+const manifestFile = fs.existsSync(localJson) ? localJson : appJson;
+
 //To Launch the OpenFin Application we need a manifestUrl.
-const manifestUrl = `http://localhost:${serverParams.port}/app.json`;
+const manifestUrl = `http://localhost:${serverParams.port}/${manifestFile}`;
 
 //Start the server server
 const server = httpServer.createServer(serverParams);
 server.listen(serverParams.port);
 (async() => {
     try {
-        console.log(manifestUrl);
+        console.log('Launching application from:', manifestUrl);
         //Once the server is running we can launch OpenFin and retrieve the port.
         const port = await launch({ manifestUrl });
 
