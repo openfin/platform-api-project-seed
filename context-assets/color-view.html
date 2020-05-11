@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            color: #eee;
+            display: flex;
+            height: 100vh;
+            margin: 0;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        form {
+            display: block;
+        }
+        button {
+            display: block;
+        }
+        form > button {
+            display: inline;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <p>
+            I am context-sensitive
+        </p>
+        <form onsubmit="return setColor(event)">
+            <input type="text" placeholder="Enter color">
+            <button type="submit">Set Color</button>
+        </form>
+        <button onclick="showDevTools()">
+            Show dev tools
+        </button>
+        <button onclick="location.reload()">
+            Reload
+        </button>
+    </div>
+    <script src="./color-view.js"></script>
+</body>
+</html>
