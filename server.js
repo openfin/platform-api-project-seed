@@ -15,6 +15,7 @@ const serverParams = {
 const appJson = 'app.json';
 const localJson = 'local.json';
 
+//If user supplied a version argument, create a new local.json file
 if(process.argv.length > 2) {
     const manifest = require(`./${appJson}`);
     const runtimeVersion = process.argv[2];
@@ -23,6 +24,7 @@ if(process.argv.length > 2) {
     fs.writeFileSync(localJson, JSON.stringify(manifest, null, 4));
 }
 
+//If local.json exists, use it instead of app.json
 const manifestFile = fs.existsSync(localJson) ? localJson : appJson;
 
 //To Launch the OpenFin Application we need a manifestUrl.
