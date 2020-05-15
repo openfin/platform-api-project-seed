@@ -72,6 +72,37 @@ left-menu button:hover {
     background-color: var(--tab-button-hover-color);
 }
 
+left-menu button:focus {
+    outline: 1px solid var(--tab-button-active-color);
+}
+
+fieldset button {
+    width: var(--sidebar-width);
+    border: 1px solid var(--tab-button-active-color);
+    background-color: var(--tab-button-hover-color);
+    color: var( --body-font-color);
+    text-align: center;
+    padding: 3px 0px;
+    margin: 5px 0px;
+}
+
+fieldset button:hover {
+    cursor: pointer;
+    background-color: var(--main-background-color);
+}
+
+fieldset button:focus {
+    outline: 1px solid var(--tab-button-hover-color);
+}
+
+fieldset input {
+    margin: 5px 0px;
+}
+
+fieldset label {
+    font-size: 14px;
+}
+
 .two-sided-container {
     transition: 0.8s;
     -webkit-transform-style: preserve-3d;
