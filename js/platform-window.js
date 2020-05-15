@@ -8,11 +8,9 @@ window.addEventListener('DOMContentLoaded', () => {
         const { settings } = await fin.Platform.Layout.getCurrentSync().getConfig();
         // determine whether it is locked and update the icon
         if(settings.hasHeaders && settings.reorderEnabled) {
-            document.getElementById('lock-button').classList.add('layout-unlocked');
             document.getElementById('lock-button').classList.remove('layout-locked');
         } else {
             document.getElementById('lock-button').classList.add('layout-locked');
-            document.getElementById('lock-button').classList.remove('layout-unlocked');
         }
     });
     // Before .50 AI version this may throw...
@@ -195,6 +193,7 @@ class TitleBar extends HTMLElement {
         super();
         this.render = this.render.bind(this);
         this.maxOrRestore = this.maxOrRestore.bind(this);
+        this.toggleTheme = this.toggleTheme.bind(this);
         this.toggleMenu = this.toggleMenu.bind(this);
 
         this.render();
@@ -206,11 +205,12 @@ class TitleBar extends HTMLElement {
                     <div id="title"></div>
                 </div>
                 <div id="buttons-wrapper">
+                    <div class="button" title="Toggle Theme" id="theme-button" @click=${this.toggleTheme}></div>
                     <div class="button" title="Toggle Sidebar" id="menu-button" @click=${this.toggleMenu}></div>
                     <div class="button" title="Toggle Layout Lock" id="lock-button" @click=${this.toggleLockedLayout}></div>
-                    <div class="button" id="minimize-button" @click=${() => fin.me.minimize().catch(console.error)}></div>
-                    <div class="button" id="expand-button" @click=${() => this.maxOrRestore().catch(console.error)}></div>
-                    <div class="button" id="close-button" @click=${() => fin.me.close().catch(console.error)}></div>
+                    <div class="button" title="Minimize Window" id="minimize-button" @click=${() => fin.me.minimize().catch(console.error)}></div>
+                    <div class="button" title="Maximize Window" id="expand-button" @click=${() => this.maxOrRestore().catch(console.error)}></div>
+                    <div class="button" title="Close Window" id="close-button" @click=${() => fin.me.close().catch(console.error)}></div>
                 </div>`;
         return render(titleBar, this);
     }
@@ -251,7 +251,11 @@ class TitleBar extends HTMLElement {
         }
     };
 
-    //leave this for when we have a better menu icon.
+    toggleTheme () {
+        const root = document.documentElement;
+        root.classList.toggle('light-theme');
+    }
+
     toggleMenu () {
         document.querySelector('left-menu').classList.toggle('hidden');
     }
@@ -283,15 +287,11 @@ class LayoutMenu extends HTMLElement {
     }
 
     hideElement() {
-        if (!this.classList.contains('hidden')) {
-            this.classList.toggle('hidden');            
-        }
+        this.classList.add('hidden');
     }
 
     showElement() {
-        if (this.classList.contains('hidden')) {
-            this.classList.toggle('hidden');
-        }
+        this.classList.remove('hidden');
     }
 
     toggleVisibility() {
