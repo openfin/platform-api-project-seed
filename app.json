@@ -1,7 +1,7 @@
 {
     "runtime": {
         "arguments": "--v=1 --inspect",
-        "version": "canary"
+        "version": "beta"
     },
     "shortcut": {
         "company": "OpenFin",
