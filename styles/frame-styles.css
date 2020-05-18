@@ -4,6 +4,7 @@
     --frame-background: #121212;
     --title-bar: #000000;
     --tab-text: #FFFFFF;
+    --body-font-color: #b8b8b8;
 
 
     --title-bar-height: 22px;
@@ -19,7 +20,7 @@
 
     --sidebar-width: 120px;
 
-    --layout-container-width: calc(100% - var(--layout-container-padding-left) - var(--layout-container-padding-right) - var(--sidebar-width));
+    --layout-container-width: calc(100% - var(--layout-container-padding-left) - var(--layout-container-padding-right));
 
     --frame-background-color: var(--frame-background);
     --title-bar-background-color: var(--title-bar);
@@ -38,24 +39,47 @@ body {
     margin: 0;
     padding: 0px;
     overflow: hidden;
+    color:var(--body-font-color);
+}
+
+.container-container {
+     width: var(--layout-container-width);
 }
 
 #body-container {
     display:flex;
 }
 
-.left-menu ul {
+left-menu ul {
     list-style: none;
     padding-inline-start: 0px;
     width: 100%;
     margin-block-start: 20px;
 }
 
-.left-menu li {
+.hidden {
+    display:none;
+    hidden:true;
+}
+
+left-menu li {
     width: 100%;
 }
 
-.left-menu button {
+left-menu button {
+  width: var(--sidebar-width);
+  border: none;
+  background:none;
+  color:var(--body-font-color);
+  text-align: left;
+}
+
+left-menu button:hover {
+    cursor: pointer;
+    background-color: var(--active-tab);
+}
+
+left-menu-uu_delete button {
     width: var(--sidebar-width);
     padding: 4px;
     height: 40px;
@@ -64,6 +88,28 @@ body {
     border-color: var(--frame-background);
 }
 
+
+advanced-menu {
+    color:white;
+}
+advanced-menu .advanced-content {
+    padding: 3%;
+}
+
+.two-sided-container {
+    transition: 0.8s;
+    -webkit-transform-style: preserve-3d;
+    height: 100%;
+    width: 100%;
+}
+.face {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
 .left-menu button:hover {
     cursor: pointer;
     background-color: var(--tab-bar-background);
@@ -78,4 +124,9 @@ body {
 #lock-button img {
     width: 100%;
     height: auto;
+}
+
+#menu-button img{
+    height: 15px;
+    width: 12px;
 }

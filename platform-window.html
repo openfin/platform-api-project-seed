@@ -11,10 +11,14 @@
     </head>
     <body>
         <div id="of-frame-main">
-            <title-bar></title-bar>
+            <title-bar id="title-bar"></title-bar>
             <div id="body-container">
-                <left-menu></left-menu>
-                <div id="layout-container"></div>
+                <left-menu class="hidden"></left-menu>
+                <div class="two-sided-container">
+                    <div id="layout-container" class="face"></div>
+                    <layout-menu class="face hidden"></layout-menu>
+                    <workspace-menu class="face hidden"></workspace-menu>
+                </div>
             </div>
         </div>
     </body>
