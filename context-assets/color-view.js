@@ -24,8 +24,7 @@ async function setContext(contextObj) {
 
 function onContextChanged(e) {
     console.log('event: ', e);
-    // const { diff: { newVal, oldVal } } = e;
-    const { newContext: { color } } = e;
+    const { context: { color } } = e;
     applyColor(color);
 }
 
