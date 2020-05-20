@@ -204,14 +204,15 @@ class TitleBar extends HTMLElement {
 
         fin.Platform.getCurrentSync().getWindowContext().then(context => {
             if (context) {
-                console.log('in constructor', context.theme);
                 this.setTheme(context.theme);
             }
 
         });
 
         fin.Platform.getCurrentSync().on('window-context-changed', evt => {
-            this.setTheme(evt.context.theme);
+            if (evt.context) {
+                this.setTheme(evt.context.theme);
+            }
         });
     }
 
@@ -272,24 +273,22 @@ class TitleBar extends HTMLElement {
         if (!document.documentElement.classList.contains(this.LIGHT_THEME_CLASS)) {
             themeName = this.LIGHT_THEME_CLASS;
         }
-        this.setTheme(themeName, true);
+        this.setTheme(themeName);
     }
 
     async setTheme(theme) {
         const root = document.documentElement;
-        const newContext = {};
 
         if (theme === this.LIGHT_THEME_CLASS) {
             root.classList.add(this.LIGHT_THEME_CLASS);
-            newContext.theme = this.LIGHT_THEME_CLASS;
+
         } else {
             root.classList.remove(this.LIGHT_THEME_CLASS);
-            newContext.theme = this.DEFAULT_THEME;
         }
 
         const context = await fin.Platform.getCurrentSync().getWindowContext() || {};
-        if (context.theme !== newContext.theme) {
-            fin.Platform.getCurrentSync().setWindowContext(newContext);
+        if (context.theme !== theme) {
+            fin.Platform.getCurrentSync().setWindowContext({theme});
         }
     }
     toggleMenu () {
