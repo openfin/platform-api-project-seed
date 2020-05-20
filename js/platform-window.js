@@ -191,12 +191,28 @@ class LeftMenu extends HTMLElement {
 class TitleBar extends HTMLElement {
     constructor() {
         super();
+        this.LIGHT_THEME_CLASS = 'light-theme';
+        this.DEFAULT_THEME = 'default';
+
         this.render = this.render.bind(this);
         this.maxOrRestore = this.maxOrRestore.bind(this);
         this.toggleTheme = this.toggleTheme.bind(this);
         this.toggleMenu = this.toggleMenu.bind(this);
+        this.setTheme = this.setTheme.bind(this);
 
         this.render();
+
+        fin.Platform.getCurrentSync().getWindowContext().then(context => {
+            if (context) {
+                console.log('in constructor', context.theme);
+                this.setTheme(context.theme);
+            }
+
+        });
+
+        fin.Platform.getCurrentSync().on('window-context-changed', evt => {
+            this.setTheme(evt.context.theme);
+        });
     }
 
     async render() {
@@ -216,7 +232,7 @@ class TitleBar extends HTMLElement {
     }
 
     async maxOrRestore() {
-        if (await fin.me.getState() === "normal") {
+        if (await fin.me.getState() === 'normal') {
             return await fin.me.maximize();
         }
 
@@ -251,11 +267,31 @@ class TitleBar extends HTMLElement {
         }
     };
 
-    toggleTheme () {
-        const root = document.documentElement;
-        root.classList.toggle('light-theme');
+    async toggleTheme () {
+        let themeName = this.DEFAULT_THEME;
+        if (!document.documentElement.classList.contains(this.LIGHT_THEME_CLASS)) {
+            themeName = this.LIGHT_THEME_CLASS;
+        }
+        this.setTheme(themeName, true);
     }
 
+    async setTheme(theme) {
+        const root = document.documentElement;
+        const newContext = {};
+
+        if (theme === this.LIGHT_THEME_CLASS) {
+            root.classList.add(this.LIGHT_THEME_CLASS);
+            newContext.theme = this.LIGHT_THEME_CLASS;
+        } else {
+            root.classList.remove(this.LIGHT_THEME_CLASS);
+            newContext.theme = this.DEFAULT_THEME;
+        }
+
+        const context = await fin.Platform.getCurrentSync().getWindowContext() || {};
+        if (context.theme !== newContext.theme) {
+            fin.Platform.getCurrentSync().setWindowContext(newContext);
+        }
+    }
     toggleMenu () {
         document.querySelector('left-menu').classList.toggle('hidden');
     }
@@ -304,7 +340,7 @@ class LayoutMenu extends HTMLElement {
     }
 
     async render() {
-        const titleBar = html`
+        const layoutMenu = html`
             <fieldset>
                  <legend>Save the current Views in this Window as a Layout template</legend>
                  <input type="text" class="template-name" size="50"
@@ -312,7 +348,7 @@ class LayoutMenu extends HTMLElement {
                  <button @click=${this.saveAsTemplate}>Save Layout</button>
                  <button @click=${this.cancel}>Cancel</button>
              </fieldset>`;
-        return render(titleBar, this);
+        return render(layoutMenu, this);
     }
 }
 
@@ -339,7 +375,7 @@ class SnapshotMenu extends LayoutMenu {
     }
 
     async render() {
-        const titleBar = html`
+        const snapshotMenu = html`
             <fieldset>
                  <legend>Save all current Platform Windows as a Snapshot</legend>
                  <input type="text" class="template-name" size="50"
@@ -350,7 +386,7 @@ class SnapshotMenu extends LayoutMenu {
                  <button @click=${this.saveAsTemplate}>Save Snapshot</button>
                  <button @click=${this.cancel}>Cancel</button>
              </fieldset>`;
-        return render(titleBar, this);
+        return render(snapshotMenu, this);
     }
 }
 
