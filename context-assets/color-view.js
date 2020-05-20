@@ -1,41 +1,34 @@
 const platform = fin.Platform.getCurrentSync();
 
-////////////////////////
-// Using current API
-////////////////////////
 async function setColor(event) {
     event.preventDefault();
     const color = event.target.querySelector('input').value;
-    await setContext({ color });
-}
-
-async function getColor() {
-    const context = await platform.getWindowContext();
-    return context.color;
+    await platform.setWindowContext({ color });
 }
 
 function applyColor(color) {
     document.body.style.backgroundColor = color;
 }
 
-async function setContext(contextObj) {
-    await platform.setWindowContext(contextObj);
-}
-
 function onContextChanged(e) {
-    console.log('event: ', e);
+    console.log('host-context-changed event: ', e);
     const { context: { color } } = e;
     applyColor(color);
 }
 
-function showDevTools() {
-    fin.me.showDeveloperTools();
-}
-
 async function init() {
+    // Sub to future context changes
     fin.me.on('host-context-changed', onContextChanged);
-    // fin.me.on('host-context-changed', onContextChanged);
-    applyColor(await getColor());
+
+    // Set initial color based on current context value
+    const initialContext = await platform.getWindowContext();
+    if (initialContext && initialContext.color) {
+        applyColor(initialContext.color);
+    }
+
+    // UI init
+    const setColorForm = document.getElementById('setColorForm');
+    setColorForm.addEventListener('submit', setColor);
 }
 
 init();

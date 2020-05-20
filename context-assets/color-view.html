@@ -30,15 +30,12 @@
         <p>
             I am context-sensitive
         </p>
-        <form onsubmit="return setColor(event)">
+        <form id="setColorForm">
             <input type="text" placeholder="Enter color" autofocus>
             <button type="submit">Set Color</button>
         </form>
-        <button onclick="showDevTools()">
+        <button onclick="fin.me.showDeveloperTools()">
             Show dev tools
-        </button>
-        <button onclick="location.reload()">
-            Reload
         </button>
     </div>
     <script src="./color-view.js"></script>
