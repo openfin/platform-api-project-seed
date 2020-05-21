@@ -9,32 +9,70 @@ const externalWindowsToTrack = [
     }
 ];
 
+const baselineTime = Date.now();
+var diagnosticData = [];
+diagnosticData.push({event: 'before-platform-init', time: 0, dt: 0});
+
 fin.Platform.init({
     overrideCallback: async (Provider) => {
         class Override extends Provider {
-            async getSnapshot() {
-                const snapshot = await super.getSnapshot();
+            async createWindow(options) {
+                const identity = {name: options.name, uuid: fin.me.identity.uuid};
+                const w = fin.Window.wrapSync(identity);
+                w.on('layout-initialized', event => diagnosticData.push(buildPerformanceEvent('layout-initialized', event)));
+                w.on('layout-ready', event => diagnosticData.push(buildPerformanceEvent('layout-ready', event)));
+                w.on('window-initialized', event => diagnosticData.push(buildPerformanceEvent('window-initialized', event)));
+                w.on('shown', event => diagnosticData.push(buildPerformanceEvent('window-shown', event)));
 
-                //we add an externalWindows section to our snapshot
-                const externalWindows = await generateExternalWindowSnapshot(externalWindowsToTrack);
-                return {
-                    ...snapshot,
-                    externalWindows
-                };
-            }
+                attachViewPerformanceListeners(options.layout.content[0], identity);
+                diagnosticData.push(buildPerformanceEvent(`creating-window`, {name: options.name}));
+                const res = await super.createWindow(options);
+                diagnosticData.push(buildPerformanceEvent(`created-window`, {name: options.name}));
 
-            async applySnapshot({ snapshot, options }) {
-
-                const originalPromise = super.applySnapshot({ snapshot, options });
-
-                //if we have a section with external windows we will use it.
-                if (snapshot.externalWindows) {
-                    await Promise.all(snapshot.externalWindows.map(async (i) => await restoreExternalWindowPositionAndState(i)));
-                }
-
-                return originalPromise;
+                return res;
             }
         };
         return new Override();
     }
+}).then(() => {
+    const p = fin.Platform.getCurrentSync();
+    diagnosticData.push(buildPerformanceEvent('after-platform-init'))
+    p.on('platform-api-ready', () => diagnosticData.push(buildPerformanceEvent('platform-api-ready')));
+    p.on('platform-snapshot-applied', () => diagnosticData.push(buildPerformanceEvent('platform-snapshot-applied')));
 });
+
+function buildPerformanceEvent(eventName, args = {}) {
+    const time = Date.now() - baselineTime;
+    const dt = time - diagnosticData[diagnosticData.length - 1].time;
+    return {event: eventName, time, dt, args: JSON.stringify(args)};
+}
+
+window.getPerformanceReport = function() {
+    console.table(diagnosticData);
+}
+
+// view.on('target-changed', (payload) => {
+
+// });
+
+function attachViewPerformanceListeners(layoutContent, targetIdentity) {
+    const allViewsConfigs = getAllViewConfigs(layoutContent);
+    allViewsConfigs.forEach(viewConfig => {
+        const view = fin.View.wrapSync({name: viewConfig.name, uuid: fin.me.identity.uuid});
+        view.on('target-changed', event => event.target.name === targetIdentity.name ? diagnosticData.push(buildPerformanceEvent('view-target-changed', event)): '');
+        // view.on('shown', event => event.target.name === targetIdentity.name ? diagnosticData.push(buildPerformanceEvent('view-shown', event)): '');
+        view.on('created', event => diagnosticData.push(buildPerformanceEvent('view-created', event)));
+    });
+}
+
+function getAllViewConfigs(layoutContent) {
+    const res = [];
+    layoutContent.content.forEach((contentItem) => {
+        if (contentItem.type === 'component') {
+            res.push(contentItem.componentState);
+        } else {
+            res.push(...getAllViewConfigs(contentItem));
+        }
+    });
+    return res;
+}
