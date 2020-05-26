@@ -68,49 +68,49 @@
                                     "componentName": "view",
                                     "componentState": {
                                         "processAffinity": "ps_1",
-                                        "url": "https://www.google.com"
+                                        "url": "about:blank"
                                     }
                                 },                                {
                                     "type": "component",
                                     "componentName": "view",
                                     "componentState": {
                                         "processAffinity": "ps_1",
-                                        "url": "https://www.bing.com"
+                                        "url": "about:blank"
                                     }
                                 },                                {
                                     "type": "component",
                                     "componentName": "view",
                                     "componentState": {
                                         "processAffinity": "ps_1",
-                                        "url": "https://www.yahoo.com"
+                                        "url": "about:blank"
                                     }
                                 },                                {
                                     "type": "component",
                                     "componentName": "view",
                                     "componentState": {
                                         "processAffinity": "ps_1",
-                                        "url": "https://www.baidu.com"
+                                        "url": "about:blank"
                                     }
                                 },                                {
                                     "type": "component",
                                     "componentName": "view",
                                     "componentState": {
                                         "processAffinity": "ps_1",
-                                        "url": "https://www.wolframalpha.com/"
+                                        "url": "about:blank"
                                     }
                                 },                                {
                                     "type": "component",
                                     "componentName": "view",
                                     "componentState": {
                                         "processAffinity": "ps_1",
-                                        "url": "https://www.duckduckgo.com/"
+                                        "url": "about:blank"
                                     }
                                 },                                {
                                     "type": "component",
                                     "componentName": "view",
                                     "componentState": {
                                         "processAffinity": "ps_1",
-                                        "url": "https://www.yandex.com/"
+                                        "url": "about:blank"
                                     }
                                 }
                             ]

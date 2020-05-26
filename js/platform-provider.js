@@ -1,4 +1,4 @@
-import { generateExternalWindowSnapshot, restoreExternalWindowPositionAndState } from './external-window-snapshot.js';
+import Logger from './logger.js';
 
 //We have customized out platform provider to keep track of a specific notepad window.
 //Look for the "my_platform_notes.txt" file and launch it in notepad or add another external window to this array
@@ -9,61 +9,33 @@ const externalWindowsToTrack = [
     }
 ];
 
-const baselineTime = Date.now();
-var diagnosticData = [];
-diagnosticData.push({event: 'before-platform-init', time: 0, dt: 0});
+const logger = new Logger();
+logger.push('before-platform-init');
 
 fin.Platform.init({
     overrideCallback: async (Provider) => {
         class Override extends Provider {
             async createWindow(options) {
-                const identity = {name: options.name, uuid: fin.me.identity.uuid};
-                const w = fin.Window.wrapSync(identity);
-                w.on('layout-initialized', event => diagnosticData.push(buildPerformanceEvent('layout-initialized', event)));
-                w.on('layout-ready', event => diagnosticData.push(buildPerformanceEvent('layout-ready', event)));
-                w.on('window-initialized', event => diagnosticData.push(buildPerformanceEvent('window-initialized', event)));
-                w.on('shown', event => diagnosticData.push(buildPerformanceEvent('window-shown', event)));
+                // const identity = {name: options.name, uuid: fin.me.identity.uuid};
+                // const w = fin.Window.wrapSync(identity);
+                // setupViewListeners(options.layout.content[0]);
+                logger.push(`creating-window`, {name: options.name || 'nameless window'}, 'right before createWindow is called');
+                const win = await super.createWindow(options);
+                setupWindowListeners(win);
+                setupViewListeners(options.layout && options.layout.content[0]);
+                logger.push(`created-window`, {name: options.name}, 'right after createWindow resolves');
 
-                attachViewPerformanceListeners(options.layout.content[0], identity);
-                diagnosticData.push(buildPerformanceEvent(`creating-window`, {name: options.name}));
-                const res = await super.createWindow(options);
-                diagnosticData.push(buildPerformanceEvent(`created-window`, {name: options.name}));
-
-                return res;
+                return win;
             }
         };
         return new Override();
     }
-}).then(() => {
+}).then(payload => {
+    logger.push(`after-platform-init`, payload, 'right after platform.init is resolved');
+
     const p = fin.Platform.getCurrentSync();
-    diagnosticData.push(buildPerformanceEvent('after-platform-init'))
-    p.on('platform-api-ready', () => diagnosticData.push(buildPerformanceEvent('platform-api-ready')));
-    p.on('platform-snapshot-applied', () => diagnosticData.push(buildPerformanceEvent('platform-snapshot-applied')));
+    setupPlatformListeners(p);
 });
-
-function buildPerformanceEvent(eventName, args = {}) {
-    const time = Date.now() - baselineTime;
-    const dt = time - diagnosticData[diagnosticData.length - 1].time;
-    return {event: eventName, time, dt, args: JSON.stringify(args)};
-}
-
-window.getPerformanceReport = function() {
-    console.table(diagnosticData);
-}
-
-// view.on('target-changed', (payload) => {
-
-// });
-
-function attachViewPerformanceListeners(layoutContent, targetIdentity) {
-    const allViewsConfigs = getAllViewConfigs(layoutContent);
-    allViewsConfigs.forEach(viewConfig => {
-        const view = fin.View.wrapSync({name: viewConfig.name, uuid: fin.me.identity.uuid});
-        view.on('target-changed', event => event.target.name === targetIdentity.name ? diagnosticData.push(buildPerformanceEvent('view-target-changed', event)): '');
-        // view.on('shown', event => event.target.name === targetIdentity.name ? diagnosticData.push(buildPerformanceEvent('view-shown', event)): '');
-        view.on('created', event => diagnosticData.push(buildPerformanceEvent('view-created', event)));
-    });
-}
 
 function getAllViewConfigs(layoutContent) {
     const res = [];
@@ -76,3 +48,25 @@ function getAllViewConfigs(layoutContent) {
     });
     return res;
 }
+
+function setupWindowListeners(window) {
+    window.on('layout-initialized', event => logger.push('layout-initialized', event, 'api event'));
+    window.on('window-initialized', event => logger.push('window-initialized', event, 'api event'));
+    window.on('shown', event => logger.push('window-shown', event, 'api event'));
+}
+
+function setupViewListeners(layoutContent) {
+    const allViewsConfigs = getAllViewConfigs(layoutContent);
+    allViewsConfigs.forEach(viewConfig => {
+        const view = fin.View.wrapSync({name: viewConfig.name, uuid: fin.me.identity.uuid});
+        view.on('target-changed', event => logger.push('view-target-changed', event, 'api event'));
+        view.on('created', event => logger.push('view-created', event, 'api event'));
+    });
+}
+
+function setupPlatformListeners(platform) {
+    platform.on('platform-api-ready', event => logger.push('platform-api-ready', event));
+    platform.on('platform-snapshot-applied', event => logger.push('platform-snapshot-applied', event, 'api event'));
+}
+
+window.logger = logger;
