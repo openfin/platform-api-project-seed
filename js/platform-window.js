@@ -53,6 +53,11 @@ class LeftMenu extends HTMLElement {
                 url: 'https://www.google.com/search?q=INDEXDJX:+.DJI&stick=H4sIAAAAAAAAAONgecRozC3w8sc9YSmtSWtOXmNU4eIKzsgvd80rySypFBLjYoOyeKS4uDj0c_UNkgsry3kWsfJ5-rm4Rrh4RVgp6Ll4eQIAqJT5uUkAAAA&source=lnms&sa=X&ved=0ahUKEwii_NWT9fzoAhU3mHIEHWy3AWIQ_AUIDSgA&biw=1280&bih=1366&dpr=1',
                 printName: 'News',
                 processAffinity: 'mw_1'
+            },
+            {
+                url: window.location.href.replace('platform-window', 'color-view'),
+                printName: 'Colors',
+                processAffinity: 'cv_1'
             }
         ];
 
@@ -209,8 +214,10 @@ class TitleBar extends HTMLElement {
 
         });
 
-        fin.Platform.getCurrentSync().on('window-context-changed', evt => {
-            if (evt.context) {
+        fin.Platform.getCurrentSync().on('window-context-changed', async (evt) => {
+            console.log(evt);
+            const context = await fin.Platform.getCurrentSync().getWindowContext();
+            if (context === void 0 || (evt.context && evt.context.theme && evt.context.theme !== context.theme)) {
                 this.setTheme(evt.context.theme);
             }
         });
@@ -276,7 +283,7 @@ class TitleBar extends HTMLElement {
         this.setTheme(themeName);
     }
 
-    async setTheme(theme) {
+    async setTheme(theme, broadcast) {
         const root = document.documentElement;
 
         if (theme === this.LIGHT_THEME_CLASS) {
