@@ -164,12 +164,15 @@ class LeftMenu extends HTMLElement {
     async cloneWindow() {
         const bounds = await fin.me.getBounds();
         const layout = await fin.Platform.Layout.getCurrentSync().getConfig();
+        const customContext = await fin.Platform.getCurrentSync().getWindowContext();
         const snapshot = {
             windows: [
                 {
                     defaultWidth: bounds.width,
                     defaultHeight: bounds.height,
-                    layout
+                    layout,
+                    //getWindowContext actually returns the customContext option.
+                    customContext
                 }
             ]
         };
@@ -217,7 +220,7 @@ class TitleBar extends HTMLElement {
         fin.Platform.getCurrentSync().on('window-context-changed', async (evt) => {
             console.log(evt);
             const context = await fin.Platform.getCurrentSync().getWindowContext();
-            if (context === void 0 || (evt.context && evt.context.theme && evt.context.theme !== context.theme)) {
+            if (context === void 0 || evt.context && evt.context.theme && evt.context.theme !== context.theme) {
                 this.setTheme(evt.context.theme);
             }
         });

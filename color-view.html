@@ -24,20 +24,9 @@
                 display: inline;
             }
         </style>
+        <script type="module" src="js/color-view.js"></script>
     </head>
     <body>
-        <div class="content">
-            <p>
-                I am context-sensitive
-            </p>
-            <form id="setColorForm">
-                <input type="text" placeholder="Enter color" autofocus>
-                <button type="submit">Set Color</button>
-            </form>
-            <button onclick="fin.me.showDeveloperTools()">
-                Show dev tools
-            </button>
-        </div>
-        <script src="./js/color-view.js"></script>
+        <color-picker></color-picker>
     </body>
 </html>
