@@ -285,7 +285,7 @@ class TitleBar extends HTMLElement {
         this.setTheme(themeName);
     }
 
-    async setTheme(theme, broadcast) {
+    async setTheme(theme) {
         const root = document.documentElement;
 
         if (theme === this.LIGHT_THEME_CLASS) {
