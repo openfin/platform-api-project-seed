@@ -29,7 +29,7 @@ class ColorPicker extends HTMLElement {
                 <input type="text" placeholder="Enter color" autofocus>
                 <button action="submit">Set Color</button>
             </form>
-            <button @click=${fin.me.showDeveloperTools}>
+            <button @click=${fin.me.showDeveloperTools.bind(fin.me)}>
                 Show dev tools
             </button>
         </fieldset>`;
