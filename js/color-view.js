@@ -25,7 +25,7 @@ class ColorPicker extends HTMLElement {
             <p>
                 I am context-sensitive
             </p>
-            <div>
+            <form @submit=${this.setColor}>
                 <input type="text" placeholder="Enter color" autofocus>
                 <button @click=${this.setColor}>Set Color</button>
             </form>
