@@ -30,7 +30,7 @@ class ColorPicker extends HTMLElement {
                 <button action="submit">Set Color</button>
             </form>
             <button @click=${fin.me.showDeveloperTools}>
-                Show dev tool
+                Show dev tools
             </button>
         </fieldset>`;
         return render(content, this);
