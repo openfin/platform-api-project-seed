@@ -218,7 +218,6 @@ class TitleBar extends HTMLElement {
         });
 
         fin.Platform.getCurrentSync().on('window-context-changed', async (evt) => {
-            console.log(evt);
             const context = await fin.Platform.getCurrentSync().getWindowContext();
             if (context === void 0 || evt.context && evt.context.theme && evt.context.theme !== context.theme) {
                 this.setTheme(evt.context.theme);
