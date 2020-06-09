@@ -1,7 +1,7 @@
 {
     "runtime": {
-        "arguments": "",
-        "version": "canary"
+        "arguments": "--v=1 --inspect",
+        "version": "beta"
     },
     "shortcut": {
         "company": "OpenFin",
@@ -53,11 +53,6 @@
         "windows": [
             {
                 "layout": {
-                    "settings": {
-                        "showPopoutIcon": true,
-                        "showCloseIcon": true,
-                        "showMaximiseIcon": true
-                    },
                     "content": [
                         {
                             "type": "stack",

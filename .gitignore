@@ -6,3 +6,5 @@ bower_components
 logs
 OpenFinRVM.exe
 OpenFin
+
+local.json
