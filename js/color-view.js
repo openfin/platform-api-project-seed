@@ -3,11 +3,8 @@ import { html, render } from 'https://unpkg.com/lit-html@1.0.0/lit-html.js';
 class ColorPicker extends HTMLElement {
     constructor() {
         super();
-        this.render = this.render.bind(this);
-        this.setColor = this.setColor.bind(this);
-        this.applyColor = this.applyColor.bind(this);
-        this.onContextChanged = this.onContextChanged.bind(this);
 
+        this.render();
         fin.me.on('host-context-changed', this.onContextChanged);
 
         // Set initial color based on current context value
@@ -16,10 +13,10 @@ class ColorPicker extends HTMLElement {
                 this.applyColor(initialContext.color);
             }
         });
-        this.render();
+
     }
 
-    async render() {
+    render = () => {
         const content = html`
         <fieldset>
             <p>
@@ -29,24 +26,24 @@ class ColorPicker extends HTMLElement {
                 <input type="text" placeholder="Enter color" autofocus>
                 <button action="submit">Set Color</button>
             </form>
-            <button @click=${fin.me.showDeveloperTools}>
+            <button @click=${() => fin.me.showDeveloperTools()}>
                 Show dev tools
             </button>
         </fieldset>`;
         return render(content, this);
     }
 
-    async setColor(event) {
+   setColor = async (event) => {
         event.preventDefault();
         const color = this.querySelector('input').value;
         await fin.Platform.getCurrentSync().setWindowContext({ color });
     }
 
-    applyColor(color) {
+   applyColor = async (color) => {
         document.body.style.backgroundColor = color;
     }
 
-    onContextChanged(e) {
+    onContextChanged = (e) => {
         const { context: { color } } = e;
         this.applyColor(color);
     }

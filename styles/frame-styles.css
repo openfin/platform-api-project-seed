@@ -118,3 +118,13 @@ fieldset label {
 #lock-button.layout-locked {
     background-image: var(--layout-locked-icon);
 }
+
+.center-form {
+    color: #eee;
+    display: flex;
+    height: 100%;
+    margin: 0;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial, Helvetica, sans-serif;
+}
