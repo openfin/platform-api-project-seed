@@ -1,7 +1,10 @@
 import { html, render } from 'https://unpkg.com/lit-html@1.0.0/lit-html.js';
 import { getTemplates, storeTemplate, getTemplateByName, onStoreUpdate } from './template-store.js';
+import { CHART_URL, TRADEVIEW_URL, NEWS_URL } from './constants.js';
+
 
 window.addEventListener('DOMContentLoaded', () => {
+    console.log('dom content');
 
     fin.me.on('layout-ready', async () => {
         // Whenever a new layout is ready on this window (on init, replace, or applyPreset)
@@ -17,7 +20,6 @@ window.addEventListener('DOMContentLoaded', () => {
     fin.Platform.Layout.init({containerId: CONTAINER_ID});
 });
 
-const CHART_URL = 'https://cdn.openfin.co/embed-web/chart.html';
 const LAYOUT_STORE_KEY  = 'LayoutMenu';
 const SNAPSHOT_STORE_KEY = 'SnapshotMenu';
 const CONTAINER_ID = 'layout-container';
@@ -42,17 +44,14 @@ class LeftMenu extends HTMLElement {
             {
                 url: CHART_URL,
                 printName: 'OF Chart',
-                processAffinity: 'ps_1'
             },
             {
-                url: 'https://www.tradingview.com/chart/?symbol=NASDAQ:AAPL',
+                url: TRADEVIEW_URL,
                 printName: 'TradeView',
-                processAffinity: 'tv_1'
             },
             {
-                url: 'https://www.google.com/search?q=INDEXDJX:+.DJI&stick=H4sIAAAAAAAAAONgecRozC3w8sc9YSmtSWtOXmNU4eIKzsgvd80rySypFBLjYoOyeKS4uDj0c_UNkgsry3kWsfJ5-rm4Rrh4RVgp6Ll4eQIAqJT5uUkAAAA&source=lnms&sa=X&ved=0ahUKEwii_NWT9fzoAhU3mHIEHWy3AWIQ_AUIDSgA&biw=1280&bih=1366&dpr=1',
+                url: NEWS_URL,
                 printName: 'News',
-                processAffinity: 'mw_1'
             }
         ];
 
