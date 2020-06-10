@@ -35,7 +35,7 @@
             "saveWindowState": false,
             "backgroundThrottling": true,
             "minHeight": 445,
-            "minWidth": 308
+            "minWidth": 354
         },
         "defaultViewOptions": {
             "experimental": {

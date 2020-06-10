@@ -7,14 +7,23 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="styles/frame-styles.css"></link>
+        <link rel="stylesheet" href="styles/light-theme.css"></link>
         <script type="module" src="js/platform-window.js"></script>
+        <script type="module" src="js/left-menu.js"></script>
+        <script type="module" src="js/title-bar.js"></script>
+        <script type="module" src="js/layout-form.js"></script>
+        <script type="module" src="js/snapshot-form.js"></script>
     </head>
     <body>
         <div id="of-frame-main">
-            <title-bar></title-bar>
+            <title-bar id="title-bar"></title-bar>
             <div id="body-container">
-                <left-menu></left-menu>
-                <div id="layout-container"></div>
+                <left-menu class="hidden"></left-menu>
+                <div class="two-sided-container">
+                    <div id="layout-container" class="face"></div>
+                    <layout-form class="face hidden"></layout-form>
+                    <snapshot-form class="face hidden"></snapshot-form>
+                </div>
             </div>
         </div>
     </body>
