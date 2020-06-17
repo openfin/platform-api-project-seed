@@ -19,6 +19,41 @@ const createPooledView = async (url) => {
 
 fin.Platform.getCurrentSync().once('platform-snapshot-applied', () => URLS_ARRAY.forEach(createPooledView));
 
+function modifyContentItemName(
+    contentItem,
+    shouldReplace,
+    url
+) {
+    const name = generateViewNameIfNeeded(contentItem.componentState.name, shouldReplace, url);
+    const newComponentState = { ...contentItem.componentState, name };
+    return { ...contentItem, componentState: newComponentState };
+}
+
+function generateViewNameIfNeeded(name, shouldReplace, url) {
+    // either the view has no name OR it is being restored and has a generated name
+    if(!name || (shouldReplace && name.startsWith('internal-generated-view-'))) {
+        const name = pooledViews[url];
+        setTimeout(() => createPooledView(url),1);
+        delete pooledViews[url];
+        return name;
+    }
+    return name;
+}
+
+function mapLayoutContentItems(
+    contentItems,
+    action
+) {
+    return contentItems.reduce((res, contentItem) => {
+        let modifiedContentItemContent = contentItem.content;
+        const modifiedContentItem = contentItem.type === 'component' ? action(contentItem) : contentItem;
+        if (contentItem.content) {
+            modifiedContentItemContent = mapLayoutContentItems(contentItem.content, action);
+        }
+        return [...res, { ...modifiedContentItem, content: modifiedContentItemContent }];
+    }, []);
+}
+
 fin.Platform.init({
     overrideCallback: async (Provider) => {
         class Override extends Provider {
@@ -31,6 +66,21 @@ fin.Platform.init({
                     setTimeout(() => createPooledView(opts.url),1);
                 }
                 return super.createView(payload);
+            }
+
+            async createWindow(payload) {
+                if (payload.layout) {
+                    payload.layout.content = mapLayoutContentItems(
+                        payload.layout.content,
+                        (contentItem) =>
+                            modifyContentItemName(
+                                contentItem,
+                                payload.reason !== 'tearout' && pooledViews[contentItem.componentState.url],
+                                contentItem.componentState.url
+                            )
+                    );
+                }
+                super.createWindow(payload)
             }
             async getSnapshot() {
                 const snapshot = await super.getSnapshot();
@@ -48,9 +98,9 @@ fin.Platform.init({
                 const originalPromise = super.applySnapshot({ snapshot, options });
 
                 //if we have a section with external windows we will use it.
-                if (snapshot.externalWindows) {
-                    await Promise.all(snapshot.externalWindows.map(async (i) => await restoreExternalWindowPositionAndState(i)));
-                }
+                // if (snapshot.externalWindows) {
+                //     await Promise.all(snapshot.externalWindows.map(async (i) => await restoreExternalWindowPositionAndState(i)));
+                // }
 
                 return originalPromise;
             }

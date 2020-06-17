@@ -1,6 +1,6 @@
 {
     "runtime": {
-        "arguments": "",
+        "arguments": "--v=1",
         "version": "canary"
     },
     "shortcut": {
@@ -38,7 +38,7 @@
             "minWidth": 354
         },
         "defaultViewOptions": {
-            "experimental": {
+            "_experimental": {
                 "childWindows": true
             }
         },
@@ -61,7 +61,6 @@
                     "content": [
                         {
                             "type": "stack",
-                            "id": "no-drop-target",
                             "content": [
                                 {
                                     "type": "component",

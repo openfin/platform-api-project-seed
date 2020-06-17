@@ -10,13 +10,13 @@ window.addEventListener('DOMContentLoaded', () => {
         // Whenever a new layout is ready on this window (on init, replace, or applyPreset)
         const { settings } = await fin.Platform.Layout.getCurrentSync().getConfig();
         // determine whether it is locked and update the icon
+        const lockIcon = document.getElementById('lock-button');
         if(settings.hasHeaders && settings.reorderEnabled) {
-            document.getElementById('lock-button').classList.remove('layout-locked');
+            lockIcon.classList.remove('layout-locked');
         } else {
-            document.getElementById('lock-button').classList.add('layout-locked');
+            lockIcon.classList.add('layout-locked');
         }
     });
-    // Before .50 AI version this may throw...
     fin.Platform.Layout.init({containerId: CONTAINER_ID});
 });
 
