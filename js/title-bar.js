@@ -59,31 +59,9 @@ class TitleBar extends HTMLElement {
     }
 
     toggleLockedLayout = async () => {
-        const oldLayout = await fin.Platform.Layout.getCurrentSync().getConfig();
-        const { settings, dimensions } = oldLayout;
-        if(settings.hasHeaders && settings.reorderEnabled) {
-            fin.Platform.Layout.getCurrentSync().replace({
-                ...oldLayout,
-                settings: {
-                    ...settings,
-                    hasHeaders: false,
-                    reorderEnabled: false
-                }
-            });
-        } else {
-            fin.Platform.Layout.getCurrentSync().replace({
-                ...oldLayout,
-                settings: {
-                    ...settings,
-                    hasHeaders: true,
-                    reorderEnabled: true
-                },
-                dimensions: {
-                    ...dimensions,
-                    headerHeight: 25
-                }
-            });
-        }
+        const client = await fin.Platform.getCurrentSync().getClient();
+        const windowIdentity = fin.Window.getCurrentSync().identity;
+        await client.dispatch('toggle-layout-lock', { target: windowIdentity });
     };
 
     toggleTheme = async () => {
