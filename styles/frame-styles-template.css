@@ -17,6 +17,7 @@
     --of-highlight-opacity: #958EFF26;
     --of-default-red: red;
     --of-default-red-negative: #F55D5F;
+    --of-positive-green: #29AF6F;
 
     /* Main colors to set from the above list */
     --main-background-color: var(--of-default-charcoal-dark);
@@ -26,6 +27,8 @@
     --tab-button-active-color: var(--of-default-grey-light-opacity);
     --tab-border-top-color: var(--of-dark-theme);
     --tab-border-top-highlight-color: var(--of-light-theme);
+    --focused-tab-border-top-color: var(--of-positive-green);
+    --focused-tab-border-top-highlight-color: #3cf89d;
     --tab-font-color: var(--of-default-white);
     --top-bar-close-button-color: var(--of-default-red);
     --top-bar-close-button-active-color: var(--of-default-red-negative);
