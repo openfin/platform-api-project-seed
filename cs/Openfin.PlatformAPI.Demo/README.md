@@ -12,6 +12,7 @@ This project seed includes the following [Platform API](https://openfin.co/platf
 
 * Examples of the configuration required to use the Platform API and apply customizations
 * Usage of the Platform API to group, tab, and rearrange application windows
+* API examples of Window management and creation
 * API examples of View management and creation
 * API examples of Snapshot saving and applying
 * API examples of Layout management
