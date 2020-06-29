@@ -1,0 +1,29 @@
+﻿<Application x:Class="Openfin.PlatformAPI.Demo.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:Openfin.PlatformAPI.Demo"
+             xmlns:ComponentModel="clr-namespace:System.ComponentModel;assembly=PresentationFramework"
+             xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"
+              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <materialDesign:BundledTheme BaseTheme="Dark" PrimaryColor="DeepPurple" SecondaryColor="Indigo" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Dragablz;component/Themes/materialdesign.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/FluentWPF;component/Styles/Controls.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <SolidColorBrush x:Key="PrimaryHueMidBrush" Color="#7B7BFF"/>
+            
+            <Style TargetType="{x:Type dragablz:TabablzControl}" BasedOn="{StaticResource MaterialDesignTabablzControlStyle}" />
+            <Style TargetType="Window">
+                <Style.Triggers>
+                    <Trigger Property="ComponentModel:DesignerProperties.IsInDesignMode" Value="True">
+                        <Setter Property="Background" Value="Black"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+        </ResourceDictionary>  
+    </Application.Resources>
+</Application>
