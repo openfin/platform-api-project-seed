@@ -5,7 +5,7 @@ dist
 bower_components
 logs
 OpenFinRVM.exe
-OpenFin
+#OpenFin
 
 local.json
 
