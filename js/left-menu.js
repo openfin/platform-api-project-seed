@@ -1,11 +1,12 @@
 import { html, render } from 'https://unpkg.com/lit-html@1.0.0/lit-html.js';
-import { getTemplates, getTemplateByName, onStoreUpdate } from './template-store.js';
+import { getTemplates, getTemplateByName, onStoreUpdate, storeTemplate, getActiveLayoutName, setActiveLayoutName } from './template-store.js';
+// import { getActiveTemplates, getActiveTemplateByName, onActiveStoreUpdate, storeActiveTemplate } from './active-template-store.js';
 import { CONTAINER_ID } from './platform-window.js';
 
 const CHART_URL = 'https://cdn.openfin.co/embed-web/chart.html';
 const LAYOUT_STORE_KEY  = 'LayoutForm';
+const ACTIVE_LAYOUT_STORE_KEY  = 'ActiveLayoutForm';
 const SNAPSHOT_STORE_KEY = 'SnapshotForm';
-
 
 //Our Left Menu element
 class LeftMenu extends HTMLElement {
@@ -50,6 +51,13 @@ class LeftMenu extends HTMLElement {
 
         //Whenever the store updates we will want to render any new elements.
         onStoreUpdate(() => { this.render(); });
+        this.launchLastAutosave();
+
+        fin.Window.getCurrentSync().addListener('close-requested', async () => {
+            console.log("CLOSE REQUESTED HIT");
+            await this.saveCurrentActiveLayout();
+            fin.Window.getCurrentSync().close(true);
+        });
     }
 
     clickHandler = (e) => {
@@ -79,7 +87,9 @@ class LeftMenu extends HTMLElement {
 
     render = async () => {
         const layoutTemplates = getTemplates(LAYOUT_STORE_KEY);
+        const activeLayoutTemplates = getTemplates(ACTIVE_LAYOUT_STORE_KEY);
         const snapshotTemplates = getTemplates(SNAPSHOT_STORE_KEY);
+        const currentActiveLayoutName = getActiveLayoutName();
         const menuItems = html`
         <span>Applications</span>
         <ul>
@@ -93,16 +103,28 @@ class LeftMenu extends HTMLElement {
             <li><button @click=${() => this.layoutWindow().catch(console.error)}>Platform Window</button></li>
             <li><button @click=${() => this.nonLayoutWindow().catch(console.error)}>OF Window</button></li>
         </ul>
+        <span>Active Layouts</span>
+        <ul>
+            ${activeLayoutTemplates.map((item) => html`<li>
+                  <button class="${item.name === currentActiveLayoutName ? 'active-layout' : ''}" @click=${() => this.replaceActiveLayoutFromTemplate(item.name)}>${item.name}</button>
+              </li>`)}
+        </ul>
         <span>Layouts</span>
+        <ul>
+            ${layoutTemplates.map((item) => html`<li>
+                  <button class="${item.name === currentActiveLayoutName ? 'active-layout' : ''}" @click=${() => this.replaceLayoutFromTemplate(item.name)}>${item.name}</button>
+              </li>`)}
+            <li><button @click=${() => this.cloneWindow().catch(console.error)}>Clone Window</button></li>
+            <li><button class="left-menu-button"  @click=${() => this.saveCurrentTemplate().catch(console.error)}>Overwrite Layout</button></li>
+            <li><button class="layout-button">Save New Layout</button></li>
+        </ul>
+
+        <span>Templates</span>
         <ul>
             <li><button @click=${() => this.toGrid().catch(console.error)}>Grid</button></li>
             <li><button @click=${() => this.toTabbed().catch(console.error)}>Tab</button></li>
-            ${layoutTemplates.map((item) => html`<li>
-                  <button @click=${() => this.replaceLayoutFromTemplate(item.name)}>${item.name}</button>
-              </li>`)}
-            <li><button @click=${() => this.cloneWindow().catch(console.error)}>Clone</button></li>
-            <li><button class="layout-button">Save Layout</button></li>
         </ul>
+
         <span>Snapshots</span>
         <ul>
             ${snapshotTemplates.map((item) => html`<li><button @click=${() => this.applySnapshotFromTemplate(item.name)}>${item.name}</button></li>`)}
@@ -120,10 +142,63 @@ class LeftMenu extends HTMLElement {
 
     }
 
+    launchLastAutosave = async () => {
+        const currentActiveLayoutName = getActiveLayoutName();
+        if (!currentActiveLayoutName) return;
+        const templates = getTemplates(ACTIVE_LAYOUT_STORE_KEY);
+        const templateToUse = templates.find(i => i.name === currentActiveLayoutName);
+        fin.Platform.Layout.getCurrentSync().replace(templateToUse.layout);
+    }
+
     replaceLayoutFromTemplate = async (templateName) => {
+        await this.saveCurrentActiveLayout();
         const templates = getTemplates(LAYOUT_STORE_KEY);
         const templateToUse = templates.find(i => i.name === templateName);
         fin.Platform.Layout.getCurrentSync().replace(templateToUse.layout);
+        setActiveLayoutName(templateName);
+    }
+
+    replaceActiveLayoutFromTemplate = async (templateName) => {
+        // User has clicked on their active template, wants to go back to that. 
+        const activeLayoutName = getActiveLayoutName();
+        if (templateName !== activeLayoutName) {
+            await this.saveCurrentActiveLayout();
+        }
+        const templates = getTemplates(ACTIVE_LAYOUT_STORE_KEY);
+        const templateToUse = templates.find(i => i.name === templateName);
+        fin.Platform.Layout.getCurrentSync().replace(templateToUse.layout);
+        setActiveLayoutName(templateName);
+    }
+
+    saveAsActiveTemplate = async (templateName) => {
+        const name = templateName || 'DEFAULT';
+        const templateObject = {
+            name,
+            layout: await fin.Platform.Layout.getCurrentSync().getConfig()
+        };
+
+        storeTemplate(ACTIVE_LAYOUT_STORE_KEY, templateObject);
+
+        return;
+    }
+
+    saveCurrentTemplate = async () => {
+        const name = getActiveLayoutName();
+        const templateObject = {
+            name,
+            layout: await fin.Platform.Layout.getCurrentSync().getConfig()
+        };
+
+        setActiveLayoutName(name);
+        storeTemplate(LAYOUT_STORE_KEY, templateObject);
+        storeTemplate(ACTIVE_LAYOUT_STORE_KEY, templateObject);
+
+        return;
+    }
+
+    saveCurrentActiveLayout = async () => {
+        const currentActiveLayoutName = getActiveLayoutName();
+        await this.saveAsActiveTemplate(currentActiveLayoutName);
     }
 
     addView = async (printName) => {

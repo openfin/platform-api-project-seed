@@ -44,6 +44,10 @@ left-menu button:focus {
     outline: 1px solid var(--tab-button-active-color);
 }
 
+.active-layout {
+    background-color: green;
+}
+
 fieldset button {
     width: var(--sidebar-width);
     border: 1px solid var(--tab-button-active-color);
@@ -88,11 +92,11 @@ fieldset label {
     z-index: 1;
 }
 
-.layout-button, .snapshot-button {
+.layout-button, .snapshot-button, .left-menu-button {
     background-color: var(--of-highlight);
 }
 
-.layout-button:hover, .snapshot-button:hover {
+.layout-button:hover, .snapshot-button:hover, .left-menu-button:hover {
     background-color: var(--of-dark-theme);
 }
 

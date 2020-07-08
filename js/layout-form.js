@@ -1,5 +1,7 @@
 import { html, render } from 'https://unpkg.com/lit-html@1.0.0/lit-html.js';
-import { storeTemplate } from './template-store.js';
+import { storeTemplate, setActiveLayoutName } from './template-store.js';
+
+const ACTIVE_LAYOUT_STORE_KEY = 'ActiveLayoutForm';
 
 export class LayoutForm extends HTMLElement {
     constructor() {
@@ -16,7 +18,9 @@ export class LayoutForm extends HTMLElement {
             layout: await fin.Platform.Layout.getCurrentSync().getConfig()
         };
 
+        setActiveLayoutName(name);
         storeTemplate(this.templateStorageKey, templateObject);
+        storeTemplate(ACTIVE_LAYOUT_STORE_KEY, templateObject);
 
         this.toggleVisibility();
         return;
