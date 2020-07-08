@@ -2,7 +2,6 @@ package com.openfin.demo;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
@@ -22,33 +21,25 @@ import java.util.UUID;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.JTree;
-import javax.swing.ListCellRenderer;
-import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
-import javax.swing.tree.TreeSelectionModel;
 
 import org.json.JSONObject;
 
-import com.openfin.desktop.Application;
 import com.openfin.desktop.DesktopConnection;
 import com.openfin.desktop.DesktopException;
 import com.openfin.desktop.DesktopIOException;
@@ -382,21 +373,23 @@ public class PlatformApiDemo {
 	}
 
 	JPanel createSnapshotPanel() {
-		JPanel p = new JPanel();
-		p.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-		p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
+		JPanel pnlSnapshot = new JPanel(new BorderLayout(5, 5));
+		JPanel pnlCenter = new JPanel();
+		pnlCenter.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		pnlCenter.setLayout(new BoxLayout(pnlCenter, BoxLayout.Y_AXIS));
 		JPanel pnlSave = new JPanel();
 		pnlSave.setLayout(new BoxLayout(pnlSave, BoxLayout.X_AXIS));
 		pnlSave.setBorder(BorderFactory.createTitledBorder("Save Snapshot"));
 		JTextField tfSavePath = new JTextField(new File("snapshot.json").getAbsolutePath().toString());
 		tfSavePath.setPreferredSize(new Dimension(Short.MAX_VALUE, tfSavePath.getPreferredSize().height));
 		JButton btnSave = new JButton("Save...");
+		btnSave.setEnabled(false);
 		btnSave.addActionListener(e -> {
 			Platform platform = this.getSelectedNode(Platform.class);
 			if (platform != null) {
 				JFileChooser fileChooser = new JFileChooser(new File(".").getAbsoluteFile());
 				fileChooser.setSelectedFile(new File(tfSavePath.getText()));
-				int rv = fileChooser.showSaveDialog(p);
+				int rv = fileChooser.showSaveDialog(pnlCenter);
 				if (rv == JFileChooser.APPROVE_OPTION) {
 					File saveFile = fileChooser.getSelectedFile();
 					tfSavePath.setText(saveFile.getAbsolutePath());
@@ -415,12 +408,13 @@ public class PlatformApiDemo {
 		JTextField tfApplyPath = new JTextField(new File("snapshot.json").getAbsolutePath().toString());
 		tfApplyPath.setPreferredSize(new Dimension(Short.MAX_VALUE, tfApplyPath.getPreferredSize().height));
 		JButton btnApply = new JButton("Apply...");
+		btnApply.setEnabled(false);
 		btnApply.addActionListener(e -> {
 			Platform platform = this.getSelectedNode(Platform.class);
 			if (platform != null) {
 				JFileChooser fileChooser = new JFileChooser(new File(".").getAbsoluteFile());
 				fileChooser.setSelectedFile(new File(tfApplyPath.getText()));
-				int rv = fileChooser.showOpenDialog(p);
+				int rv = fileChooser.showOpenDialog(pnlCenter);
 				if (rv == JFileChooser.APPROVE_OPTION) {
 					File snapshotFile = fileChooser.getSelectedFile();
 					tfApplyPath.setText(snapshotFile.getAbsolutePath());
@@ -433,23 +427,42 @@ public class PlatformApiDemo {
 		pnlApply.add(tfApplyPath);
 		pnlApply.add(btnApply);
 
-		p.add(pnlSave);
-		p.add(pnlApply);
-		p.add(new Box.Filler(new Dimension(0, 0), new Dimension(0, Short.MAX_VALUE),
+		pnlCenter.add(pnlSave);
+		pnlCenter.add(pnlApply);
+		pnlCenter.add(new Box.Filler(new Dimension(0, 0), new Dimension(0, Short.MAX_VALUE),
 				new Dimension(0, Short.MAX_VALUE)));
-		return p;
+		
+		JPanel pnlTop = new JPanel(new BorderLayout(5, 5));
+		pnlTop.setBorder(BorderFactory.createEmptyBorder(20, 10, 20, 10));
+		pnlTop.add(new JLabel("Selected Platform"), BorderLayout.WEST);
+		JTextField tfSelectedPlatformUuid = new JTextField("N/A");
+		tfSelectedPlatformUuid.setEditable(false);
+		pnlTop.add(tfSelectedPlatformUuid, BorderLayout.CENTER);
+
+		this.runtimeTree.addTreeSelectionListener(e -> {
+			Platform p = this.getSelectedNode(Platform.class);
+			btnSave.setEnabled(p != null);
+			btnApply.setEnabled(p != null);
+			tfSelectedPlatformUuid.setText(p == null ? "N/A" : p.getUuid());
+		});
+
+		pnlSnapshot.add(pnlTop, BorderLayout.NORTH);
+		pnlSnapshot.add(pnlCenter, BorderLayout.CENTER);
+		return pnlSnapshot;
 	}
 
 	JPanel createLayoutPanel() {
-		JPanel p = new JPanel();
-		p.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-		p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
+		JPanel pnlLayout = new JPanel(new BorderLayout(5, 5));
+		JPanel pnlCenter = new JPanel();
+		pnlCenter.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		pnlCenter.setLayout(new BoxLayout(pnlCenter, BoxLayout.Y_AXIS));
 		JPanel pnlPreset = new JPanel();
 		pnlPreset.setLayout(new BoxLayout(pnlPreset, BoxLayout.X_AXIS));
 		pnlPreset.setBorder(BorderFactory.createTitledBorder("Apply Preset"));
 		JComboBox<String> cbPreset = new JComboBox<>(new String[] { "columns", "grid", "rows", "tabs" });
 		cbPreset.setPreferredSize(new Dimension(Short.MAX_VALUE, cbPreset.getPreferredSize().height));
 		JButton btnApply = new JButton("Apply");
+		btnApply.setEnabled(false);
 		btnApply.addActionListener(e -> {
 			Window win = this.getSelectedNode(Window.class);
 			if (win != null) {
@@ -468,13 +481,14 @@ public class PlatformApiDemo {
 		JTextField tfSavePath = new JTextField(new File("layout.json").getAbsolutePath().toString());
 		tfSavePath.setPreferredSize(new Dimension(Short.MAX_VALUE, tfSavePath.getPreferredSize().height));
 		JButton btnSave = new JButton("Save...");
+		btnSave.setEnabled(false);
 		btnSave.addActionListener(e -> {
 			Window win = this.getSelectedNode(Window.class);
 			if (win != null) {
 				Layout layout = Layout.wrap(win.getIdentity(), this.desktopConnection);
 				JFileChooser fileChooser = new JFileChooser(new File(".").getAbsoluteFile());
 				fileChooser.setSelectedFile(new File(tfSavePath.getText()));
-				int rv = fileChooser.showOpenDialog(p);
+				int rv = fileChooser.showOpenDialog(pnlCenter);
 				if (rv == JFileChooser.APPROVE_OPTION) {
 					File layoutFile = fileChooser.getSelectedFile();
 					tfSavePath.setText(layoutFile.getAbsolutePath());
@@ -493,13 +507,14 @@ public class PlatformApiDemo {
 		JTextField tfReplacePath = new JTextField(new File("layout.json").getAbsolutePath().toString());
 		tfReplacePath.setPreferredSize(new Dimension(Short.MAX_VALUE, tfReplacePath.getPreferredSize().height));
 		JButton btnReplace = new JButton("Replace...");
+		btnReplace.setEnabled(false);
 		btnReplace.addActionListener(e -> {
 			Window win = this.getSelectedNode(Window.class);
 			if (win != null) {
 				Layout layout = Layout.wrap(win.getIdentity(), this.desktopConnection);
 				JFileChooser fileChooser = new JFileChooser(new File(".").getAbsoluteFile());
 				fileChooser.setSelectedFile(new File(tfReplacePath.getText()));
-				int rv = fileChooser.showOpenDialog(p);
+				int rv = fileChooser.showOpenDialog(pnlCenter);
 				if (rv == JFileChooser.APPROVE_OPTION) {
 					File layoutFile = fileChooser.getSelectedFile();
 					tfReplacePath.setText(layoutFile.getAbsolutePath());
@@ -512,12 +527,31 @@ public class PlatformApiDemo {
 		pnlReplace.add(tfReplacePath);
 		pnlReplace.add(btnReplace);
 
-		p.add(pnlPreset);
-		p.add(pnlSave);
-		p.add(pnlReplace);
-		p.add(new Box.Filler(new Dimension(0, 0), new Dimension(0, Short.MAX_VALUE),
+		pnlCenter.add(pnlPreset);
+		pnlCenter.add(pnlSave);
+		pnlCenter.add(pnlReplace);
+		pnlCenter.add(new Box.Filler(new Dimension(0, 0), new Dimension(0, Short.MAX_VALUE),
 				new Dimension(0, Short.MAX_VALUE)));
-		return p;
+		
+		JPanel pnlTop = new JPanel(new BorderLayout(5, 5));
+		pnlTop.setBorder(BorderFactory.createEmptyBorder(20, 10, 20, 10));
+		pnlTop.add(new JLabel("Selected Platform"), BorderLayout.WEST);
+		JTextField tfSelectedPlatformUuid = new JTextField("N/A");
+		tfSelectedPlatformUuid.setEditable(false);
+		pnlTop.add(tfSelectedPlatformUuid, BorderLayout.CENTER);
+
+		this.runtimeTree.addTreeSelectionListener(e -> {
+			Platform p = this.getSelectedNode(Platform.class);
+			btnApply.setEnabled(p != null);
+			btnSave.setEnabled(p != null);
+			btnReplace.setEnabled(p != null);
+			tfSelectedPlatformUuid.setText(p == null ? "N/A" : p.getUuid());
+		});
+
+		pnlLayout.add(pnlTop, BorderLayout.NORTH);
+		pnlLayout.add(pnlCenter, BorderLayout.CENTER);
+
+		return pnlLayout;
 	}
 
 	JPanel createContentPane() {
