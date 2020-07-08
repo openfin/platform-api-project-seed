@@ -67,7 +67,6 @@ import com.openfin.desktop.platform.Platform;
 import com.openfin.desktop.platform.PlatformOptions;
 import com.openfin.desktop.platform.PlatformViewOptions;
 import com.openfin.desktop.platform.PlatformWindowOptions;
-import com.sun.corba.se.impl.orbutil.graph.Node;
 
 public class PlatformApiDemo {
 
@@ -345,7 +344,7 @@ public class PlatformApiDemo {
 			Window w = this.getSelectedNode(Window.class);
 			if (p != null) {
 				this.platformCreateView(p, viewOpts, null);
-				
+
 			} else if (w != null) {
 				p = (Platform) ((DefaultMutableTreeNode)this.runtimeTree.getSelectionPath().getParentPath().getLastPathComponent()).getUserObject();
 				this.platformCreateView(p, viewOpts, w.getIdentity());
@@ -367,7 +366,7 @@ public class PlatformApiDemo {
 			btnCreate.setEnabled(p != null || w != null);
 			if (p != null) {
 				tfSelectedWinIdentity.setText("Platform: " + p.getUuid());
-				
+
 			} else if (w != null) {
 				tfSelectedWinIdentity.setText("Window: " + w.getName());
 			}
