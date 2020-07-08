@@ -363,7 +363,7 @@ namespace Openfin.PlatformAPI.Demo
         } 
 
         private async void btnReplaceLayout_Click(object sender, RoutedEventArgs e)
-        {
+        {            
             var targetWindow = dgPlatformWindows.SelectedItem as Desktop.Window;
           
             if (targetWindow == null)
@@ -372,6 +372,7 @@ namespace Openfin.PlatformAPI.Demo
                 return;
             }
 
+            targetWindow.PlatformLayoutReady -= TargetWindow_PlatformLayoutReady;
             targetWindow.PlatformLayoutReady += TargetWindow_PlatformLayoutReady;
 
             if (dgSavedLayouts.SelectedItem == null)
@@ -387,7 +388,7 @@ namespace Openfin.PlatformAPI.Demo
             try
             {
                 var jobj = JObject.Parse(savedLayout.LayoutConfig);
-                var layoutConfiguration = ((JArray)jobj["snapshot"]["windows"])[0]["layout"].ToObject<PlatformLayoutConfiguration>();
+                var layoutConfiguration = ((JArray)jobj["snapshot"]["windows"]).First()["layout"].ToObject<PlatformLayoutConfiguration>();
                 await layout.ReplaceLayoutAsync(layoutConfiguration);
             }
             catch(Exception ex)
@@ -399,8 +400,8 @@ namespace Openfin.PlatformAPI.Demo
 
         private async void TargetWindow_PlatformLayoutReady(object sender, PlatformLayoutReadyEventArgs e)
         {
-            MessageBox.Show("entered ready handler");
 
+            MessageBox.Show("layout ready handler");
             var targetWindow = e.Window;
             var views = await targetWindow.GetViewsAsync();
 
@@ -416,10 +417,8 @@ namespace Openfin.PlatformAPI.Demo
 
             Dispatcher.Invoke(() =>
             {
-                dgPlatformViews.ItemsSource = platformViews[targetWindow.Name];
+                dgPlatformViews.ItemsSource = platformViews[targetWindow.Name];               
             });
-
-            targetWindow.PlatformLayoutReady -= TargetWindow_PlatformLayoutReady;
         }
 
         private void btnSaveLayout_Click(object sender, RoutedEventArgs e)
