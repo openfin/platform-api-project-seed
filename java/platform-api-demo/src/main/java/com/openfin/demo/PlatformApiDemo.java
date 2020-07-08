@@ -39,6 +39,8 @@ import javax.swing.JTree;
 import javax.swing.ListCellRenderer;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
@@ -143,24 +145,15 @@ public class PlatformApiDemo {
 		return p;
 	}
 
-	Platform getSelectedPlatform() {
-		DefaultMutableTreeNode node = (DefaultMutableTreeNode) this.runtimeTree.getSelectionPath()
-				.getLastPathComponent();
-		if (node.getUserObject() instanceof Platform) {
-			return (Platform) node.getUserObject();
-		}
-		else {
-			return null;
-		}
-	}
-
 	@SuppressWarnings("unchecked")
 	<T> T getSelectedNode(Class<T> clazz) {
 		T n = null;
-		DefaultMutableTreeNode node = (DefaultMutableTreeNode) this.runtimeTree.getSelectionPath()
-				.getLastPathComponent();
-		if (clazz.isInstance(node.getUserObject())) {
-			n = (T) node.getUserObject();
+		TreePath selectionPath = this.runtimeTree.getSelectionPath();
+		if (selectionPath != null) {
+			DefaultMutableTreeNode node = (DefaultMutableTreeNode) selectionPath.getLastPathComponent();
+			if (clazz.isInstance(node.getUserObject())) {
+				n = (T) node.getUserObject();
+			}
 		}
 		return n;
 	}
@@ -283,17 +276,34 @@ public class PlatformApiDemo {
 		pnlWinOpts.add(new JLabel(""), gbConst); // filler
 
 		JButton btnCreate = new JButton("Create");
+		btnCreate.setEnabled(false);
 		btnCreate.addActionListener(e -> {
-			Platform platform = this.getSelectedPlatform();
+			Platform platform = this.getSelectedNode(Platform.class);
 			if (platform != null) {
-				this.platformCreateWindow(platform, tfName.getText(), tfUrl.getText(), cbInitLayout.isSelected(), tfWinWidth.getText(), tfWinHeight.getText(), cbWinCenter.isSelected());
+				this.platformCreateWindow(platform, tfName.getText(), tfUrl.getText(), cbInitLayout.isSelected(),
+						tfWinWidth.getText(), tfWinHeight.getText(), cbWinCenter.isSelected());
 			}
 			else {
 				// show popup warning?
 			}
 		});
+
+		JPanel pnlTop = new JPanel(new BorderLayout(5, 5));
+		pnlTop.setBorder(BorderFactory.createEmptyBorder(20, 10, 20, 10));
+		pnlTop.add(new JLabel("Selected Platform"), BorderLayout.WEST);
+		JTextField tfSelectedPlatformUuid = new JTextField("N/A");
+		tfSelectedPlatformUuid.setEditable(false);
+		pnlTop.add(tfSelectedPlatformUuid, BorderLayout.CENTER);
+
+		this.runtimeTree.addTreeSelectionListener(e -> {
+			Platform p = this.getSelectedNode(Platform.class);
+			btnCreate.setEnabled(p != null);
+			tfSelectedPlatformUuid.setText(p == null ? "N/A" : p.getUuid());
+		});
+
 		JPanel pnlBottom = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		pnlBottom.add(btnCreate);
+		pnl.add(pnlTop, BorderLayout.NORTH);
 		pnl.add(pnlWinOpts, BorderLayout.CENTER);
 		pnl.add(pnlBottom, BorderLayout.SOUTH);
 		return pnl;
@@ -326,29 +336,47 @@ public class PlatformApiDemo {
 		pnlWinOpts.add(new JLabel(""), gbConst); // filler
 
 		JButton btnCreate = new JButton("Create");
+		btnCreate.setEnabled(false);
 		btnCreate.addActionListener(e -> {
-			// get selected platform
-			DefaultMutableTreeNode node = (DefaultMutableTreeNode) this.runtimeTree.getSelectionPath()
-					.getLastPathComponent();
-			Object nodeValue = node.getUserObject();
-			if (nodeValue instanceof Platform || nodeValue instanceof Window) {
-				PlatformViewOptions viewOpts = new PlatformViewOptions();
-				viewOpts.setName(tfName.getText());
-				viewOpts.setUrl(tfUrl.getText());
-				Platform p;
-				Identity winIdentity = null;
-				if (nodeValue instanceof Platform) {
-					p = (Platform) nodeValue;
-				}
-				else {
-					p = (Platform) ((DefaultMutableTreeNode) node.getParent()).getUserObject();
-					winIdentity = ((Window) nodeValue).getIdentity();
-				}
-				this.platformCreateView(p, viewOpts, winIdentity);
+			PlatformViewOptions viewOpts = new PlatformViewOptions();
+			viewOpts.setName(tfName.getText());
+			viewOpts.setUrl(tfUrl.getText());
+			Platform p = this.getSelectedNode(Platform.class);
+			Window w = this.getSelectedNode(Window.class);
+			if (p != null) {
+				this.platformCreateView(p, viewOpts, null);
+				
+			} else if (w != null) {
+				p = (Platform) ((DefaultMutableTreeNode)this.runtimeTree.getSelectionPath().getParentPath().getLastPathComponent()).getUserObject();
+				this.platformCreateView(p, viewOpts, w.getIdentity());
 			}
 		});
 		JPanel pnlBottom = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		pnlBottom.add(btnCreate);
+
+		JPanel pnlTop = new JPanel(new BorderLayout(5, 5));
+		pnlTop.setBorder(BorderFactory.createEmptyBorder(20, 10, 20, 10));
+		pnlTop.add(new JLabel("Selected"), BorderLayout.WEST);
+		JTextField tfSelectedWinIdentity = new JTextField("N/A");
+		tfSelectedWinIdentity.setEditable(false);
+		pnlTop.add(tfSelectedWinIdentity, BorderLayout.CENTER);
+
+		this.runtimeTree.addTreeSelectionListener(e -> {
+			Platform p = this.getSelectedNode(Platform.class);
+			Window w = this.getSelectedNode(Window.class);
+			btnCreate.setEnabled(p != null || w != null);
+			if (p != null) {
+				tfSelectedWinIdentity.setText("Platform: " + p.getUuid());
+				
+			} else if (w != null) {
+				tfSelectedWinIdentity.setText("Window: " + w.getName());
+			}
+			else {
+				tfSelectedWinIdentity.setText("N/A");
+			}
+		});
+
+		pnl.add(pnlTop, BorderLayout.NORTH);
 		pnl.add(pnlWinOpts, BorderLayout.CENTER);
 		pnl.add(pnlBottom, BorderLayout.SOUTH);
 		return pnl;
@@ -365,7 +393,7 @@ public class PlatformApiDemo {
 		tfSavePath.setPreferredSize(new Dimension(Short.MAX_VALUE, tfSavePath.getPreferredSize().height));
 		JButton btnSave = new JButton("Save...");
 		btnSave.addActionListener(e -> {
-			Platform platform = this.getSelectedPlatform();
+			Platform platform = this.getSelectedNode(Platform.class);
 			if (platform != null) {
 				JFileChooser fileChooser = new JFileChooser(new File(".").getAbsoluteFile());
 				fileChooser.setSelectedFile(new File(tfSavePath.getText()));
@@ -389,7 +417,7 @@ public class PlatformApiDemo {
 		tfApplyPath.setPreferredSize(new Dimension(Short.MAX_VALUE, tfApplyPath.getPreferredSize().height));
 		JButton btnApply = new JButton("Apply...");
 		btnApply.addActionListener(e -> {
-			Platform platform = this.getSelectedPlatform();
+			Platform platform = this.getSelectedNode(Platform.class);
 			if (platform != null) {
 				JFileChooser fileChooser = new JFileChooser(new File(".").getAbsoluteFile());
 				fileChooser.setSelectedFile(new File(tfApplyPath.getText()));
@@ -687,7 +715,8 @@ public class PlatformApiDemo {
 		});
 	}
 
-	void platformCreateWindow(Platform platform, String winName, String url, boolean initLayout, String width, String height, boolean center) {
+	void platformCreateWindow(Platform platform, String winName, String url, boolean initLayout, String width,
+			String height, boolean center) {
 		WindowOptions winOpts = new WindowOptions();
 		if (!width.isEmpty()) {
 			winOpts.setDefaultWidth(Integer.parseInt(width));
@@ -698,7 +727,7 @@ public class PlatformApiDemo {
 		if (center) {
 			winOpts.setDefaultCentered(center);
 		}
-		
+
 		winOpts.setName(winName);
 		if (initLayout) {
 			LayoutContentItemStateOptions itemState1 = new LayoutContentItemStateOptions();
