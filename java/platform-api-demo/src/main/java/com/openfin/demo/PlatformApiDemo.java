@@ -16,7 +16,12 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -67,6 +72,7 @@ public class PlatformApiDemo {
 	private DefaultTreeModel platformTreeModel;
 	private DefaultMutableTreeNode rootNode;
 	private JTree runtimeTree;
+	private boolean windowClosing;
 
 	PlatformApiDemo() {
 		try {
@@ -580,11 +586,33 @@ public class PlatformApiDemo {
 		this.frame.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
+				windowClosing = true;
 				PlatformApiDemo.this.frame.setVisible(false);
 				try {
-					PlatformApiDemo.this.desktopConnection.disconnect();
+					int cnt = rootNode.getChildCount();
+					if (cnt == 0) {
+						PlatformApiDemo.this.desktopConnection.disconnect();
+					}
+					else {
+						ArrayList<CompletableFuture<?>> quitFutures = new ArrayList<>();
+						for (int i=0; i<cnt; i++) {
+							DefaultMutableTreeNode pNode = (DefaultMutableTreeNode) rootNode.getChildAt(i);
+							Platform p = (Platform) pNode.getUserObject();
+							quitFutures.add(p.quit().toCompletableFuture());
+						}
+						CompletableFuture.allOf(quitFutures.toArray(new CompletableFuture<?>[cnt])).get(10, TimeUnit.SECONDS);
+					}
 				}
 				catch (DesktopException e1) {
+					e1.printStackTrace();
+				}
+				catch (InterruptedException e1) {
+					e1.printStackTrace();
+				}
+				catch (ExecutionException e1) {
+					e1.printStackTrace();
+				}
+				catch (TimeoutException e1) {
 					e1.printStackTrace();
 				}
 			}
@@ -618,6 +646,15 @@ public class PlatformApiDemo {
 				if (((Platform) n.getUserObject()).getUuid().equals(uuid)) {
 					this.platformTreeModel.removeNodeFromParent(n);
 					break;
+				}
+			}
+			
+			if (windowClosing && rootNode.getChildCount() == 0) {
+				try {
+					PlatformApiDemo.this.desktopConnection.disconnect();
+				}
+				catch (DesktopException e1) {
+					e1.printStackTrace();
 				}
 			}
 		});
