@@ -1,4 +1,4 @@
-import { html, render } from 'https://unpkg.com/lit-html@1.0.0/lit-html.js';
+import { html, render } from 'lit-html';
 import { LayoutForm } from './layout-form.js';
 import { storeTemplate } from './template-store.js';
 

@@ -1,4 +1,4 @@
-import { html, render } from 'https://unpkg.com/lit-html@1.0.0/lit-html.js';
+import { html, render } from 'lit-html';
 
 //Our Title bar element
 class TitleBar extends HTMLElement {
@@ -26,7 +26,7 @@ class TitleBar extends HTMLElement {
             // Whenever a new layout is ready on this window (on init, replace, or applyPreset)
             const { settings } = await fin.Platform.Layout.getCurrentSync().getConfig();
             // determine whether it is locked and update the icon
-            if(settings.hasHeaders && settings.reorderEnabled) {
+            if (settings.hasHeaders && settings.reorderEnabled) {
                 document.getElementById('lock-button').classList.remove('layout-locked');
             } else {
                 document.getElementById('lock-button').classList.add('layout-locked');
@@ -61,7 +61,7 @@ class TitleBar extends HTMLElement {
     toggleLockedLayout = async () => {
         const oldLayout = await fin.Platform.Layout.getCurrentSync().getConfig();
         const { settings, dimensions } = oldLayout;
-        if(settings.hasHeaders && settings.reorderEnabled) {
+        if (settings.hasHeaders && settings.reorderEnabled) {
             fin.Platform.Layout.getCurrentSync().replace({
                 ...oldLayout,
                 settings: {
@@ -106,7 +106,7 @@ class TitleBar extends HTMLElement {
 
         const context = await fin.Platform.getCurrentSync().getWindowContext() || {};
         if (context.theme !== theme) {
-            fin.Platform.getCurrentSync().setWindowContext({theme});
+            fin.Platform.getCurrentSync().setWindowContext({ theme });
         }
     }
 

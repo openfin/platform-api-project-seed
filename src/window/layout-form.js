@@ -1,4 +1,4 @@
-import { html, render } from 'https://unpkg.com/lit-html@1.0.0/lit-html.js';
+import { html, render } from 'lit-html';
 import { storeTemplate } from './template-store.js';
 
 export class LayoutForm extends HTMLElement {
@@ -9,7 +9,7 @@ export class LayoutForm extends HTMLElement {
         this.render();
     }
 
-     saveAsTemplate = async () => {
+    saveAsTemplate = async () => {
         const name = this.querySelector('.template-name').value;
         const templateObject = {
             name,

@@ -1,4 +1,4 @@
-import { html, render } from 'https://unpkg.com/lit-html@1.0.0/lit-html.js';
+import { html, render } from 'lit-html';
 
 class ColorPicker extends HTMLElement {
     constructor() {
@@ -33,13 +33,13 @@ class ColorPicker extends HTMLElement {
         return render(content, this);
     }
 
-   setColor = async (event) => {
+    setColor = async (event) => {
         event.preventDefault();
         const color = this.querySelector('input').value;
         await fin.Platform.getCurrentSync().setWindowContext({ color });
     }
 
-   applyColor = async (color) => {
+    applyColor = async (color) => {
         document.body.style.backgroundColor = color;
     }
 

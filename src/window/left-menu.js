@@ -1,9 +1,9 @@
-import { html, render } from 'https://unpkg.com/lit-html@1.0.0/lit-html.js';
+import { html, render } from 'lit-html';
 import { getTemplates, getTemplateByName, onStoreUpdate } from './template-store.js';
 import { CONTAINER_ID } from './platform-window.js';
 
 const CHART_URL = 'https://cdn.openfin.co/embed-web/chart.html';
-const LAYOUT_STORE_KEY  = 'LayoutForm';
+const LAYOUT_STORE_KEY = 'LayoutForm';
 const SNAPSHOT_STORE_KEY = 'SnapshotForm';
 
 
@@ -191,7 +191,7 @@ class LeftMenu extends HTMLElement {
 
     share = async () => {
         const { windows } = await fin.Platform.getCurrentSync().getSnapshot();
-        const contentConfig = {snapshot: { windows } };
+        const contentConfig = { snapshot: { windows } };
         const res = await fetch('https://jsonblob.com/api/jsonBlob', {
             method: 'POST', // or 'PUT'
             body: JSON.stringify(contentConfig), // data can be `string` or {object}!
