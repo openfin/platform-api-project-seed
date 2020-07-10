@@ -1,4 +1,4 @@
-﻿using Openfin.Desktop;
+using Openfin.Desktop;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -23,7 +23,7 @@ namespace Openfin.PlatformAPI.Demo
             InitializeComponent();
             var runtimeOptions = new RuntimeOptions
             {
-                Version = "stable"
+                Version = "stable"                
             };
 
             var appOptions = new ApplicationOptions(Guid.NewGuid().ToString(), Guid.NewGuid().ToString(), "https://openfin.github.io/golden-prototype/config-gen"); 

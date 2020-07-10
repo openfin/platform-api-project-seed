@@ -1,6 +1,8 @@
+using Microsoft.Win32;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Openfin.Desktop;
+using Openfin.Desktop.Messaging;
 using Openfin.Desktop.PlatformAPI;
 using Openfin.Desktop.PlatformAPI.Layout;
 using Openfin.Desktop.PlatformAPI.View;
@@ -11,6 +13,7 @@ using System.Collections.ObjectModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -39,13 +42,22 @@ namespace Openfin.PlatformAPI.Demo
         {
             InitializeComponent();
 
-            clipboardMonitor.ObserveLastEntry = false;
-            clipboardMonitor.ClipboardChanged += ClipboardMonitor_ClipboardChanged;
+            Loaded += async (s, e) =>
+            {
+                await LoadAppStateAsync();
+            };
 
-            dgSavedLayouts.DataContext = savedLayouts;
+            Closed += async (s, e) =>
+            {
+                await SaveAppStateAsync();
+            };
+            
+
+            clipboardMonitor.ObserveLastEntry = false;
+            clipboardMonitor.ClipboardChanged += ClipboardMonitor_ClipboardChanged;            
             dgRunningPlatforms.DataContext = platforms;
             dgPlatformWindows.DataContext = platformWindows;
-            dgSavedSnapshots.DataContext = savedSnapshots;
+            
 
             dgRunningPlatforms.SelectionChanged += DgRunningPlatforms_SelectionChanged;
 
@@ -70,6 +82,32 @@ namespace Openfin.PlatformAPI.Demo
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
         }
 
+        private Task SaveAppStateAsync()
+        {
+            var state = new AppState
+            {
+                Layouts = savedLayouts,
+                Snapshots = savedSnapshots
+            };
+
+            return File.WriteAllTextAsync("appstate.json", JsonConvert.SerializeObject(state));
+        }
+
+        private async Task LoadAppStateAsync()
+        {
+            if (!File.Exists("appstate.json")) return;
+
+            var state = JsonConvert.DeserializeObject<AppState>(await File.ReadAllTextAsync("appstate.json"));
+
+            savedLayouts = state.Layouts;
+
+            
+            savedSnapshots = state.Snapshots;
+
+            dgSavedLayouts.DataContext = savedLayouts;
+            dgSavedSnapshots.DataContext = savedSnapshots;
+        }
+
         private void btnApplyPreset_Click(object sender, RoutedEventArgs e)
         {
             dlgLayoutPreset.IsOpen = true;
@@ -77,6 +115,12 @@ namespace Openfin.PlatformAPI.Demo
 
         private async void btnApplySnapshot_Click(object sender, RoutedEventArgs e)
         {
+            if (selectedPlatform == null)
+            {
+                MessageBox.Show("Start a platform first.");
+                return;
+            }
+
             var snapshot = (SavedSnapshot)dgSavedSnapshots.SelectedItem;
 
             if (snapshot == null)
@@ -86,6 +130,26 @@ namespace Openfin.PlatformAPI.Demo
             }
 
             await selectedPlatform.ApplySnapshotAsync(snapshot.Snapshot, new ApplySnapshotOptions { CloseExistingWindows = snapshot.ClosePlatformWhenApplying });
+
+            // When a snapshot is applied, the platform's PlatformWindows property is refreshed with the windows and views from the snapshot
+
+            platformWindows = new ObservableCollection<Desktop.Window>();
+            platformViews = new Dictionary<string, ObservableCollection<PlatformView>>();
+
+            foreach(var item in selectedPlatform.PlatformWindows)
+            {
+               
+                    platformWindows.Add(item.Key);
+                    platformViews[item.Key.Name] = new ObservableCollection<PlatformView>();
+
+                    foreach (var view in item.Value)
+                    {
+                        platformViews[item.Key.Name].Add(view);
+                    }            
+                
+            }
+
+            dgPlatformWindows.DataContext = platformWindows;
         }
 
         private void btnCancelCreatePlatformView_Click(object sender, RoutedEventArgs e)
@@ -132,10 +196,6 @@ namespace Openfin.PlatformAPI.Demo
             }
 
             window.close();
-        }
-
-        private void btnCreateOFWindow_Click(object sender, RoutedEventArgs e)
-        {
         }
 
         private async void btnCreatePlatformView_Click(object sender, RoutedEventArgs e)
@@ -203,12 +263,13 @@ namespace Openfin.PlatformAPI.Demo
 
         private async void btnCreatePlatformWindow_Click(object sender, RoutedEventArgs e)
         {
-            if (platforms.Count == 0)
+            if (selectedPlatform == null)
             {
-                await startPlatform();
+                MessageBox.Show("Start a platform first.");
+                return;
             }
 
-            var options = new PlatformWindowOptions(Guid.NewGuid().ToString())
+            var options = new PlatformWindowOptions()
             {
                 BackgroundColor = getSystemDrawingColor(cpWindowBackground.Color),
                 Frame = cbCreateFrame.IsChecked.Value,
@@ -218,8 +279,7 @@ namespace Openfin.PlatformAPI.Demo
                 Opacity = slOpacity.Value,
                 DefaultCentered = cbCreatePlatformWindowDefaultCentered.IsChecked.Value
             };
-
-            // This code is for this demo purposes only.
+            
             // Window layouts should be created with the layout generator tool which can be found at https://openfin.github.io/golden-prototype/config-gen
             var snapshotJson = await File.ReadAllTextAsync(Environment.CurrentDirectory + "\\snapshot.json");
 
@@ -371,8 +431,7 @@ namespace Openfin.PlatformAPI.Demo
                 MessageBox.Show("Select a platform window from Window Management.");
                 return;
             }
-
-            targetWindow.PlatformLayoutReady -= TargetWindow_PlatformLayoutReady;
+            
             targetWindow.PlatformLayoutReady += TargetWindow_PlatformLayoutReady;
 
             if (dgSavedLayouts.SelectedItem == null)
@@ -387,8 +446,17 @@ namespace Openfin.PlatformAPI.Demo
 
             try
             {
-                var jobj = JObject.Parse(savedLayout.LayoutConfig);
-                var layoutConfiguration = ((JArray)jobj["snapshot"]["windows"]).First()["layout"].ToObject<PlatformLayoutConfiguration>();
+                PlatformLayoutConfiguration layoutConfiguration = null;
+
+                if (savedLayout.LayoutConfig.Contains("layout"))
+                {
+                    var jobj = JObject.Parse(savedLayout.LayoutConfig);
+                    layoutConfiguration = ((JArray)jobj["snapshot"]["windows"]).First()["layout"].ToObject<PlatformLayoutConfiguration>();
+                }
+                else
+                {
+                    layoutConfiguration = JsonConvert.DeserializeObject<PlatformLayoutConfiguration>(savedLayout.LayoutConfig);
+                }
                 await layout.ReplaceLayoutAsync(layoutConfiguration);
             }
             catch(Exception ex)
@@ -399,14 +467,12 @@ namespace Openfin.PlatformAPI.Demo
         }
 
         private async void TargetWindow_PlatformLayoutReady(object sender, PlatformLayoutReadyEventArgs e)
-        {
-
-            MessageBox.Show("layout ready handler");
+        {   
             var targetWindow = e.Window;
             var views = await targetWindow.GetViewsAsync();
 
             platformViews[targetWindow.Name] = new ObservableCollection<PlatformView>();
-
+            
             foreach (var view in views)
             {
                 Dispatcher.Invoke(() =>
@@ -417,8 +483,10 @@ namespace Openfin.PlatformAPI.Demo
 
             Dispatcher.Invoke(() =>
             {
-                dgPlatformViews.ItemsSource = platformViews[targetWindow.Name];               
+                dgPlatformViews.ItemsSource = platformViews[targetWindow.Name];                
             });
+
+            targetWindow.PlatformLayoutReady -= TargetWindow_PlatformLayoutReady;
         }
 
         private void btnSaveLayout_Click(object sender, RoutedEventArgs e)
@@ -429,7 +497,10 @@ namespace Openfin.PlatformAPI.Demo
                 return;
             }
 
-            savedLayouts.Add(new SavedLayout { LayoutName = tbLayoutName.Text, LayoutConfig = currentClipboardContents });
+            var layout = JObject.Parse(currentClipboardContents)["snapshot"]["windows"][0]["layout"].ToObject<PlatformLayoutConfiguration>();
+            
+
+            savedLayouts.Add(new SavedLayout { LayoutName = tbLayoutName.Text, LayoutConfig = JsonConvert.SerializeObject(layout) });
             dlgSaveLayout.IsOpen = false;
         }
 
@@ -537,14 +608,14 @@ namespace Openfin.PlatformAPI.Demo
                 window.Key.Closed += Window_Closed;
                 platformWindows.Add(window.Key);
 
-                var observableViews = new ObservableCollection<PlatformView>();
+                var views = new ObservableCollection<PlatformView>();
 
                 foreach (var view in window.Value)
                 {
-                    observableViews.Add(view);
+                    views.Add(view);
                 }
 
-                platformViews.Add(window.Key.Name, observableViews);
+                platformViews.Add(window.Key.Name, views);
             }
 
             selectedPlatform = platform;
@@ -563,6 +634,34 @@ namespace Openfin.PlatformAPI.Demo
                     platformWindows.Remove(w);
                     dgPlatformViews.ItemsSource = new ObservableCollection<PlatformView>();
                 });
+            }
+        }
+
+        private async void btnSaveWindowLayout_Click(object sender, RoutedEventArgs e)
+        {
+            var selectedWindow = dgPlatformWindows.SelectedItem as Desktop.Window;
+            var layout = new PlatformLayout(selectedWindow.Identity, selectedPlatform);
+            var layoutConfig = await layout.GetLayoutConfigurationAsync();
+            var dlg = new SaveFileDialog();
+
+            if (selectedWindow == null)
+            {
+                MessageBox.Show("Select a window from Window Management.");
+                return;
+            }
+           
+            if (dlg.ShowDialog().Value)
+            {               
+             
+                var savedLayout = new SavedLayout
+                {
+                    LayoutConfig = JsonConvert.SerializeObject(layoutConfig),
+                    LayoutName = dlg.FileName
+                };
+
+                savedLayouts.Add(savedLayout);
+
+                await File.WriteAllTextAsync(dlg.FileName, savedLayout.LayoutConfig);
             }
         }
     }

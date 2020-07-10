@@ -182,6 +182,13 @@
                     </StackPanel>
                     <DataGrid x:Name="dgSavedSnapshots"  Background="Black"  CanUserAddRows="False" AutoGenerateColumns="False" SelectionMode="Single" CanUserSortColumns="False" ItemsSource="{Binding}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"  Opacity=".7"  Foreground="White" Grid.Column="1" Grid.RowSpan="3" Grid.ColumnSpan="2">
                         <DataGrid.Columns>
+                            <DataGridTemplateColumn>
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Content="Delete" Command="Delete"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
                             <DataGridTextColumn Header="Saved Snapshot(s)" Binding="{Binding SnapshotName}" IsReadOnly="True"></DataGridTextColumn>
                             <DataGridCheckBoxColumn Header="Close Platform Before Applying" Binding="{Binding ClosePlatformWhenApplying}"></DataGridCheckBoxColumn>
                         </DataGrid.Columns>                        
@@ -209,26 +216,33 @@
                             </VisualBrush>
                         </Grid.Background>
                     </Grid>
-                    <StackPanel Grid.Row="0"  Grid.RowSpan="2" HorizontalAlignment="Center" Margin="18">
-                        <ScrollViewer CanContentScroll="True" VerticalScrollBarVisibility="Visible" Height="120">
+                    <StackPanel Grid.Row="0"  Grid.RowSpan="2" HorizontalAlignment="Center" Margin="8">
+                        <ScrollViewer CanContentScroll="True" VerticalScrollBarVisibility="Visible" Height="100">
                             <TextBlock  TextWrapping="Wrap" Margin="8">
                                 The layout generator is a tool used to generate layouts for platform. When the generator is launched, you can specify your window arrangement and URLs to load in each configured view.<LineBreak/><LineBreak/>
-                                When the design is done, click the "Copy to Clipboard" button in the layout generator tool and you will be prompted to save the layout here. (A unique name is required).<LineBreak/><LineBreak/>
-                                
+                                When the design is done, click the "Copy to Clipboard" button in the layout generator tool and you will be prompted to save the layout here. (A unique name is required).<LineBreak/><LineBreak/>                                
                             
                             </TextBlock>
                         </ScrollViewer>
                         <Separator Margin="0,30,0,0"/>
                     </StackPanel>
                     <StackPanel Grid.Row="1" Grid.RowSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center">
-                        <Button x:Name="btnLaunchGenerator" Click="btnLaunchGenerator_Click" Grid.Column="0" Margin="0,10">Launch Layout Generator</Button>
-                        <Button x:Name="btnReplaceLayout" Click="btnReplaceLayout_Click" Grid.Column="0" Margin="0,10">Replace Layout</Button>
-                        <Button x:Name="btnApplyPreset" Click="btnApplyPreset_Click" Grid.Column="0" Margin="0,10">Apply Preset</Button>
+                        <Button x:Name="btnSaveWindowLayout" Click="btnSaveWindowLayout_Click"  Grid.Column="0" Margin="0,5">Save Current Layout</Button>
+                        <Button x:Name="btnLaunchGenerator" Click="btnLaunchGenerator_Click" Grid.Column="0" Margin="0,5">Launch Layout Generator</Button>
+                        <Button x:Name="btnReplaceLayout" Click="btnReplaceLayout_Click" Grid.Column="0" Margin="0,5">Replace Layout</Button>
+                        <Button x:Name="btnApplyPreset" Click="btnApplyPreset_Click" Grid.Column="0" Margin="0,5">Apply Preset</Button>
                     </StackPanel>
                     <DataGrid x:Name="dgSavedLayouts" Background="Black" CanUserAddRows="False" AutoGenerateColumns="False" ItemsSource="{Binding}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"  Opacity=".7"  Foreground="White" Grid.Column="1" Grid.RowSpan="3" Grid.ColumnSpan="2">
                         <DataGrid.Columns>
+                            <DataGridTemplateColumn>
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Content="Delete" Command="Delete"/>
+                                    </DataTemplate>                                    
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
                             <DataGridTextColumn Header="Saved Layout(s)" Binding="{Binding LayoutName}" IsReadOnly="True"></DataGridTextColumn>
-                            <DataGridTextColumn Header="JSON Data" Binding="{Binding LayoutConfig}" IsReadOnly="True"></DataGridTextColumn>
+                            <DataGridTextColumn Header="JSON Data" Binding="{Binding LayoutConfig}" IsReadOnly="True"></DataGridTextColumn>                            
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>
@@ -275,8 +289,7 @@
                     <StackPanel Grid.Row="2" Orientation="Horizontal"  Margin="0,0,0,10">
                         <Label Content="Opacity"/>
                         <Slider x:Name="slOpacity" Minimum="0" Maximum="1" Value="1" Width="200" TickFrequency=".1" TickPlacement="BottomRight" IsSnapToTickEnabled="True"/>
-                    </StackPanel>
-                    <!--<TextBox x:Name="tbCreateWindowUrl" materialDesign:HintAssist.Hint="URL"/>-->
+                    </StackPanel>                    
                     <StackPanel Margin="12" Grid.Row="4" >
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="8">
                             <Button x:Name="btnCancelCreatePlatformWindow" HorizontalAlignment="Stretch" Click="btnCancelCreatePlatformWindow_Click">Cancel</Button>
@@ -326,10 +339,9 @@
             <materialDesign:DialogHost.DialogContent>
                 <StackPanel Margin="24">
                     <TextBox x:Name="tbSnapshotName" materialDesign:HintAssist.Hint="Snapshot Name"/>
-                    <CheckBox x:Name="cbClosePlatform" Content="Close Platform before restoring Snapshot"/>
-                    <Separator Margin="10"/>
+                    <CheckBox x:Name="cbClosePlatform" Content="Close Platform before restoring Snapshot"/>                    
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                        <Button x:Name="btnCancelSaveSnapshot" Content="Cancel" Click="btnCancelSaveSnapshot_Click"/>
+                        <Button x:Name="btnCancelSaveSnapshot" Content="Cancel" Click="btnCancelSaveSnapshot_Click" />
                         <Button x:Name="btnPersistSnapshot" Content="Save" Click="btnPersistSnapshot_Click"/>
                     </StackPanel>
                 </StackPanel>
