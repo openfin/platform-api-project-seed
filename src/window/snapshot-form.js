@@ -23,25 +23,21 @@ class SnapshotForm extends LayoutForm {
         storeTemplate(this.templateStorageKey, templateObject);
 
         this.toggleVisibility();
-        return;
-    }
+    };
 
     render = async () => {
-        const snapshotMenu = html`
-            <div class="center-form">
-                <fieldset>
-                     <legend>Save all current Platform Windows as a Snapshot</legend>
-                     <input type="text" class="template-name" size="50"
-                         value="New Snapshot"/> <br>
-                     <input type="checkbox" id="close" name="close"
-                         checked>
-                     <label for="close">Close Platform before restoring Snapshot</label> <br>
-                     <button @click=${this.saveAsTemplate}>Save Snapshot</button>
-                     <button @click=${this.cancel}>Cancel</button>
-                 </fieldset>
-             </div>`;
+        const snapshotMenu = html` <div class="center-form">
+            <fieldset>
+                <legend>Save all current Platform Windows as a Snapshot</legend>
+                <input type="text" class="template-name" size="50" value="New Snapshot" /> <br />
+                <input type="checkbox" id="close" name="close" checked />
+                <label for="close">Close Platform before restoring Snapshot</label> <br />
+                <button @click=${this.saveAsTemplate}>Save Snapshot</button>
+                <button @click=${this.cancel}>Cancel</button>
+            </fieldset>
+        </div>`;
         return render(snapshotMenu, this);
-    }
+    };
 }
 
 customElements.define('snapshot-form', SnapshotForm);

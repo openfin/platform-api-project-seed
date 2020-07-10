@@ -19,39 +19,36 @@ export class LayoutForm extends HTMLElement {
         storeTemplate(this.templateStorageKey, templateObject);
 
         this.toggleVisibility();
-        return;
-    }
+    };
 
     hideElement = () => {
         this.classList.add('hidden');
-    }
+    };
 
     showElement = () => {
         this.classList.remove('hidden');
-    }
+    };
 
     toggleVisibility = () => {
         this.classList.toggle('hidden');
         document.querySelector('#layout-container').classList.toggle('hidden');
-    }
+    };
 
     cancel = () => {
         this.toggleVisibility();
-    }
+    };
 
     render = () => {
-        const layoutMenu = html`
-            <div class="center-form">
-                <fieldset>
-                     <legend>Save the current Views in this Window as a Layout template</legend>
-                     <input type="text" class="template-name" size="50"
-                         value="New Layout"/> <br>
-                     <button @click=${this.saveAsTemplate}>Save Layout</button>
-                     <button @click=${this.cancel}>Cancel</button>
-                 </fieldset>
-             </div>`;
+        const layoutMenu = html` <div class="center-form">
+            <fieldset>
+                <legend>Save the current Views in this Window as a Layout template</legend>
+                <input type="text" class="template-name" size="50" value="New Layout" /> <br />
+                <button @click=${this.saveAsTemplate}>Save Layout</button>
+                <button @click=${this.cancel}>Cancel</button>
+            </fieldset>
+        </div>`;
         return render(layoutMenu, this);
-    }
+    };
 }
 
 customElements.define('layout-form', LayoutForm);
