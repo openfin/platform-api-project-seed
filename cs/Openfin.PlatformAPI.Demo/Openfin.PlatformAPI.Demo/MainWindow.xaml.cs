@@ -589,19 +589,21 @@ namespace Openfin.PlatformAPI.Demo
 
             platform.Application.Closed += (s, e) =>
             {
-                var p = platforms.First(x => x.UUID == e.Application.Uuid);
+               
+                    var p = platforms.FirstOrDefault(x => x.UUID == e.Application.Uuid);
 
-                if (p != null)
-                {
-                    Dispatcher.Invoke(() =>
+                    if (p != null)
                     {
-                        platforms.Remove(p);
-                        MessageBox.Show($"{e.Application.Uuid} has closed.");
-                    });
+                        Dispatcher.Invoke(() =>
+                        {
+                            platforms.Remove(p);
+                            MessageBox.Show($"{e.Application.Uuid} has closed.");
+                        });
 
-                    setButtonEnabled(btnStartPlatform, true);
-                    setButtonEnabled(btnQuitPlatform, false);
-                }
+                        setButtonEnabled(btnStartPlatform, true);
+                        setButtonEnabled(btnQuitPlatform, false);
+                    }
+                
             };
 
             foreach (var window in platform.PlatformWindows)
