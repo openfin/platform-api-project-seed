@@ -21,12 +21,16 @@ namespace Openfin.PlatformAPI.Demo
         public LayoutGenerator()
         {
             InitializeComponent();
+
             var runtimeOptions = new RuntimeOptions
             {
-                Version = "stable"                
+                Version = "canary"                
             };
 
-            var appOptions = new ApplicationOptions(Guid.NewGuid().ToString(), Guid.NewGuid().ToString(), "https://openfin.github.io/golden-prototype/config-gen"); 
+            
+            var appOptions = new ApplicationOptions(Guid.NewGuid().ToString(), Guid.NewGuid().ToString(), "https://openfin.github.io/golden-prototype/config-gen");
+            appOptions.MainWindowOptions.PreloadScripts = new List<PreloadScript>();
+            appOptions.MainWindowOptions.PreloadScripts.Add(new PreloadScript("preloadscript.js", false));
             embeddedView.Initialize(runtimeOptions, appOptions);
         }
     }

@@ -8,6 +8,7 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:local="clr-namespace:Openfin.PlatformAPI.Demo"
         xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"
+        Icon="openfin.ico"
         Foreground="White"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Medium"
@@ -15,19 +16,19 @@
         TextElement.FontSize="14"  
         FontFamily="{materialDesign:MaterialDesignFont}"
         mc:Ignorable="d"        
-        Title="OpenFin Platform API" Height="450" Width="800">
+        Title="OpenFin Platform API Management" Height="450" Width="800">
     <Window.Resources>
         <Style TargetType="TextBlock">
             <Setter Property="Foreground" Value="White" />
         </Style>
     </Window.Resources>
-    <Grid>    
+    <Grid>
 
-        <dragablz:TabablzControl Grid.RowSpan="2"> 
+        <dragablz:TabablzControl x:Name="tabControl" Grid.RowSpan="2">
             <dragablz:TabablzControl.InterTabController>
                 <dragablz:InterTabController />
             </dragablz:TabablzControl.InterTabController>
-            <TabItem Name="tiPlatformManagement" Header="Platform Management" IsSelected="True">
+            <TabItem Name="tiPlatformManagement" Header="Platform"  IsSelected="True">
                 <Grid Margin="8">
                     <Grid.RowDefinitions>
                         <RowDefinition />
@@ -74,7 +75,7 @@
                     </DataGrid>
                 </Grid>
             </TabItem>
-            <TabItem Header="Window Management">
+            <TabItem Header="Window">
                 <Grid Margin="8" >
                     <Grid.RowDefinitions>
                         <RowDefinition />
@@ -100,17 +101,17 @@
                         <Separator Margin="0,30,0,0"/>
                     </StackPanel>
                     <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1" Grid.RowSpan="2">
-                        <Button x:Name="btnCreateWindow" Click="btnCreateWindow_Click" Margin="0,10">Create Platform Window</Button>                        
-                        <Button x:Name="btnCloseWindow" Click="btnCloseWindow_Click" Margin="0,10">Close Platform Window</Button>
+                        <Button  x:Name="btnCreateWindow" Click="btnCreateWindow_Click" Margin="0,10">Create Platform Window</Button>
+                        <Button  x:Name="btnCloseWindow" Click="btnCloseWindow_Click" Margin="0,10">Close Platform Window</Button>
                     </StackPanel>
-                    <DataGrid x:Name="dgPlatformWindows" SelectionChanged="dgPlatformWindows_SelectionChanged" CanUserAddRows="False" CurrentCellChanged="dgPlatformWindows_CurrentCellChanged" Opacity=".6" Background="Black" ItemsSource="{Binding}" SelectionMode="Single" CanUserSortColumns="False"  Foreground="White" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2"  Grid.RowSpan="3" AutoGenerateColumns="False">
+                    <DataGrid x:Name="dgPlatformWindows" SelectionChanged="dgPlatformWindows_SelectionChanged" CanUserAddRows="False" Opacity=".6" Background="Black" ItemsSource="{Binding}" SelectionMode="Single" CanUserSortColumns="False"  Foreground="White" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2"  Grid.RowSpan="3" AutoGenerateColumns="False">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Platform Windows(s)" Binding="{Binding Name}" IsReadOnly="True" ></DataGridTextColumn>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>
             </TabItem>
-            <TabItem x:Name="tiViewManagement" Header="View Management">
+            <TabItem x:Name="tiViewManagement" Header="View">
                 <Grid Margin="8" HorizontalAlignment="Stretch" >
                     <Grid.RowDefinitions>
                         <RowDefinition />
@@ -132,21 +133,21 @@
                         </Grid.Background>
                     </Grid>
                     <StackPanel Grid.Row="0"  Grid.RowSpan="2" HorizontalAlignment="Center" Margin="18">
-                        <TextBlock TextWrapping="Wrap">Create and close platform views from here.</TextBlock>
+                        <TextBlock TextWrapping="Wrap"><Run Text="Create and close platform views from here."/></TextBlock>
                         <Separator Margin="0,30,0,0"/>
                     </StackPanel>
                     <StackPanel Orientation="Vertical" Grid.Row="1" HorizontalAlignment="Center" >
-                        <Button x:Name="btnCreateView" Click="btnCreateView_Click" Margin="0,10">Create Platform View</Button>
-                        <Button x:Name="btnCloseView" Click="btnCloseView_Click">Close Platform View</Button>
+                        <Button  x:Name="btnCreateView" Click="btnCreateView_Click" Margin="0,10" Content="Create Platform View"/>
+                        <Button  x:Name="btnCloseView" Click="btnCloseView_Click" Content="Close Platform View"/>
                     </StackPanel>
                     <DataGrid x:Name="dgPlatformViews" Opacity=".6" Background="Black" CanUserAddRows="False" ItemsSource="{Binding}" SelectionMode="Single" CanUserSortColumns="False" Foreground="White" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2"  Grid.RowSpan="3" AutoGenerateColumns="False">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Platform View(s)" Binding="{Binding Name}" IsReadOnly="True" ></DataGridTextColumn>
+                            <DataGridTextColumn Header="Platform View(s)" Binding="{Binding Name}" IsReadOnly="True" />
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>
             </TabItem>
-            <TabItem Header="Snapshot Management">
+            <TabItem Header="Snapshot">
                 <Grid Margin="8" HorizontalAlignment="Stretch" >
                     <Grid.RowDefinitions>
                         <RowDefinition />
@@ -169,33 +170,33 @@
                     </Grid>
                     <StackPanel Grid.Row="0"  Grid.RowSpan="2" HorizontalAlignment="Center" Margin="18">
                         <ScrollViewer CanContentScroll="True" VerticalScrollBarVisibility="Visible" Height="170">
-                        <TextBlock  TextWrapping="Wrap" Margin="8">
+                            <TextBlock  TextWrapping="Wrap" Margin="8">
                             Saving a snapshot will get a snapshot of the current layout and persist it in memory to be applied to the current running platform.<LineBreak/><LineBreak/>
                             When saving a snapshot, you can choose the option to force the platform to shut down and restart when a snapshot is applied.
-                        </TextBlock>
+                            </TextBlock>
                         </ScrollViewer>
                         <Separator Margin="0,30,0,0"/>
                     </StackPanel>
                     <StackPanel Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center">
-                        <Button x:Name="btnSaveSnapshot" Content="Save Snapshot" Click="btnSaveSnapshot_Click" Margin="0,10"/>
-                        <Button x:Name="btnApplySnapshot" Content="Apply Snapshot" Click="btnApplySnapshot_Click" Margin="0,10"/>
+                        <Button  x:Name="btnSaveSnapshot" Content="Save Snapshot" Click="btnSaveSnapshot_Click" Margin="0,10"/>
+                        <Button  x:Name="btnApplySnapshot" Content="Apply Snapshot" Click="btnApplySnapshot_Click" Margin="0,10"/>
                     </StackPanel>
                     <DataGrid x:Name="dgSavedSnapshots"  Background="Black"  CanUserAddRows="False" AutoGenerateColumns="False" SelectionMode="Single" CanUserSortColumns="False" ItemsSource="{Binding}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"  Opacity=".7"  Foreground="White" Grid.Column="1" Grid.RowSpan="3" Grid.ColumnSpan="2">
                         <DataGrid.Columns>
                             <DataGridTemplateColumn>
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <Button Content="Delete" Command="Delete"/>
+                                        <Button  Content="Delete" Command="Delete"/>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
                             <DataGridTextColumn Header="Saved Snapshot(s)" Binding="{Binding SnapshotName}" IsReadOnly="True"></DataGridTextColumn>
                             <DataGridCheckBoxColumn Header="Close Platform Before Applying" Binding="{Binding ClosePlatformWhenApplying}"></DataGridCheckBoxColumn>
-                        </DataGrid.Columns>                        
+                        </DataGrid.Columns>
                     </DataGrid>
                 </Grid>
             </TabItem>
-            <TabItem Header="Layout Management">
+            <TabItem Header="Layout">
                 <Grid Margin="8" HorizontalAlignment="Stretch" >
                     <Grid.RowDefinitions>
                         <RowDefinition />
@@ -220,29 +221,29 @@
                         <ScrollViewer CanContentScroll="True" VerticalScrollBarVisibility="Visible" Height="100">
                             <TextBlock  TextWrapping="Wrap" Margin="8">
                                 The layout generator is a tool used to generate layouts for platform. When the generator is launched, you can specify your window arrangement and URLs to load in each configured view.<LineBreak/><LineBreak/>
-                                When the design is done, click the "Copy to Clipboard" button in the layout generator tool and you will be prompted to save the layout here. (A unique name is required).<LineBreak/><LineBreak/>                                
-                            
+                                When the design is done, click the "Copy to Clipboard" button in the layout generator tool and you will be prompted to save the layout here. (A unique name is required).<LineBreak/><LineBreak/>
+
                             </TextBlock>
                         </ScrollViewer>
                         <Separator Margin="0,30,0,0"/>
                     </StackPanel>
                     <StackPanel Grid.Row="1" Grid.RowSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center">
-                        <Button x:Name="btnSaveWindowLayout" Click="btnSaveWindowLayout_Click"  Grid.Column="0" Margin="0,5">Save Current Layout</Button>
-                        <Button x:Name="btnLaunchGenerator" Click="btnLaunchGenerator_Click" Grid.Column="0" Margin="0,5">Launch Layout Generator</Button>
-                        <Button x:Name="btnReplaceLayout" Click="btnReplaceLayout_Click" Grid.Column="0" Margin="0,5">Replace Layout</Button>
-                        <Button x:Name="btnApplyPreset" Click="btnApplyPreset_Click" Grid.Column="0" Margin="0,5">Apply Preset</Button>
+                        <Button  x:Name="btnSaveWindowLayout" Click="btnSaveWindowLayout_Click"  Grid.Column="0" Margin="0,5">Save Current Layout</Button>
+                        <Button  x:Name="btnLaunchGenerator" Click="btnLaunchGenerator_Click" Grid.Column="0" Margin="0,5">Launch Layout Generator</Button>
+                        <Button  x:Name="btnReplaceLayout" Click="btnReplaceLayout_Click" Grid.Column="0" Margin="0,5">Replace Layout</Button>
+                        <Button  x:Name="btnApplyPreset" Click="btnApplyPreset_Click" Grid.Column="0" Margin="0,5">Apply Preset</Button>
                     </StackPanel>
                     <DataGrid x:Name="dgSavedLayouts" Background="Black" CanUserAddRows="False" AutoGenerateColumns="False" ItemsSource="{Binding}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"  Opacity=".7"  Foreground="White" Grid.Column="1" Grid.RowSpan="3" Grid.ColumnSpan="2">
                         <DataGrid.Columns>
                             <DataGridTemplateColumn>
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <Button Content="Delete" Command="Delete"/>
-                                    </DataTemplate>                                    
+                                        <Button  Content="Delete" Command="Delete"/>
+                                    </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
-                            <DataGridTextColumn Header="Saved Layout(s)" Binding="{Binding LayoutName}" IsReadOnly="True"></DataGridTextColumn>
-                            <DataGridTextColumn Header="JSON Data" Binding="{Binding LayoutConfig}" IsReadOnly="True"></DataGridTextColumn>                            
+                            <DataGridTextColumn Header="Saved Layout(s)" Binding="{Binding Name}" IsReadOnly="True"></DataGridTextColumn>
+                            <DataGridTextColumn Header="JSON Data" Binding="{Binding Config}" IsReadOnly="True"></DataGridTextColumn>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>
@@ -255,8 +256,8 @@
                 <StackPanel Margin="12">
                     <TextBox x:Name="tbLayoutName" Margin="0,10,0,0" materialDesign:HintAssist.Hint="Layout name"/>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="8">
-                        <Button x:Name="btnCancelSaveLayout" HorizontalAlignment="Stretch" Click="btnCancelSaveLayout_Click">Cancel</Button>
-                        <Button x:Name="btnSaveLayout" HorizontalAlignment="Stretch" Margin="5,0,0,0" Click="btnSaveLayout_Click">Save Layout</Button>
+                        <Button  x:Name="btnCancelSaveLayout" HorizontalAlignment="Stretch" Click="btnCancelSaveLayout_Click">Cancel</Button>
+                        <Button  x:Name="btnSaveLayout" HorizontalAlignment="Stretch" Margin="5,0,0,0" Click="btnSaveLayout_Click">Save Layout</Button>
                     </StackPanel>
                 </StackPanel>
             </materialDesign:DialogHost.DialogContent>
@@ -270,18 +271,18 @@
                         <RowDefinition/>
                         <RowDefinition/>
                         <RowDefinition/>
-                    </Grid.RowDefinitions>                  
+                    </Grid.RowDefinitions>
                     <StackPanel Grid.Row="0" Orientation="Vertical" Margin="0,0,0,10">
                         <Label>Background Color</Label>
                         <StackPanel Orientation="Horizontal">
                             <Rectangle x:Name="rectSelectedWindowColor" Height="20" Width="20" Fill="Black"/>
                             <TextBlock x:Name="tbSelectedWindowBackgroundColorHex"/>
                         </StackPanel>
-                        <materialDesign:ColorPicker x:Name="cpWindowBackground" Height="200" MouseMove="cpWindowBackground_MouseMove" ></materialDesign:ColorPicker>                            
-                     </StackPanel> 
+                        <materialDesign:ColorPicker x:Name="cpWindowBackground" Height="200" MouseMove="cpWindowBackground_MouseMove" ></materialDesign:ColorPicker>
+                    </StackPanel>
                     <StackPanel Grid.Row="1">
-                    <CheckBox x:Name="cbCreatePlatformWindowDefaultCentered" Content="Default Centered" Margin="0,0,0,10"/>
-                    <CheckBox x:Name="cbCreateFrame" Content="Create With Frame" Margin="0,0,0,10"/>
+                        <CheckBox x:Name="cbCreatePlatformWindowDefaultCentered" Content="Default Centered" Margin="0,0,0,10"/>
+                        <CheckBox x:Name="cbCreateFrame" Content="Create With Frame" Margin="0,0,0,10"/>
                         <CheckBox x:Name="cbResizable" Content="Allow Resize" Margin="0,0,0,10"/>
                         <CheckBox x:Name="cbMaximizable" Content="Allow Maximize" Margin="0,0,0,10"/>
                         <CheckBox x:Name="cbMinimizable" Content="Allow Minimize" Margin="0,0,0,10"/>
@@ -289,11 +290,11 @@
                     <StackPanel Grid.Row="2" Orientation="Horizontal"  Margin="0,0,0,10">
                         <Label Content="Opacity"/>
                         <Slider x:Name="slOpacity" Minimum="0" Maximum="1" Value="1" Width="200" TickFrequency=".1" TickPlacement="BottomRight" IsSnapToTickEnabled="True"/>
-                    </StackPanel>                    
+                    </StackPanel>
                     <StackPanel Margin="12" Grid.Row="4" >
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="8">
-                            <Button x:Name="btnCancelCreatePlatformWindow" HorizontalAlignment="Stretch" Click="btnCancelCreatePlatformWindow_Click">Cancel</Button>
-                            <Button x:Name="btnCreatePlatformWindow" HorizontalAlignment="Stretch" Margin="5,0,0,0" Click="btnCreatePlatformWindow_Click">Create Window</Button>
+                            <Button  x:Name="btnCancelCreatePlatformWindow" HorizontalAlignment="Stretch" Click="btnCancelCreatePlatformWindow_Click">Cancel</Button>
+                            <Button  x:Name="btnCreatePlatformWindow" HorizontalAlignment="Stretch" Margin="5,0,0,0" Click="btnCreatePlatformWindow_Click">Create Window</Button>
                         </StackPanel>
                     </StackPanel>
                 </Grid>
@@ -313,23 +314,23 @@
                         <StackPanel>
                             <Label>Target Window:</Label>
                             <TextBlock x:Name="tbTargetWindow">(one will be generated)</TextBlock>
-                        </StackPanel>                        
+                        </StackPanel>
                     </StackPanel>
                     <StackPanel Grid.Row="1">
                         <Label>Background Color</Label>
                         <StackPanel Orientation="Horizontal">
                             <Rectangle x:Name="rectSelectedViewColor" Fill="Black" Height="20" Width="20"/>
-                            <TextBlock x:Name="tbSelectedViewBackgroundColorHex"/>                            
-                        </StackPanel>                      
-                        <materialDesign:ColorPicker x:Name="cpViewBackground" Height="200"  MouseMove="cpViewBackground_MouseMove"></materialDesign:ColorPicker>                                      
+                            <TextBlock x:Name="tbSelectedViewBackgroundColorHex"/>
+                        </StackPanel>
+                        <materialDesign:ColorPicker x:Name="cpViewBackground" Height="200"  MouseMove="cpViewBackground_MouseMove"></materialDesign:ColorPicker>
                         <TextBox x:Name="tbViewName" materialDesign:HintAssist.Hint="View Name (default is GUID)"/>
                         <TextBox x:Name="tbViewUrl" materialDesign:HintAssist.Hint="URL (default https://openfin.co)"/>
-                        
-                    </StackPanel>                                     
+
+                    </StackPanel>
                     <StackPanel Margin="12" Grid.Row="2" >
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="8">
-                            <Button x:Name="btnCancelCreatePlatformView" HorizontalAlignment="Stretch" Click="btnCancelCreatePlatformView_Click">Cancel</Button>
-                            <Button x:Name="btnCreatePlatformVieww" HorizontalAlignment="Stretch" Margin="5,0,0,0" Click="btnCreatePlatformView_Click">Create View</Button>
+                            <Button  x:Name="btnCancelCreatePlatformView" HorizontalAlignment="Stretch" Click="btnCancelCreatePlatformView_Click">Cancel</Button>
+                            <Button  x:Name="btnCreatePlatformVieww" HorizontalAlignment="Stretch" Margin="5,0,0,0" Click="btnCreatePlatformView_Click">Create View</Button>
                         </StackPanel>
                     </StackPanel>
                 </Grid>
@@ -339,26 +340,26 @@
             <materialDesign:DialogHost.DialogContent>
                 <StackPanel Margin="24">
                     <TextBox x:Name="tbSnapshotName" materialDesign:HintAssist.Hint="Snapshot Name"/>
-                    <CheckBox x:Name="cbClosePlatform" Content="Close Platform before restoring Snapshot"/>                    
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                        <Button x:Name="btnCancelSaveSnapshot" Content="Cancel" Click="btnCancelSaveSnapshot_Click" />
-                        <Button x:Name="btnPersistSnapshot" Content="Save" Click="btnPersistSnapshot_Click"/>
+                    <CheckBox x:Name="cbClosePlatform" Content="Close Platform before restoring Snapshot" Margin="0,10,0,0"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
+                        <Button  x:Name="btnCancelSaveSnapshot" Content="Cancel" Click="btnCancelSaveSnapshot_Click" Margin="0,0,5,0"/>
+                        <Button  x:Name="btnPersistSnapshot" Content="Save" Click="btnPersistSnapshot_Click"/>
                     </StackPanel>
                 </StackPanel>
             </materialDesign:DialogHost.DialogContent>
         </materialDesign:DialogHost>
         <materialDesign:DialogHost x:Name="dlgLayoutPreset" IsOpen="False" CloseOnClickAway="True">
             <materialDesign:DialogHost.DialogContent>
-                <StackPanel Margin="24">                    
+                <StackPanel Margin="24">
                     <RadioButton x:Name="rbPresetColumns" GroupName="preset" Content="Columns"/>
                     <RadioButton x:Name="rbPresetGrid" GroupName="preset" Content="Grid"/>
                     <RadioButton x:Name="rbPresetRows" GroupName="preset" Content="Rows"/>
                     <RadioButton x:Name="rbPresetTabs" GroupName="preset" Content="Tabs"/>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10">
-                        <Button x:Name="btnPresetsCancel" Click="btnPresetsCancel_Click">Cancel</Button>
-                        <Button x:Name="btnPresetsApply" Click="btnPresetsApply_Click">Apply</Button>
+                        <Button  x:Name="btnPresetsCancel" Click="btnPresetsCancel_Click">Cancel</Button>
+                        <Button  x:Name="btnPresetsApply" Click="btnPresetsApply_Click">Apply</Button>
                     </StackPanel>
-                </StackPanel>                
+                </StackPanel>
             </materialDesign:DialogHost.DialogContent>
         </materialDesign:DialogHost>
     </Grid>

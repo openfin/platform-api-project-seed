@@ -5,7 +5,7 @@
     <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
 	  <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <UseWPF>true</UseWPF>
-    <ApplicationIcon></ApplicationIcon>
+    <ApplicationIcon>openfin.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,7 +16,6 @@
     <PackageReference Include="FluentWPF" Version="0.8.0" />
     <PackageReference Include="MaterialDesignThemes" Version="3.1.3" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="Openfin.WPF" Version="16.4.0" />
     <PackageReference Include="SharpClipboard" Version="3.5.2" />
     <PackageReference Include="SuperSocket.ClientEngine" Version="0.10.0" />
     <PackageReference Include="WebSocket4Net" Version="0.15.2" />
@@ -29,7 +28,26 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="snapshot.json">
+    <Reference Include="Openfin.WinForm">
+      <HintPath>..\..\..\..\dotnet-adapter\OpenFin.WPF\bin\Debug\netcoreapp3.1\Openfin.WinForm.dll</HintPath>
+    </Reference>
+    <Reference Include="Openfin.WPF">
+      <HintPath>..\..\..\..\dotnet-adapter\OpenFin.WPF\bin\Debug\netcoreapp3.1\Openfin.WPF.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenfinDesktop">
+      <HintPath>..\..\..\..\dotnet-adapter\OpenFin.WPF\bin\Debug\netcoreapp3.1\OpenfinDesktop.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="openfin.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="layout.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="preloadScript.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

@@ -1,0 +1,21 @@
+{
+    "layout": {
+        "content": [
+            {
+                "type": "stack",
+                "id": "no-drop-target",
+                "content": [
+                    {
+                        "type": "component",
+                        "componentName": "view",
+                        "componentState": {
+                            "name": "%name%",
+                            "processAffinity": "ps_1",
+                            "url": "%url%"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+}

@@ -138,12 +138,13 @@ namespace Openfin.PlatformAPI.Demo
 
             foreach(var item in selectedPlatform.PlatformWindows)
             {
-               
+
+                    item.Key.Closed += Window_Closed;
                     platformWindows.Add(item.Key);
                     platformViews[item.Key.Name] = new ObservableCollection<PlatformView>();
 
                     foreach (var view in item.Value)
-                    {
+                    {                        
                         platformViews[item.Key.Name].Add(view);
                     }            
                 
@@ -237,8 +238,11 @@ namespace Openfin.PlatformAPI.Demo
             {
                 Dispatcher.Invoke(() =>
                 {
-                    var views = platformViews[targetIdentity.Name];
-                    views.Remove(e.View);
+                    if (platformViews.ContainsKey(targetIdentity.Name))
+                    {
+                        var views = platformViews[targetIdentity.Name];
+                        views.Remove(e.View);
+                    }
                 });
             };
 
@@ -281,19 +285,14 @@ namespace Openfin.PlatformAPI.Demo
             };
             
             // Window layouts should be created with the layout generator tool which can be found at https://openfin.github.io/golden-prototype/config-gen
-            var snapshotJson = await File.ReadAllTextAsync(Environment.CurrentDirectory + "\\snapshot.json");
+            var layoutJson = await File.ReadAllTextAsync(Environment.CurrentDirectory + "\\layout.json");
 
-            snapshotJson = snapshotJson
+            layoutJson = layoutJson
                 .Replace("%name%", Guid.NewGuid().ToString());
 
-            options.Layout = JsonConvert
-               .DeserializeObject<Snapshot>(snapshotJson)
-               .Windows
-               .First()
-               .Layout;
+            options.Layout = JsonConvert.DeserializeObject<PlatformLayoutConfiguration>(layoutJson);
 
-            var window = await selectedPlatform.CreateWindowAsync(options);
-                      
+            var window = await selectedPlatform.CreateWindowAsync(options);                     
 
             window.Closed += Window_Closed;
             window.ViewAttached += Window_ViewAttached;
@@ -446,22 +445,12 @@ namespace Openfin.PlatformAPI.Demo
 
             try
             {
-                PlatformLayoutConfiguration layoutConfiguration = null;
-
-                if (savedLayout.LayoutConfig.Contains("layout"))
-                {
-                    var jobj = JObject.Parse(savedLayout.LayoutConfig);
-                    layoutConfiguration = ((JArray)jobj["snapshot"]["windows"]).First()["layout"].ToObject<PlatformLayoutConfiguration>();
-                }
-                else
-                {
-                    layoutConfiguration = JsonConvert.DeserializeObject<PlatformLayoutConfiguration>(savedLayout.LayoutConfig);
-                }
+                PlatformLayoutConfiguration layoutConfiguration = JsonConvert.DeserializeObject<PlatformLayoutConfiguration>(savedLayout.Config);
                 await layout.ReplaceLayoutAsync(layoutConfiguration);
             }
             catch(Exception ex)
             {
-                MessageBox.Show(savedLayout.LayoutConfig, "An error occurred parsing the JSON");
+                MessageBox.Show(savedLayout.Config, "An error occurred parsing the JSON");
                 return;
             }
         }
@@ -471,8 +460,7 @@ namespace Openfin.PlatformAPI.Demo
             var targetWindow = e.Window;
             var views = await targetWindow.GetViewsAsync();
 
-            platformViews[targetWindow.Name] = new ObservableCollection<PlatformView>();
-            
+            platformViews[targetWindow.Name] = new ObservableCollection<PlatformView>();            
             foreach (var view in views)
             {
                 Dispatcher.Invoke(() =>
@@ -491,7 +479,7 @@ namespace Openfin.PlatformAPI.Demo
 
         private void btnSaveLayout_Click(object sender, RoutedEventArgs e)
         {
-            if (savedLayouts.Any(x => x.LayoutName == tbLayoutName.Text))
+            if (savedLayouts.Any(x => x.Name == tbLayoutName.Text))
             {
                 MessageBox.Show("Pick a unique name.");
                 return;
@@ -500,7 +488,7 @@ namespace Openfin.PlatformAPI.Demo
             var layout = JObject.Parse(currentClipboardContents)["snapshot"]["windows"][0]["layout"].ToObject<PlatformLayoutConfiguration>();
             
 
-            savedLayouts.Add(new SavedLayout { LayoutName = tbLayoutName.Text, LayoutConfig = JsonConvert.SerializeObject(layout) });
+            savedLayouts.Add(new SavedLayout { Name = tbLayoutName.Text, Config = JsonConvert.SerializeObject(layout) });
             dlgSaveLayout.IsOpen = false;
         }
 
@@ -561,11 +549,7 @@ namespace Openfin.PlatformAPI.Demo
         private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             MessageBox.Show(e.ExceptionObject.ToString());
-        }
-
-        private void dgPlatformWindows_CurrentCellChanged(object sender, EventArgs e)
-        {
-        }
+        }    
 
         private void dgPlatformWindows_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -603,6 +587,23 @@ namespace Openfin.PlatformAPI.Demo
         {
             var platform = await PlatformService.StartPlatformAsync("https://raw.githubusercontent.com/openfin/platform-api-project-seed/master/public.json", runtime);
 
+            platform.Application.Closed += (s, e) =>
+            {
+                var p = platforms.First(x => x.UUID == e.Application.Uuid);
+
+                if (p != null)
+                {
+                    Dispatcher.Invoke(() =>
+                    {
+                        platforms.Remove(p);
+                        MessageBox.Show($"{e.Application.Uuid} has closed.");
+                    });
+
+                    setButtonEnabled(btnStartPlatform, true);
+                    setButtonEnabled(btnQuitPlatform, false);
+                }
+            };
+
             foreach (var window in platform.PlatformWindows)
             {
                 window.Key.Closed += Window_Closed;
@@ -618,6 +619,7 @@ namespace Openfin.PlatformAPI.Demo
                 platformViews.Add(window.Key.Name, views);
             }
 
+            
             selectedPlatform = platform;
             platforms.Add(platform);
         }
@@ -655,13 +657,14 @@ namespace Openfin.PlatformAPI.Demo
              
                 var savedLayout = new SavedLayout
                 {
-                    LayoutConfig = JsonConvert.SerializeObject(layoutConfig),
-                    LayoutName = dlg.FileName
+                    Config = JsonConvert.SerializeObject(layoutConfig),
+                    Path = dlg.FileName,
+                    Name = Path.GetFileName(dlg.FileName)
                 };
 
                 savedLayouts.Add(savedLayout);
 
-                await File.WriteAllTextAsync(dlg.FileName, savedLayout.LayoutConfig);
+                await File.WriteAllTextAsync(dlg.FileName, savedLayout.Config);
             }
         }
     }

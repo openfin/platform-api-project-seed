@@ -1,8 +1,9 @@
-﻿namespace Openfin.PlatformAPI.Demo
+namespace Openfin.PlatformAPI.Demo
 {
     public class SavedLayout
     {
-        public string LayoutName { get; set; }
-        public string LayoutConfig { get; set; }
+        public string Name { get; set; }
+        public string Config { get; set; }
+        public string Path { get; set; }
     }
 }
