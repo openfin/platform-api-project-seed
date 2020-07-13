@@ -387,11 +387,11 @@ namespace Openfin.PlatformAPI.Demo
             {
                 preset.PresetType = PlatformLayoutPresetTypes.Columns;
             }
-            else if (rbPresetColumns.IsChecked.Value)
+            else if (rbPresetGrid.IsChecked.Value)
             {
                 preset.PresetType = PlatformLayoutPresetTypes.Grid;
             }
-            else if (rbPresetColumns.IsChecked.Value)
+            else if (rbPresetRows.IsChecked.Value)
             {
                 preset.PresetType = PlatformLayoutPresetTypes.Rows;
             }
@@ -647,6 +647,7 @@ namespace Openfin.PlatformAPI.Demo
             var layout = new PlatformLayout(selectedWindow.Identity, selectedPlatform);
             var layoutConfig = await layout.GetLayoutConfigurationAsync();
             var dlg = new SaveFileDialog();
+            dlg.Filter = "JSON File|*.json";
 
             if (selectedWindow == null)
             {
