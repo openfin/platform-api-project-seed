@@ -541,17 +541,17 @@ public class PlatformApiDemo {
 		
 		JPanel pnlTop = new JPanel(new BorderLayout(5, 5));
 		pnlTop.setBorder(BorderFactory.createEmptyBorder(20, 10, 20, 10));
-		pnlTop.add(new JLabel("Selected Platform"), BorderLayout.WEST);
-		JTextField tfSelectedPlatformUuid = new JTextField("N/A");
-		tfSelectedPlatformUuid.setEditable(false);
-		pnlTop.add(tfSelectedPlatformUuid, BorderLayout.CENTER);
+		pnlTop.add(new JLabel("Selected Window"), BorderLayout.WEST);
+		JTextField tfSelectedWindow = new JTextField("N/A");
+		tfSelectedWindow.setEditable(false);
+		pnlTop.add(tfSelectedWindow, BorderLayout.CENTER);
 
 		this.runtimeTree.addTreeSelectionListener(e -> {
-			Platform p = this.getSelectedNode(Platform.class);
-			btnApply.setEnabled(p != null);
-			btnSave.setEnabled(p != null);
-			btnReplace.setEnabled(p != null);
-			tfSelectedPlatformUuid.setText(p == null ? "N/A" : p.getUuid());
+			Window win = this.getSelectedNode(Window.class);
+			btnApply.setEnabled(win != null);
+			btnSave.setEnabled(win != null);
+			btnReplace.setEnabled(win != null);
+			tfSelectedWindow.setText(win == null ? "N/A" : win.getUuid() + " : " + win.getName());
 		});
 
 		pnlLayout.add(pnlTop, BorderLayout.NORTH);
