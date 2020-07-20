@@ -8,8 +8,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -17,6 +15,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -61,6 +60,7 @@ import com.openfin.desktop.Window;
 import com.openfin.desktop.WindowOptions;
 import com.openfin.desktop.platform.Platform;
 import com.openfin.desktop.platform.PlatformOptions;
+import com.openfin.desktop.platform.PlatformView;
 import com.openfin.desktop.platform.PlatformViewOptions;
 import com.openfin.desktop.platform.PlatformWindowOptions;
 
@@ -73,6 +73,7 @@ public class PlatformApiDemo {
 	private DefaultMutableTreeNode rootNode;
 	private JTree runtimeTree;
 	private boolean windowClosing;
+	protected OpenFinRuntime openFinSystem;
 
 	PlatformApiDemo() {
 		try {
@@ -110,33 +111,16 @@ public class PlatformApiDemo {
 				Window window = (Window) nodeValue;
 				renderer.setText(window.getName());
 			}
+			else if (nodeValue instanceof PlatformView) {
+				PlatformView view = (PlatformView) nodeValue;
+				renderer.setText(view.getName());
+			}
 			else {
 				renderer.setText(value.toString());
 			}
 			renderer.setBackground(selected ? Color.LIGHT_GRAY : Color.WHITE);
 			return renderer;
 		});
-
-		this.runtimeTree.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent me) {
-				if (me.getClickCount() == 2) {
-					TreePath path = runtimeTree.getPathForLocation(me.getX(), me.getY());
-					Object nodeValue = ((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject();
-					if (nodeValue instanceof Window) {
-						Window window = (Window) nodeValue;
-						try {
-							window.bringToFront();
-						}
-						catch (DesktopException e) {
-							e.printStackTrace();
-						}
-					}
-
-				}
-			}
-		});
-
 		p.add(new JScrollPane(this.runtimeTree), BorderLayout.CENTER);
 		return p;
 	}
@@ -629,26 +613,59 @@ public class PlatformApiDemo {
 		this.frame.setVisible(true);
 	}
 
-	void addPlatformNode(String uuid) {
-		SwingUtilities.invokeLater(() -> {
-			Platform platform = Platform.wrap(uuid, this.desktopConnection);
-			DefaultMutableTreeNode node = new DefaultMutableTreeNode(platform);
-			this.platformTreeModel.insertNodeInto(node, this.rootNode, this.rootNode.getChildCount());
-			this.runtimeTree.expandRow(0);
+	void deleteViewNode(DefaultMutableTreeNode viewNode) {
+		SwingUtilities.invokeLater(()->{
+			this.platformTreeModel.removeNodeFromParent(viewNode);
+		});
+	}
+	
+	void addViewNode(DefaultMutableTreeNode winNode, Identity viewIdentity) {
+		SwingUtilities.invokeLater(()->{
+			PlatformView view = PlatformView.wrap(viewIdentity, this.desktopConnection);
+			Window window = (Window) winNode.getUserObject();
+			DefaultMutableTreeNode viewNode = new DefaultMutableTreeNode(view);
+			window.addEventListener("view-detached", e -> {
+				JSONObject vId = e.getEventObject().getJSONObject("viewIdentity");
+				if (Objects.equals(viewIdentity.getUuid(), vId.getString("uuid")) && Objects.equals(viewIdentity.getName(), vId.getString("name"))) {
+					this.deleteViewNode(viewNode);
+				}
+			}, null);
+			this.platformTreeModel.insertNodeInto(viewNode, winNode, winNode.getChildCount());
+			this.runtimeTree.expandPath(new TreePath(winNode.getPath()));
 		});
 	}
 
-	void deletePlatformNode(String uuid) {
+	void deleteWindowNode(DefaultMutableTreeNode winNode) {
 		SwingUtilities.invokeLater(() -> {
-			// find platform node
-			for (int i = 0; i < this.rootNode.getChildCount(); i++) {
-				DefaultMutableTreeNode n = (DefaultMutableTreeNode) this.rootNode.getChildAt(i);
-				if (((Platform) n.getUserObject()).getUuid().equals(uuid)) {
-					this.platformTreeModel.removeNodeFromParent(n);
-					break;
+			this.platformTreeModel.removeNodeFromParent(winNode);
+		});
+	}
+
+	void addWindowNode(DefaultMutableTreeNode platformNode, Identity winIdentity) {
+		SwingUtilities.invokeLater(() -> {
+			Platform platform = (Platform) platformNode.getUserObject();
+			Window window = Window.wrap(winIdentity.getUuid(), winIdentity.getName(), this.desktopConnection);
+			DefaultMutableTreeNode node = new DefaultMutableTreeNode(window);
+			platform.addEventListener("window-closed", e -> {
+				System.out.println("window-closed: " + e.getEventObject());
+				String uuid = e.getEventObject().getString("uuid");
+				String name = e.getEventObject().getString("name");
+				if (Objects.equals(winIdentity.getUuid(), uuid) && Objects.equals(winIdentity.getName(), name)) {
+					deleteWindowNode(node);
 				}
-			}
-			
+			});
+			window.addEventListener("view-attached", e -> {
+				System.out.println("view-attached: " + e.getEventObject());
+				addViewNode(node, new Identity(e.getEventObject().getJSONObject("viewIdentity")));
+			}, null);
+			this.platformTreeModel.insertNodeInto(node, platformNode, platformNode.getChildCount());
+			this.runtimeTree.expandPath(new TreePath(platformNode.getPath()));
+		});
+	}
+
+	void deletePlatformNode(DefaultMutableTreeNode platformNode) {
+		SwingUtilities.invokeLater(() -> {
+			this.platformTreeModel.removeNodeFromParent(platformNode);
 			if (windowClosing && rootNode.getChildCount() == 0) {
 				try {
 					PlatformApiDemo.this.desktopConnection.disconnect();
@@ -660,40 +677,32 @@ public class PlatformApiDemo {
 		});
 	}
 
-	void addWindowNode(String uuid, String name) {
+	void addPlatformNode(String uuid) {
 		SwingUtilities.invokeLater(() -> {
-			Window window = Window.wrap(uuid, name, this.desktopConnection);
-			DefaultMutableTreeNode node = new DefaultMutableTreeNode(window);
-			// find platform node
-			DefaultMutableTreeNode platformNode = null;
-			for (int i = 0; platformNode == null && i < this.rootNode.getChildCount(); i++) {
-				DefaultMutableTreeNode n = (DefaultMutableTreeNode) this.rootNode.getChildAt(i);
-				if (((Platform) n.getUserObject()).getUuid().equals(uuid)) {
-					platformNode = n;
-				}
-			}
-			if (platformNode != null) {
-				this.platformTreeModel.insertNodeInto(node, platformNode, platformNode.getChildCount());
-				this.runtimeTree.expandPath(new TreePath(platformNode.getPath()));
-			}
-		});
-	}
-
-	void deleteWindowNode(String uuid, String name) {
-		SwingUtilities.invokeLater(() -> {
-			// find platform node
-			for (int i = 0; i < this.rootNode.getChildCount(); i++) {
-				DefaultMutableTreeNode n = (DefaultMutableTreeNode) this.rootNode.getChildAt(i);
-				if (((Platform) n.getUserObject()).getUuid().equals(uuid)) {
-					for (int j = 0; j < n.getChildCount(); j++) {
-						DefaultMutableTreeNode w = (DefaultMutableTreeNode) n.getChildAt(j);
-						if (((Window) w.getUserObject()).getName().equals(name)) {
-							this.platformTreeModel.removeNodeFromParent(w);
-							break;
-						}
+			try {
+				Platform platform = Platform.wrap(uuid, this.desktopConnection);
+				DefaultMutableTreeNode node = new DefaultMutableTreeNode(platform);
+				openFinSystem.addEventListener("application-closed", e -> {
+					System.out.println("application-closed: " + e.getEventObject());
+					String eUuid = e.getEventObject().getString("uuid");
+					if (Objects.equals(uuid, eUuid)) {
+						deletePlatformNode(node);
 					}
-					break;
-				}
+				}, null);
+				platform.addEventListener("window-created", e -> {
+					System.out.println("window-created: " + e.getEventObject());
+					String eUuid = e.getEventObject().getString("uuid");
+					String eName = e.getEventObject().getString("name");
+					addWindowNode(node, new Identity(eUuid, eName));
+				});
+				this.platformTreeModel.insertNodeInto(node, this.rootNode, this.rootNode.getChildCount());
+				this.runtimeTree.expandRow(0);
+			}
+			catch (DesktopException e1) {
+				e1.printStackTrace();
+			}
+			finally {
+				
 			}
 		});
 	}
@@ -706,29 +715,12 @@ public class PlatformApiDemo {
 		this.desktopConnection.connect(runtimeConfiguration, new DesktopStateListener() {
 			@Override
 			public void onReady() {
-				OpenFinRuntime sys = new OpenFinRuntime(PlatformApiDemo.this.desktopConnection);
+				PlatformApiDemo.this.openFinSystem = new OpenFinRuntime(PlatformApiDemo.this.desktopConnection);
 				try {
-					sys.addEventListener("application-platform-api-ready", e -> {
+					openFinSystem.addEventListener("application-platform-api-ready", e -> {
 						System.out.println("application-platform-api-ready: " + e.getEventObject());
 						String uuid = e.getEventObject().getString("uuid");
 						addPlatformNode(uuid);
-					}, null);
-					sys.addEventListener("application-closed", e -> {
-						System.out.println("application-closed: " + e.getEventObject());
-						String uuid = e.getEventObject().getString("uuid");
-						deletePlatformNode(uuid);
-					}, null);
-					sys.addEventListener("window-created", e -> {
-						System.out.println("window-created: " + e.getEventObject());
-						String uuid = e.getEventObject().getString("uuid");
-						String name = e.getEventObject().getString("name");
-						addWindowNode(uuid, name);
-					}, null);
-					sys.addEventListener("window-closed", e -> {
-						System.out.println("window-closed: " + e.getEventObject());
-						String uuid = e.getEventObject().getString("uuid");
-						String name = e.getEventObject().getString("name");
-						deleteWindowNode(uuid, name);
 					}, null);
 				}
 				catch (DesktopException e) {
