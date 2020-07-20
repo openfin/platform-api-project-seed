@@ -478,7 +478,7 @@ public class PlatformApiDemo {
 				Layout layout = Layout.wrap(win.getIdentity(), this.desktopConnection);
 				JFileChooser fileChooser = new JFileChooser(new File(".").getAbsoluteFile());
 				fileChooser.setSelectedFile(new File(tfSavePath.getText()));
-				int rv = fileChooser.showOpenDialog(pnlCenter);
+				int rv = fileChooser.showSaveDialog(pnlCenter);
 				if (rv == JFileChooser.APPROVE_OPTION) {
 					File layoutFile = fileChooser.getSelectedFile();
 					tfSavePath.setText(layoutFile.getAbsolutePath());
