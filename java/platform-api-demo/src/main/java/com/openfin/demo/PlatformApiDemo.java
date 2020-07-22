@@ -60,6 +60,7 @@ import com.openfin.desktop.Window;
 import com.openfin.desktop.WindowOptions;
 import com.openfin.desktop.platform.Platform;
 import com.openfin.desktop.platform.PlatformOptions;
+import com.openfin.desktop.platform.PlatformSnapshotOptions;
 import com.openfin.desktop.platform.PlatformView;
 import com.openfin.desktop.platform.PlatformViewOptions;
 import com.openfin.desktop.platform.PlatformWindowOptions;
@@ -394,7 +395,14 @@ public class PlatformApiDemo {
 
 		JPanel pnlApply = new JPanel();
 		pnlApply.setBorder(BorderFactory.createTitledBorder("Apply Snapshot"));
-		pnlApply.setLayout(new BoxLayout(pnlApply, BoxLayout.X_AXIS));
+		pnlApply.setLayout(new BorderLayout(5, 5));
+		
+		JCheckBox cbCloseExistingWindows = new JCheckBox("Close Existing Windows");
+		
+		pnlApply.add(cbCloseExistingWindows, BorderLayout.NORTH);
+		
+		JPanel pnlApplyPath = new JPanel();
+		pnlApplyPath.setLayout(new BoxLayout(pnlApplyPath, BoxLayout.X_AXIS));
 		JTextField tfApplyPath = new JTextField(new File("snapshot.json").getAbsolutePath().toString());
 		tfApplyPath.setPreferredSize(new Dimension(Short.MAX_VALUE, tfApplyPath.getPreferredSize().height));
 		JButton btnApply = new JButton("Apply...");
@@ -408,14 +416,15 @@ public class PlatformApiDemo {
 				if (rv == JFileChooser.APPROVE_OPTION) {
 					File snapshotFile = fileChooser.getSelectedFile();
 					tfApplyPath.setText(snapshotFile.getAbsolutePath());
-					this.platformApplySnapshot(platform, snapshotFile);
+					this.platformApplySnapshot(platform, snapshotFile, cbCloseExistingWindows.isSelected());
 				}
 			}
 			else {
 			}
 		});
-		pnlApply.add(tfApplyPath);
-		pnlApply.add(btnApply);
+		pnlApplyPath.add(tfApplyPath);
+		pnlApplyPath.add(btnApply);
+		pnlApply.add(pnlApplyPath, BorderLayout.CENTER);
 
 		pnlCenter.add(pnlSave);
 		pnlCenter.add(pnlApply);
@@ -829,8 +838,13 @@ public class PlatformApiDemo {
 		});
 	}
 
-	void platformApplySnapshot(Platform platform, File path) {
-		platform.applySnapshot(path.getAbsolutePath(), null);
+	void platformApplySnapshot(Platform platform, File path, boolean closeExistingWindows) {
+		PlatformSnapshotOptions opts = null;
+		if (closeExistingWindows) {
+			opts = new PlatformSnapshotOptions();
+			opts.setCloseExistingWindows(true);
+		}
+		platform.applySnapshot(path.getAbsolutePath(), opts);
 	}
 
 	void layoutSaveLayout(Layout layout, File path) {
