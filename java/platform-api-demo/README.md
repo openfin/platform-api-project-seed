@@ -1,5 +1,9 @@
 # Platform API Java Adapter Demo
 
+## prerequisite
+* JDK 8
+* Maven 3.6
+
 ## to build
 mvn clean install
 
