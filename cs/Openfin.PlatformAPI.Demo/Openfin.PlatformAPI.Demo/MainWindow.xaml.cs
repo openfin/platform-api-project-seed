@@ -228,7 +228,7 @@ namespace Openfin.PlatformAPI.Demo
             var options = new ViewCreationOptions
             {
                 Url = tbViewUrl.Text,
-                Name = string.IsNullOrEmpty(tbViewName.Text) ? Guid.NewGuid().ToString() : tbViewName.Text,
+                Name = string.IsNullOrEmpty(tbViewName.Text) ? null : tbViewName.Text,
                 BackgroundColor = getSystemDrawingColor(cpViewBackground.Color)
             };
 
