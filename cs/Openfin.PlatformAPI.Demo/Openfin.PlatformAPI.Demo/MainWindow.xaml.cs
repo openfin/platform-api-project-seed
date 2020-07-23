@@ -95,7 +95,7 @@ namespace Openfin.PlatformAPI.Demo
 
         private async Task LoadAppStateAsync()
         {
-            if (!File.Exists("appstate.json")) return;
+            if (!File.Exists("appstate.json")) { File.Create("appstate.json");  return; }
 
             var state = JsonConvert.DeserializeObject<AppState>(await File.ReadAllTextAsync("appstate.json"));
 
