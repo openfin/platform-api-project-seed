@@ -477,18 +477,45 @@ namespace Openfin.PlatformAPI.Demo
             targetWindow.PlatformLayoutReady -= TargetWindow_PlatformLayoutReady;
         }
 
-        private void btnSaveLayout_Click(object sender, RoutedEventArgs e)
+        private async void btnSaveLayout_Click(object sender, RoutedEventArgs e)
         {
             if (savedLayouts.Any(x => x.Name == tbLayoutName.Text))
             {
                 MessageBox.Show("Pick a unique name.");
                 return;
             }
-
-            var layout = JObject.Parse(currentClipboardContents)["snapshot"]["windows"][0]["layout"].ToObject<PlatformLayoutConfiguration>();
             
+            if (!string.IsNullOrEmpty(currentClipboardContents))
+            {
+                var layout = JObject.Parse(currentClipboardContents)["snapshot"]["windows"][0]["layout"].ToObject<PlatformLayoutConfiguration>();
 
-            savedLayouts.Add(new SavedLayout { Name = tbLayoutName.Text, Config = JsonConvert.SerializeObject(layout) });
+                savedLayouts.Add(new SavedLayout { Name = tbLayoutName.Text, Config = JsonConvert.SerializeObject(layout) });
+                currentClipboardContents = string.Empty;
+            }
+            else
+            {
+                var selectedWindow = dgPlatformWindows.SelectedItem as Desktop.Window;
+
+                if (selectedWindow == null)
+                {
+                    MessageBox.Show("Select a window.");
+                    return;
+                }
+
+                var layout = new PlatformLayout(selectedWindow.Identity, selectedPlatform);
+                var layoutConfig = await layout.GetLayoutConfigurationAsync();
+
+                dlgSaveLayout.IsOpen = true;
+
+                var savedLayout = new SavedLayout
+                {
+                    Config = JsonConvert.SerializeObject(layoutConfig),
+                    Name = tbLayoutName.Text
+                };
+
+                savedLayouts.Add(savedLayout);
+            }
+
             dlgSaveLayout.IsOpen = false;
         }
 
@@ -607,7 +634,7 @@ namespace Openfin.PlatformAPI.Demo
             };
 
             foreach (var window in platform.PlatformWindows)
-            {
+            {                
                 window.Key.Closed += Window_Closed;
                 platformWindows.Add(window.Key);
 
@@ -643,32 +670,8 @@ namespace Openfin.PlatformAPI.Demo
 
         private async void btnSaveWindowLayout_Click(object sender, RoutedEventArgs e)
         {
-            var selectedWindow = dgPlatformWindows.SelectedItem as Desktop.Window;
-            var layout = new PlatformLayout(selectedWindow.Identity, selectedPlatform);
-            var layoutConfig = await layout.GetLayoutConfigurationAsync();
-            var dlg = new SaveFileDialog();
-            dlg.Filter = "JSON File|*.json";
-
-            if (selectedWindow == null)
-            {
-                MessageBox.Show("Select a window from Window Management.");
-                return;
-            }
-           
-            if (dlg.ShowDialog().Value)
-            {               
-             
-                var savedLayout = new SavedLayout
-                {
-                    Config = JsonConvert.SerializeObject(layoutConfig),
-                    Path = dlg.FileName,
-                    Name = Path.GetFileName(dlg.FileName)
-                };
-
-                savedLayouts.Add(savedLayout);
-
-                await File.WriteAllTextAsync(dlg.FileName, savedLayout.Config);
-            }
+            dlgSaveLayout.IsOpen = true;
+            
         }
     }
 }
