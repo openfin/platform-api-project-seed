@@ -106,7 +106,7 @@
                         <Button  x:Name="btnCreateWindow" Click="btnCreateWindow_Click" Margin="0,10">Create Platform Window</Button>
                         <Button  x:Name="btnCloseWindow" Click="btnCloseWindow_Click" Margin="0,10">Close Platform Window</Button>
                     </StackPanel>
-                    <DataGrid x:Name="dgPlatformWindows" SelectionChanged="dgPlatformWindows_SelectionChanged" CanUserAddRows="False" Opacity=".6" Background="Black" ItemsSource="{Binding}" SelectionMode="Single" CanUserSortColumns="False"  Foreground="White" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2"  Grid.RowSpan="3" AutoGenerateColumns="False">
+                    <DataGrid x:Name="dgPlatformWindows" CanUserAddRows="False" Opacity=".6" Background="Black" ItemsSource="{Binding}" SelectionMode="Single" CanUserSortColumns="False"  Foreground="White" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2"  Grid.RowSpan="3" AutoGenerateColumns="False">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Platform Windows(s)" Binding="{Binding Name}" IsReadOnly="True" ></DataGridTextColumn>
                         </DataGrid.Columns>

@@ -44,8 +44,7 @@
                     {
                         "type": "component",
                         "componentName": "view",
-                        "componentState": {
-                            "name": "%name%",
+                        "componentState": {                            
                             "processAffinity": "ps_1",
                             "url": "https://openfin.co",
                             "componentName": "view",
