@@ -1,12 +1,16 @@
 import { generateExternalWindowSnapshot, restoreExternalWindowPositionAndState } from './external-window-snapshot.js';
 import { URLS_ARRAY } from './constants.js';
 
-//We have customized out platform provider to keep track of a specific notepad window.
+//We have customized our platform provider to keep track of a specific notepad window.
 //Look for the "my_platform_notes.txt" file and launch it in notepad or add another external window to this array
 const externalWindowsToTrack = [
     {
         name: 'Notepad',
-        title: 'my_platform_notes - Notepad'
+        // Note that this is only the beginning of the title.
+        // In `getExternalWindowByNameTitle`, we will just check that the title starts with this string.
+        // This is in order to work with both 'my_platform_notes' and 'my_platform_notes.txt', depending on
+        // the user's settings for viewing file extensions.
+        title: 'my_platform_notes'
     }
 ];
 

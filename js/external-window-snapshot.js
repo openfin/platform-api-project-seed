@@ -1,6 +1,8 @@
 async function getExternalWindowByNameTitle(name, title) {
     const externalWindows = await fin.System.getAllExternalWindows();
-    const externalWin = externalWindows.find(w => (w.name === name && w.title == title));
+    // Using `startsWith` to account for the fact that notepad window titles may or may not include
+    // a file extension, depending on user settings.
+    const externalWin = externalWindows.find(w => (w.name === name && w.title.startsWith(title)));
     if (externalWin) {
         return await fin.ExternalWindow.wrap(externalWin);
     } else {
