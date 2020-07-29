@@ -1,6 +1,6 @@
 {
     "runtime": {
-        "arguments": "--v=1 --inspect",
+        "arguments": "--v=1 --inspect --security-realm=demo",
         "version": "beta"
     },
     "shortcut": {

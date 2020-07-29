@@ -1,10 +1,8 @@
 import { html, render } from 'https://unpkg.com/lit-html@1.0.0/lit-html.js';
 import { getTemplates, getTemplateByName, onStoreUpdate } from './template-store.js';
 import { CONTAINER_ID } from './platform-window.js';
-
-const CHART_URL = 'https://cdn.openfin.co/embed-web/chart.html';
-const LAYOUT_STORE_KEY  = 'LayoutForm';
-const SNAPSHOT_STORE_KEY = 'SnapshotForm';
+import { CHART_URL, LAYOUT_STORE_KEY, SNAPSHOT_STORE_KEY, TRADEVIEW_URL, DOCS_URL } from './constants.js';
+import { NEWS_URL } from './constants.js';
 
 
 //Our Left Menu element
@@ -21,12 +19,12 @@ class LeftMenu extends HTMLElement {
                 processAffinity: 'ps_1'
             },
             {
-                url: 'https://www.tradingview.com/chart/?symbol=NASDAQ:AAPL',
+                url: TRADEVIEW_URL,
                 printName: 'TradeView',
                 processAffinity: 'tv_1'
             },
             {
-                url: 'https://www.google.com/search?q=INDEXDJX:+.DJI&stick=H4sIAAAAAAAAAONgecRozC3w8sc9YSmtSWtOXmNU4eIKzsgvd80rySypFBLjYoOyeKS4uDj0c_UNkgsry3kWsfJ5-rm4Rrh4RVgp6Ll4eQIAqJT5uUkAAAA&source=lnms&sa=X&ved=0ahUKEwii_NWT9fzoAhU3mHIEHWy3AWIQ_AUIDSgA&biw=1280&bih=1366&dpr=1',
+                url: NEWS_URL,
                 printName: 'News',
                 processAffinity: 'mw_1'
             },
@@ -36,7 +34,7 @@ class LeftMenu extends HTMLElement {
                 processAffinity: 'cv_1'
             },
             {
-                url: `https://cdn.openfin.co/docs/javascript/${fin.desktop.getVersion()}`,
+                url: DOCS_URL,
                 printName: "Documentation",
                 processAffinity: 'ps_1'
             }
@@ -128,6 +126,7 @@ class LeftMenu extends HTMLElement {
 
     addView = async (printName) => {
         const viewOptions = this.appList.find(i => i.printName === printName);
+        viewOptions.detachOnClose = true;
         return fin.Platform.getCurrentSync().createView(viewOptions, fin.me.identity);
     }
 
@@ -202,7 +201,7 @@ class LeftMenu extends HTMLElement {
         const contentUrl = res.headers.get('Location');
         const { manifestUrl } = await fin.Application.getCurrentSync().getInfo();
 
-        const startUrl = `https://openfin.github.io/start/?manifest=${encodeURIComponent(`${manifestUrl}?$$appManifestUrl=${contentUrl}`)}`;
+        const startUrl = `https://openfin.github.io/start/?manifest=${encodeURIComponent(`https://openfin.github.io/platform-api-project-seed/public.json?$$appManifestUrl=${contentUrl}`)}`;
 
         fin.System.openUrlWithBrowser(startUrl);
     }

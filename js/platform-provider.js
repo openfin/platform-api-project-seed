@@ -17,7 +17,7 @@ const externalWindowsToTrack = [
 const pooledViews = {};
 const createPooledView = async (url) => {
     console.log('about to create');
-    const view = await fin.Platform.getCurrentSync().createView({ url }, fin.me.identity);
+    const view = await fin.Platform.getCurrentSync().createView({ url, detachOnClose: true }, fin.me.identity);
     pooledViews[url] = view.identity.name;
 };
 
@@ -35,7 +35,8 @@ function modifyContentItemName(
 
 function generateViewNameIfNeeded(name, shouldReplace, url) {
     // either the view has no name OR it is being restored and has a generated name
-    if(!name || (shouldReplace && name.startsWith('internal-generated-view-'))) {
+    if(shouldReplace && name.startsWith('internal-generated-view-')) {
+        console.log('replacing name');
         const name = pooledViews[url];
         setTimeout(() => createPooledView(url),1);
         delete pooledViews[url];
@@ -102,9 +103,9 @@ fin.Platform.init({
                 const originalPromise = super.applySnapshot({ snapshot, options });
 
                 //if we have a section with external windows we will use it.
-                // if (snapshot.externalWindows) {
-                //     await Promise.all(snapshot.externalWindows.map(async (i) => await restoreExternalWindowPositionAndState(i)));
-                // }
+                if (snapshot.externalWindows && snapshot.externalWindows.length) {
+                    await Promise.all(snapshot.externalWindows.map(async (i) => await restoreExternalWindowPositionAndState(i)));
+                }
 
                 return originalPromise;
             }
