@@ -148,19 +148,7 @@ namespace Openfin.PlatformAPI.Demo
             platformWindows = new ObservableCollection<Desktop.Window>();
             platformViews = new Dictionary<string, ObservableCollection<PlatformView>>();
 
-            foreach(var item in selectedPlatform.PlatformWindows)
-            {
-                
-                    item.Key.Closed += Window_Closed;
-                    platformWindows.Add(item.Key);
-                    platformViews[item.Key.Name] = new ObservableCollection<PlatformView>();
-
-                    foreach (var view in item.Value)
-                    {                        
-                        platformViews[item.Key.Name].Add(view);
-                    }            
-                
-            }
+            await refreshWindowsAsync();
 
             dgPlatformWindows.DataContext = platformWindows;
         }
@@ -396,11 +384,21 @@ namespace Openfin.PlatformAPI.Demo
         private void btnQuitPlatform_Click(object sender, RoutedEventArgs e)
         {
             selectedPlatform.QuitPlatformAsync();
-            platforms.Clear();
+            clearCollections();
 
             setButtonEnabled(btnQuitPlatform, false);
             setButtonEnabled(btnStartPlatform, true);
-        } 
+        }
+
+        private void clearCollections()
+        {
+            platforms.Clear();
+            platformViews.Clear();
+            platformWindows.Clear();
+            dgRunningPlatforms.ItemsSource = platforms;
+            dgPlatformWindows.ItemsSource = platformWindows;
+            dgPlatformViews.ItemsSource = new ObservableCollection<PlatformView>();
+        }
 
         private async void btnReplaceLayout_Click(object sender, RoutedEventArgs e)
         {            
@@ -599,18 +597,21 @@ namespace Openfin.PlatformAPI.Demo
 
         private async Task startPlatform()
         {
-            var platform = await PlatformService.StartPlatformAsync("https://raw.githubusercontent.com/openfin/platform-api-project-seed/master/public.json", runtime);
+            selectedPlatform = await PlatformService.StartPlatformAsync("https://raw.githubusercontent.com/openfin/platform-api-project-seed/master/public.json", runtime);
+            
+            await refreshWindowsAsync();
 
-            platform.Application.Closed += (s, e) =>
+            selectedPlatform.Application.Closed += (s, e) =>
             {
                 var p = platforms.FirstOrDefault(x => x.UUID == e.Application.Uuid);
-
+                
                 if (p != null)
                 {
                     Dispatcher.Invoke(() =>
                     {
                         platforms.Remove(p);
                         MessageBox.Show($"{e.Application.Uuid} has closed.");
+                        clearCollections();
                     });
 
                     setButtonEnabled(btnStartPlatform, true);
@@ -619,8 +620,8 @@ namespace Openfin.PlatformAPI.Demo
 
             };
 
-            platform.Application.WindowCreated += (s, e) =>
-            {                
+            selectedPlatform.Application.WindowCreated += (s, e) =>
+            {
                 e.Window.Closed += Window_Closed;
                 e.Window.Focused += Window_Focused;
                 e.Window.ViewAttached += Window_ViewAttached;
@@ -629,22 +630,22 @@ namespace Openfin.PlatformAPI.Demo
                 {
                     platformWindows.Add(e.Window);
 
-                    if(dlgCreateWindow.IsOpen)
+                    if (dlgCreateWindow.IsOpen)
                     {
                         dlgCreateWindow.IsOpen = false;
                     }
                 });
             };
 
-            platform.Application.PlatformViewCreated +=  (s, e) =>
+            selectedPlatform.Application.PlatformViewCreated += (s, e) =>
             {
                 var view = e.View;
 
                 view.ViewDestroyed += View_ViewDestroyed;
                 view.ViewFocused += View_ViewFocused;
 
-                var window = platform.Application.WrapWindow(e.Target.Name);
-                
+                var window = selectedPlatform.Application.WrapWindow(e.Target.Name);
+
                 if (!platformViews.ContainsKey(window.Name))
                 {
                     platformViews[window.Name] = new ObservableCollection<PlatformView>();
@@ -657,38 +658,38 @@ namespace Openfin.PlatformAPI.Demo
                     if (w != null)
                     {
                         platformViews[window.Name].Add(view);
-                        dgPlatformWindows.SelectedItem = w;                        
+                        dgPlatformWindows.SelectedItem = w;
                     }
                 });
 
-                var views = new List<PlatformView>();             
+                var views = new List<PlatformView>();
 
 
-                Dispatcher.Invoke(() => { dlgCreateView.IsOpen = false; });                
+                Dispatcher.Invoke(() => { dlgCreateView.IsOpen = false; });
             };
 
-            foreach (var window in platform.PlatformWindows)
-            {                
-                window.Key.Closed += Window_Closed;
-                window.Key.ViewAttached += Window_ViewAttached;                
-                window.Key.Focused += Window_Focused;
-
-                platformWindows.Add(window.Key);
-
-                var views = new ObservableCollection<PlatformView>();
-
-                foreach (var view in window.Value)
-                {
-                    view.ViewFocused += View_ViewFocused;
-                    view.ViewDestroyed += View_ViewDestroyed;
-                    views.Add(view);
-                }
-
-                platformViews.Add(window.Key.Name, views);
-            }          
             
-            selectedPlatform = platform;
-            platforms.Add(platform);
+            platforms.Add(selectedPlatform);
+        }
+
+        private async Task refreshWindowsAsync()
+        {
+            var windows = await selectedPlatform.Application.GetChildWindowsAsync();
+
+            foreach (var window in windows)
+            {
+                platformViews[window.Name] = new ObservableCollection<PlatformView>();
+
+                var views = await window.GetViewsAsync();
+
+                platformWindows.Add(window);
+
+                foreach (var view in views)
+                {
+
+                    platformViews[window.Name].Add(view);
+                }
+            }
         }
 
         private void View_ViewDestroyed(object sender, ViewDestroyedEventArgs e)
@@ -723,14 +724,17 @@ namespace Openfin.PlatformAPI.Demo
         {
             if (platformWindows.Count > 0)
             {
-                var w = platformWindows.First(x => x.Name == e.Window.Name);
+                var w = platformWindows.FirstOrDefault(x => x.Name == e.Window.Name);
 
-                Dispatcher.Invoke(() =>
+                if (w != null)
                 {
-                    platformViews.Remove(w.Name);
-                    platformWindows.Remove(w);
-                    dgPlatformViews.ItemsSource = new ObservableCollection<PlatformView>();
-                });
+                    Dispatcher.Invoke(() =>
+                    {
+                        platformViews.Remove(w.Name);
+                        platformWindows.Remove(w);
+                        dgPlatformViews.ItemsSource = new ObservableCollection<PlatformView>();
+                    });
+                }
             }
         }
 
