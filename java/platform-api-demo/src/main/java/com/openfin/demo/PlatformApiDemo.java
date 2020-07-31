@@ -44,6 +44,8 @@ import javax.swing.tree.TreePath;
 
 import org.json.JSONObject;
 
+import com.openfin.desktop.Ack;
+import com.openfin.desktop.AckListener;
 import com.openfin.desktop.DesktopConnection;
 import com.openfin.desktop.DesktopException;
 import com.openfin.desktop.DesktopIOException;
@@ -173,6 +175,10 @@ public class PlatformApiDemo {
 		p.add(new JLabel("Default Window Height"), gbConst);
 		gbConst.gridy++;
 		p.add(new JLabel("Default Window Centered"), gbConst);
+		gbConst.gridy++;
+		p.add(new JLabel("Default View URL"), gbConst);
+		gbConst.gridy++;
+		p.add(new JLabel("Create View"), gbConst);
 		gbConst.weightx = 1;
 		gbConst.gridwidth = 2;
 		gbConst.gridx = 1;
@@ -188,6 +194,12 @@ public class PlatformApiDemo {
 		gbConst.gridy++;
 		JCheckBox cbWinCenter = new JCheckBox("", false);
 		p.add(cbWinCenter, gbConst);
+		gbConst.gridy++;
+		JTextField tfUrl = new JTextField("");
+		p.add(tfUrl, gbConst);
+		gbConst.gridy++;
+		JCheckBox cbCreateView = new JCheckBox("", false);
+		p.add(cbCreateView, gbConst);
 		gbConst.gridwidth = 1;
 		gbConst.gridy++;
 		p.add(new JLabel(""), gbConst); // filler
@@ -195,7 +207,7 @@ public class PlatformApiDemo {
 		gbConst.weightx = 0;
 		JButton btnStart = new JButton("Start");
 		btnStart.addActionListener(e -> {
-			platformStart(tfUuid.getText(), tfWinWidth.getText(), tfWinHeight.getText(), cbWinCenter.isSelected());
+			platformStart(tfUuid.getText(), tfWinWidth.getText(), tfWinHeight.getText(), cbWinCenter.isSelected(), tfUrl.getText(), cbCreateView.isSelected());
 		});
 		p.add(btnStart, gbConst);
 		return p;
@@ -221,7 +233,7 @@ public class PlatformApiDemo {
 		gbConst.fill = GridBagConstraints.BOTH;
 		gbConst.gridx = 0;
 		gbConst.gridy = 0;
-		JCheckBox cbInitLayout = new JCheckBox("Init Layout");
+		JCheckBox cbInitLayout = new JCheckBox("Platform Window");
 		pnlWinOpts.add(cbInitLayout, gbConst);
 		gbConst.gridy++;
 		pnlWinOpts.add(new JLabel("Name"), gbConst);
@@ -306,7 +318,7 @@ public class PlatformApiDemo {
 		gbConst.gridwidth = 2;
 		gbConst.gridx = 1;
 		gbConst.gridy = 0;
-		JTextField tfName = new JTextField("viewName");
+		JTextField tfName = new JTextField("");
 		pnlWinOpts.add(tfName, gbConst);
 		gbConst.gridy++;
 		JTextField tfUrl = new JTextField("https://openfin.co");
@@ -320,15 +332,23 @@ public class PlatformApiDemo {
 		btnCreate.setEnabled(false);
 		btnCreate.addActionListener(e -> {
 			PlatformViewOptions viewOpts = new PlatformViewOptions();
-			viewOpts.setName(tfName.getText());
-			viewOpts.setUrl(tfUrl.getText());
+			String name = tfName.getText();
+			String url = tfUrl.getText();
+			if (name != null && !name.trim().isEmpty()) {
+				viewOpts.setName(name.trim());
+			}
+			if (url != null && !url.trim().isEmpty()) {
+				viewOpts.setUrl(url.trim());
+			}
 			Platform p = this.getSelectedNode(Platform.class);
 			Window w = this.getSelectedNode(Window.class);
 			if (p != null) {
 				this.platformCreateView(p, viewOpts, null);
 
-			} else if (w != null) {
-				p = (Platform) ((DefaultMutableTreeNode)this.runtimeTree.getSelectionPath().getParentPath().getLastPathComponent()).getUserObject();
+			}
+			else if (w != null) {
+				p = (Platform) ((DefaultMutableTreeNode) this.runtimeTree.getSelectionPath().getParentPath()
+						.getLastPathComponent()).getUserObject();
 				this.platformCreateView(p, viewOpts, w.getIdentity());
 			}
 		});
@@ -349,7 +369,8 @@ public class PlatformApiDemo {
 			if (p != null) {
 				tfSelectedWinIdentity.setText("Platform: " + p.getUuid());
 
-			} else if (w != null) {
+			}
+			else if (w != null) {
 				tfSelectedWinIdentity.setText("Window: " + w.getName());
 			}
 			else {
@@ -396,11 +417,11 @@ public class PlatformApiDemo {
 		JPanel pnlApply = new JPanel();
 		pnlApply.setBorder(BorderFactory.createTitledBorder("Apply Snapshot"));
 		pnlApply.setLayout(new BorderLayout(5, 5));
-		
+
 		JCheckBox cbCloseExistingWindows = new JCheckBox("Close Existing Windows");
-		
+
 		pnlApply.add(cbCloseExistingWindows, BorderLayout.NORTH);
-		
+
 		JPanel pnlApplyPath = new JPanel();
 		pnlApplyPath.setLayout(new BoxLayout(pnlApplyPath, BoxLayout.X_AXIS));
 		JTextField tfApplyPath = new JTextField(new File("snapshot.json").getAbsolutePath().toString());
@@ -430,7 +451,7 @@ public class PlatformApiDemo {
 		pnlCenter.add(pnlApply);
 		pnlCenter.add(new Box.Filler(new Dimension(0, 0), new Dimension(0, Short.MAX_VALUE),
 				new Dimension(0, Short.MAX_VALUE)));
-		
+
 		JPanel pnlTop = new JPanel(new BorderLayout(5, 5));
 		pnlTop.setBorder(BorderFactory.createEmptyBorder(20, 10, 20, 10));
 		pnlTop.add(new JLabel("Selected Platform"), BorderLayout.WEST);
@@ -531,7 +552,7 @@ public class PlatformApiDemo {
 		pnlCenter.add(pnlReplace);
 		pnlCenter.add(new Box.Filler(new Dimension(0, 0), new Dimension(0, Short.MAX_VALUE),
 				new Dimension(0, Short.MAX_VALUE)));
-		
+
 		JPanel pnlTop = new JPanel(new BorderLayout(5, 5));
 		pnlTop.setBorder(BorderFactory.createEmptyBorder(20, 10, 20, 10));
 		pnlTop.add(new JLabel("Selected Window"), BorderLayout.WEST);
@@ -588,12 +609,13 @@ public class PlatformApiDemo {
 					}
 					else {
 						ArrayList<CompletableFuture<?>> quitFutures = new ArrayList<>();
-						for (int i=0; i<cnt; i++) {
+						for (int i = 0; i < cnt; i++) {
 							DefaultMutableTreeNode pNode = (DefaultMutableTreeNode) rootNode.getChildAt(i);
 							Platform p = (Platform) pNode.getUserObject();
 							quitFutures.add(p.quit().toCompletableFuture());
 						}
-						CompletableFuture.allOf(quitFutures.toArray(new CompletableFuture<?>[cnt])).get(10, TimeUnit.SECONDS);
+						CompletableFuture.allOf(quitFutures.toArray(new CompletableFuture<?>[cnt])).get(10,
+								TimeUnit.SECONDS);
 					}
 				}
 				catch (DesktopException e1) {
@@ -623,19 +645,20 @@ public class PlatformApiDemo {
 	}
 
 	void deleteViewNode(DefaultMutableTreeNode viewNode) {
-		SwingUtilities.invokeLater(()->{
+		SwingUtilities.invokeLater(() -> {
 			this.platformTreeModel.removeNodeFromParent(viewNode);
 		});
 	}
-	
+
 	void addViewNode(DefaultMutableTreeNode winNode, Identity viewIdentity) {
-		SwingUtilities.invokeLater(()->{
+		SwingUtilities.invokeLater(() -> {
 			PlatformView view = PlatformView.wrap(viewIdentity, this.desktopConnection);
 			Window window = (Window) winNode.getUserObject();
 			DefaultMutableTreeNode viewNode = new DefaultMutableTreeNode(view);
 			window.addEventListener("view-detached", e -> {
 				JSONObject vId = e.getEventObject().getJSONObject("viewIdentity");
-				if (Objects.equals(viewIdentity.getUuid(), vId.getString("uuid")) && Objects.equals(viewIdentity.getName(), vId.getString("name"))) {
+				if (Objects.equals(viewIdentity.getUuid(), vId.getString("uuid"))
+						&& Objects.equals(viewIdentity.getName(), vId.getString("name"))) {
 					this.deleteViewNode(viewNode);
 				}
 			}, null);
@@ -711,7 +734,7 @@ public class PlatformApiDemo {
 				e1.printStackTrace();
 			}
 			finally {
-				
+
 			}
 		});
 	}
@@ -767,7 +790,7 @@ public class PlatformApiDemo {
 		});
 	}
 
-	void platformStart(String uuid, String width, String height, boolean center) {
+	void platformStart(String uuid, String width, String height, boolean center, String url, boolean createView) {
 		PlatformOptions opts = new PlatformOptions(uuid);
 		PlatformWindowOptions winOpts = new PlatformWindowOptions();
 		if (!width.isEmpty()) {
@@ -780,7 +803,17 @@ public class PlatformApiDemo {
 			winOpts.setDefaultCentered(center);
 		}
 		opts.setDefaultWindowOptions(winOpts);
-		Platform.start(desktopConnection, opts).exceptionally(e -> {
+		if (!url.isEmpty()) {
+			PlatformViewOptions defViewOpts = new PlatformViewOptions();
+			defViewOpts.setUrl(url);
+			opts.setDefaultViewOptions(defViewOpts);
+		}
+		Platform.start(desktopConnection, opts).thenAccept(p -> {
+			if (createView) {
+				PlatformViewOptions viewOpts = new PlatformViewOptions();
+				this.platformCreateView(p, viewOpts, null);
+			}
+		}).exceptionally(e -> {
 			e.printStackTrace();
 			return null;
 		});
@@ -802,7 +835,6 @@ public class PlatformApiDemo {
 		winOpts.setName(winName);
 		if (initLayout) {
 			LayoutContentItemStateOptions itemState1 = new LayoutContentItemStateOptions();
-			itemState1.setName(winName + "_default");
 			itemState1.setUrl(url);
 			LayoutContentItemOptions itemOpts1 = new LayoutContentItemOptions();
 			itemOpts1.setType("component");
