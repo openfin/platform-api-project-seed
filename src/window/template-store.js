@@ -1,20 +1,20 @@
 const STORE_UPDATED_TOPIC = `store:updated-${fin.me.identity.uuid}`;
 
-//no need to send any data, we just want to notify other windows so they can re-render
+// no need to send any data, we just want to notify other windows so they can re-render
 async function publishUpdateEvents() {
     return fin.InterApplicationBus.publish(STORE_UPDATED_TOPIC, '');
 }
 
-//templates need to have a name { name:"", ... }
+// templates need to have a name { name:"", ... }
 function storeTemplate(templateStoreKey, template) {
     const storedTemplates = getTemplates(templateStoreKey);
     storedTemplates.push(template);
     localStorage.setItem(templateStoreKey, JSON.stringify(storedTemplates));
-    //Delete this
+    // Delete this
     publishUpdateEvents();
 }
 
-//Either returns a list of templates or an empty array.
+// Either returns a list of templates or an empty array.
 function getTemplates(templateStoreKey) {
     const storedTemplates = localStorage.getItem(templateStoreKey);
     let storedTemplatesArr;
@@ -27,14 +27,13 @@ function getTemplates(templateStoreKey) {
     return storedTemplatesArr;
 }
 
-
 function getTemplateByName(templateStoreKey, name) {
     const templates = getTemplates(templateStoreKey);
-    const template = templates.find(i => i.name === name);
+    const template = templates.find((i) => i.name === name);
     return template;
 }
 
-//no concept of unsubcribing from these events.
+// no concept of unsubcribing from these events.
 function onStoreUpdate(fn) {
     fin.InterApplicationBus.subscribe({ uuid: '*' }, STORE_UPDATED_TOPIC, fn);
 }
