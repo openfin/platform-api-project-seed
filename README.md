@@ -10,20 +10,22 @@ This project seed includes the following [Platform API](https://openfin.co/platf
 * Examples of visual customization by providing a custom Platform Window
 * Examples of behavioral customization by overriding the Platform APIs
 
+[Launch in OpenFin](https://openfin.github.io/start/?manifest=https%3A%2F%2Fopenfin.github.io%2Fplatform-api-project-seed%2Fpublic.json)
+
 ## Running the code
 
 **Basic Usage:**
 
 * Clone this repository
 * Install the dependencies: `npm install`
-* Start the live-server and launch the application: `npm start`
+* Start the server and launch the application: `npm start`
 
 **Advanced Usage:**
 
 For users who would like to test features with a different OpenFin Runtime, configure your workspace as follows:
 
-* Generate a local manifest file, _local.json_, with the specified Runtime version, e.g. canary: `npm start -- canary`
-* Subsequent launches will automatically use _local.json_; delete this file to revert to _app.json_
+* Generate a local manifest file, _./static/local.json_, with the specified Runtime version, e.g. canary: `npm run config -- canary`
+* Subsequent launches will automatically use _./static/local.json_; delete this file to revert to _app.json_
 
 ## Understanding the code
 
