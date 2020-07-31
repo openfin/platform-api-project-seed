@@ -12,5 +12,8 @@
     "src/**/*.ts",
     "src/**/*.js",
     "test/**/*.ts",
+    "webpack.config.js",
+    "server.js",
+    "serviceworker.js"
   ]
 }
