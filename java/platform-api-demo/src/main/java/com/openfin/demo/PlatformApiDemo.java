@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -25,12 +26,16 @@ import java.util.concurrent.TimeoutException;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -44,12 +49,12 @@ import javax.swing.tree.TreePath;
 
 import org.json.JSONObject;
 
-import com.openfin.desktop.Ack;
-import com.openfin.desktop.AckListener;
+import com.openfin.desktop.ActionEvent;
 import com.openfin.desktop.DesktopConnection;
 import com.openfin.desktop.DesktopException;
 import com.openfin.desktop.DesktopIOException;
 import com.openfin.desktop.DesktopStateListener;
+import com.openfin.desktop.EventListener;
 import com.openfin.desktop.Identity;
 import com.openfin.desktop.Layout;
 import com.openfin.desktop.LayoutContentItemOptions;
@@ -207,7 +212,8 @@ public class PlatformApiDemo {
 		gbConst.weightx = 0;
 		JButton btnStart = new JButton("Start");
 		btnStart.addActionListener(e -> {
-			platformStart(tfUuid.getText(), tfWinWidth.getText(), tfWinHeight.getText(), cbWinCenter.isSelected(), tfUrl.getText(), cbCreateView.isSelected());
+			platformStart(tfUuid.getText(), tfWinWidth.getText(), tfWinHeight.getText(), cbWinCenter.isSelected(),
+					tfUrl.getText(), cbCreateView.isSelected());
 		});
 		p.add(btnStart, gbConst);
 		return p;
@@ -389,6 +395,7 @@ public class PlatformApiDemo {
 		JPanel pnlCenter = new JPanel();
 		pnlCenter.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		pnlCenter.setLayout(new BoxLayout(pnlCenter, BoxLayout.Y_AXIS));
+
 		JPanel pnlSave = new JPanel();
 		pnlSave.setLayout(new BoxLayout(pnlSave, BoxLayout.X_AXIS));
 		pnlSave.setBorder(BorderFactory.createTitledBorder("Save Snapshot"));
@@ -478,7 +485,8 @@ public class PlatformApiDemo {
 		pnlCenter.setLayout(new BoxLayout(pnlCenter, BoxLayout.Y_AXIS));
 		JPanel pnlPreset = new JPanel();
 		pnlPreset.setLayout(new BoxLayout(pnlPreset, BoxLayout.X_AXIS));
-		pnlPreset.setBorder(BorderFactory.createTitledBorder("Apply Preset"));
+		pnlPreset.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createTitledBorder("Apply Preset"),
+				BorderFactory.createEmptyBorder(5, 5, 5, 5)));
 		JComboBox<String> cbPreset = new JComboBox<>(new String[] { "columns", "grid", "rows", "tabs" });
 		cbPreset.setPreferredSize(new Dimension(Short.MAX_VALUE, cbPreset.getPreferredSize().height));
 		JButton btnApply = new JButton("Apply");
@@ -493,63 +501,68 @@ public class PlatformApiDemo {
 			}
 		});
 		pnlPreset.add(cbPreset);
+		pnlPreset.add(Box.createHorizontalStrut(5));
 		pnlPreset.add(btnApply);
 
-		JPanel pnlSave = new JPanel();
-		pnlSave.setBorder(BorderFactory.createTitledBorder("Save Layout"));
-		pnlSave.setLayout(new BoxLayout(pnlSave, BoxLayout.X_AXIS));
-		JTextField tfSavePath = new JTextField(new File("layout.json").getAbsolutePath().toString());
-		tfSavePath.setPreferredSize(new Dimension(Short.MAX_VALUE, tfSavePath.getPreferredSize().height));
-		JButton btnSave = new JButton("Save...");
-		btnSave.setEnabled(false);
-		btnSave.addActionListener(e -> {
+		JPanel pnlLayouts = new JPanel(new BorderLayout(10, 10));
+		pnlLayouts.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createTitledBorder("Layouts"),
+				BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+
+		DefaultListModel<JSONObject> layoutListModel = new DefaultListModel<>();
+
+		JList<JSONObject> lstLayouts = new JList<>(layoutListModel);
+		DefaultListCellRenderer renderer = new DefaultListCellRenderer();
+		;
+		lstLayouts.setCellRenderer((list, value, index, isSelected, cellHasFocus) -> {
+			JLabel lbl = (JLabel) renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+			lbl.setText(value.getString("name"));
+			return renderer;
+		});
+
+		pnlLayouts.add(new JScrollPane(lstLayouts), BorderLayout.CENTER);
+
+		JPanel pnlButtons = new JPanel(new GridLayout(10, 1, 5, 5));
+		JButton btnGet = new JButton("Get");
+		btnGet.setEnabled(false);
+		btnGet.addActionListener(ae -> {
 			Window win = this.getSelectedNode(Window.class);
 			if (win != null) {
 				Layout layout = Layout.wrap(win.getIdentity(), this.desktopConnection);
-				JFileChooser fileChooser = new JFileChooser(new File(".").getAbsoluteFile());
-				fileChooser.setSelectedFile(new File(tfSavePath.getText()));
-				int rv = fileChooser.showSaveDialog(pnlCenter);
-				if (rv == JFileChooser.APPROVE_OPTION) {
-					File layoutFile = fileChooser.getSelectedFile();
-					tfSavePath.setText(layoutFile.getAbsolutePath());
-					layoutSaveLayout(layout, layoutFile);
-				}
-			}
-			else {
+				layout.getConfig().thenAccept(l -> {
+					SwingUtilities.invokeLater(() -> {
+						String name = JOptionPane.showInputDialog(pnlLayouts, "Layout Name",
+								"layout-" + (layoutListModel.getSize() + 1));
+						if (name != null) {
+							JSONObject obj = new JSONObject();
+							obj.put("name", name);
+							obj.put("layout", l.getJson());
+							layoutListModel.addElement(obj);
+						}
+					});
+				});
 			}
 		});
-		pnlSave.add(tfSavePath);
-		pnlSave.add(btnSave);
 
-		JPanel pnlReplace = new JPanel();
-		pnlReplace.setBorder(BorderFactory.createTitledBorder("Replace Layout"));
-		pnlReplace.setLayout(new BoxLayout(pnlReplace, BoxLayout.X_AXIS));
-		JTextField tfReplacePath = new JTextField(new File("layout.json").getAbsolutePath().toString());
-		tfReplacePath.setPreferredSize(new Dimension(Short.MAX_VALUE, tfReplacePath.getPreferredSize().height));
-		JButton btnReplace = new JButton("Replace...");
+		JButton btnReplace = new JButton("Replace");
 		btnReplace.setEnabled(false);
 		btnReplace.addActionListener(e -> {
 			Window win = this.getSelectedNode(Window.class);
-			if (win != null) {
-				Layout layout = Layout.wrap(win.getIdentity(), this.desktopConnection);
-				JFileChooser fileChooser = new JFileChooser(new File(".").getAbsoluteFile());
-				fileChooser.setSelectedFile(new File(tfReplacePath.getText()));
-				int rv = fileChooser.showOpenDialog(pnlCenter);
-				if (rv == JFileChooser.APPROVE_OPTION) {
-					File layoutFile = fileChooser.getSelectedFile();
-					tfReplacePath.setText(layoutFile.getAbsolutePath());
-					layoutReplaceLayout(layout, layoutFile);
-				}
-			}
-			else {
-			}
+			Layout layout = Layout.wrap(win.getIdentity(), this.desktopConnection);
+			layout.replace(new LayoutOptions(lstLayouts.getSelectedValue().getJSONObject("layout")));
 		});
-		pnlReplace.add(tfReplacePath);
-		pnlReplace.add(btnReplace);
+
+		lstLayouts.addListSelectionListener(e -> {
+			btnReplace.setEnabled(lstLayouts.getSelectedIndex() != -1);
+		});
+
+		pnlButtons.add(btnGet);
+		pnlButtons.add(btnReplace);
+
+		pnlLayouts.add(pnlButtons, BorderLayout.EAST);
 
 		pnlCenter.add(pnlPreset);
-		pnlCenter.add(pnlSave);
-		pnlCenter.add(pnlReplace);
+		pnlCenter.add(Box.createVerticalStrut(10));
+		pnlCenter.add(pnlLayouts);
 		pnlCenter.add(new Box.Filler(new Dimension(0, 0), new Dimension(0, Short.MAX_VALUE),
 				new Dimension(0, Short.MAX_VALUE)));
 
@@ -563,8 +576,9 @@ public class PlatformApiDemo {
 		this.runtimeTree.addTreeSelectionListener(e -> {
 			Window win = this.getSelectedNode(Window.class);
 			btnApply.setEnabled(win != null);
-			btnSave.setEnabled(win != null);
-			btnReplace.setEnabled(win != null);
+			btnGet.setEnabled(win != null);
+			lstLayouts.setEnabled(win != null);
+			btnReplace.setEnabled(win != null && lstLayouts.getSelectedIndex() != -1);
 			tfSelectedWindow.setText(win == null ? "N/A" : win.getUuid() + " : " + win.getName());
 		});
 
@@ -714,11 +728,20 @@ public class PlatformApiDemo {
 			try {
 				Platform platform = Platform.wrap(uuid, this.desktopConnection);
 				DefaultMutableTreeNode node = new DefaultMutableTreeNode(platform);
-				openFinSystem.addEventListener("application-closed", e -> {
-					System.out.println("application-closed: " + e.getEventObject());
-					String eUuid = e.getEventObject().getString("uuid");
-					if (Objects.equals(uuid, eUuid)) {
-						deletePlatformNode(node);
+				openFinSystem.addEventListener("application-closed", new EventListener() {
+					@Override
+					public void eventReceived(ActionEvent e) {
+						System.out.println("application-closed: " + e.getEventObject());
+						String eUuid = e.getEventObject().getString("uuid");
+						if (Objects.equals(uuid, eUuid)) {
+							deletePlatformNode(node);
+							try {
+								openFinSystem.removeEventListener("application-closed", this, null);
+							}
+							catch (DesktopException e1) {
+								e1.printStackTrace();
+							}
+						}
 					}
 				}, null);
 				platform.addEventListener("window-created", e -> {
@@ -877,32 +900,6 @@ public class PlatformApiDemo {
 			opts.setCloseExistingWindows(true);
 		}
 		platform.applySnapshot(path.getAbsolutePath(), opts);
-	}
-
-	void layoutSaveLayout(Layout layout, File path) {
-		layout.getConfig().thenAccept(layougConfig -> {
-			try {
-				Files.write(path.toPath(), layougConfig.getJson().toString().getBytes(), StandardOpenOption.CREATE,
-						StandardOpenOption.TRUNCATE_EXISTING);
-			}
-			catch (IOException e) {
-				e.printStackTrace();
-			}
-		});
-	}
-
-	void layoutReplaceLayout(Layout layout, File path) {
-		try {
-			String layoutString = new String(Files.readAllBytes(path.toPath()));
-			LayoutOptions opts = new LayoutOptions(new JSONObject(layoutString));
-			layout.replace(opts);
-		}
-		catch (IOException e) {
-			e.printStackTrace();
-		}
-		finally {
-
-		}
 	}
 
 	public static void main(String[] args) {
