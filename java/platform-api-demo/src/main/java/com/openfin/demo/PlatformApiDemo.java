@@ -67,6 +67,7 @@ import com.openfin.desktop.Window;
 import com.openfin.desktop.WindowOptions;
 import com.openfin.desktop.platform.Platform;
 import com.openfin.desktop.platform.PlatformOptions;
+import com.openfin.desktop.platform.PlatformSnapshot;
 import com.openfin.desktop.platform.PlatformSnapshotOptions;
 import com.openfin.desktop.platform.PlatformView;
 import com.openfin.desktop.platform.PlatformViewOptions;
@@ -396,66 +397,67 @@ public class PlatformApiDemo {
 		pnlCenter.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		pnlCenter.setLayout(new BoxLayout(pnlCenter, BoxLayout.Y_AXIS));
 
-		JPanel pnlSave = new JPanel();
-		pnlSave.setLayout(new BoxLayout(pnlSave, BoxLayout.X_AXIS));
-		pnlSave.setBorder(BorderFactory.createTitledBorder("Save Snapshot"));
-		JTextField tfSavePath = new JTextField(new File("snapshot.json").getAbsolutePath().toString());
-		tfSavePath.setPreferredSize(new Dimension(Short.MAX_VALUE, tfSavePath.getPreferredSize().height));
-		JButton btnSave = new JButton("Save...");
-		btnSave.setEnabled(false);
-		btnSave.addActionListener(e -> {
-			Platform platform = this.getSelectedNode(Platform.class);
-			if (platform != null) {
-				JFileChooser fileChooser = new JFileChooser(new File(".").getAbsoluteFile());
-				fileChooser.setSelectedFile(new File(tfSavePath.getText()));
-				int rv = fileChooser.showSaveDialog(pnlCenter);
-				if (rv == JFileChooser.APPROVE_OPTION) {
-					File saveFile = fileChooser.getSelectedFile();
-					tfSavePath.setText(saveFile.getAbsolutePath());
-					this.platformSaveSnapshot(platform, saveFile);
-				}
-			}
-			else {
+		JPanel pnlSnapshots = new JPanel(new BorderLayout(10, 10));
+		pnlSnapshots.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createTitledBorder("Snapshots"),
+				BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+
+		DefaultListModel<JSONObject> snapshotListModel = new DefaultListModel<>();
+
+		JList<JSONObject> lstSnapshots = new JList<>(snapshotListModel);
+		DefaultListCellRenderer renderer = new DefaultListCellRenderer();
+		lstSnapshots.setCellRenderer((list, value, index, isSelected, cellHasFocus) -> {
+			JLabel lbl = (JLabel) renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+			lbl.setText(value.getString("name"));
+			return renderer;
+		});
+
+		pnlSnapshots.add(new JScrollPane(lstSnapshots), BorderLayout.CENTER);
+
+		JPanel pnlButtons = new JPanel(new GridLayout(10, 1, 5, 5));
+		JButton btnGet = new JButton("Get");
+		btnGet.setEnabled(false);
+		btnGet.addActionListener(ae -> {
+			Platform p = this.getSelectedNode(Platform.class);
+			if (p != null) {
+				p.getSnapshot().thenAccept(snapshot -> {
+					SwingUtilities.invokeLater(() -> {
+						String name = JOptionPane.showInputDialog(pnlSnapshots, "Snapshot Name",
+								"snapshot-" + (snapshotListModel.getSize() + 1));
+						if (name != null) {
+							JSONObject obj = new JSONObject();
+							obj.put("name", name);
+							obj.put("snapshot", snapshot.getJson());
+							snapshotListModel.addElement(obj);
+						}
+					});
+				});
 			}
 		});
-		pnlSave.add(tfSavePath);
-		pnlSave.add(btnSave);
 
-		JPanel pnlApply = new JPanel();
-		pnlApply.setBorder(BorderFactory.createTitledBorder("Apply Snapshot"));
-		pnlApply.setLayout(new BorderLayout(5, 5));
-
-		JCheckBox cbCloseExistingWindows = new JCheckBox("Close Existing Windows");
-
-		pnlApply.add(cbCloseExistingWindows, BorderLayout.NORTH);
-
-		JPanel pnlApplyPath = new JPanel();
-		pnlApplyPath.setLayout(new BoxLayout(pnlApplyPath, BoxLayout.X_AXIS));
-		JTextField tfApplyPath = new JTextField(new File("snapshot.json").getAbsolutePath().toString());
-		tfApplyPath.setPreferredSize(new Dimension(Short.MAX_VALUE, tfApplyPath.getPreferredSize().height));
-		JButton btnApply = new JButton("Apply...");
+		JButton btnApply = new JButton("Apply");
 		btnApply.setEnabled(false);
 		btnApply.addActionListener(e -> {
-			Platform platform = this.getSelectedNode(Platform.class);
-			if (platform != null) {
-				JFileChooser fileChooser = new JFileChooser(new File(".").getAbsoluteFile());
-				fileChooser.setSelectedFile(new File(tfApplyPath.getText()));
-				int rv = fileChooser.showOpenDialog(pnlCenter);
-				if (rv == JFileChooser.APPROVE_OPTION) {
-					File snapshotFile = fileChooser.getSelectedFile();
-					tfApplyPath.setText(snapshotFile.getAbsolutePath());
-					this.platformApplySnapshot(platform, snapshotFile, cbCloseExistingWindows.isSelected());
-				}
-			}
-			else {
+			int rv = JOptionPane.showConfirmDialog(pnlSnapshots, "Close Existing Windows?", "Apply Snapshot",
+					JOptionPane.YES_NO_CANCEL_OPTION);
+			if (rv == JOptionPane.YES_OPTION || rv == JOptionPane.NO_OPTION) {
+				Platform p = this.getSelectedNode(Platform.class);
+				PlatformSnapshotOptions snapshotOpts = new PlatformSnapshotOptions();
+				snapshotOpts.setCloseExistingWindows(rv == JOptionPane.YES_OPTION);
+				p.applySnapshot(new PlatformSnapshot(lstSnapshots.getSelectedValue().getJSONObject("snapshot")),
+						snapshotOpts);
 			}
 		});
-		pnlApplyPath.add(tfApplyPath);
-		pnlApplyPath.add(btnApply);
-		pnlApply.add(pnlApplyPath, BorderLayout.CENTER);
 
-		pnlCenter.add(pnlSave);
-		pnlCenter.add(pnlApply);
+		lstSnapshots.addListSelectionListener(e -> {
+			btnApply.setEnabled(lstSnapshots.getSelectedIndex() != -1);
+		});
+
+		pnlButtons.add(btnGet);
+		pnlButtons.add(btnApply);
+
+		pnlSnapshots.add(pnlButtons, BorderLayout.EAST);
+
+		pnlCenter.add(pnlSnapshots);
 		pnlCenter.add(new Box.Filler(new Dimension(0, 0), new Dimension(0, Short.MAX_VALUE),
 				new Dimension(0, Short.MAX_VALUE)));
 
@@ -468,8 +470,8 @@ public class PlatformApiDemo {
 
 		this.runtimeTree.addTreeSelectionListener(e -> {
 			Platform p = this.getSelectedNode(Platform.class);
-			btnSave.setEnabled(p != null);
-			btnApply.setEnabled(p != null);
+			btnGet.setEnabled(p != null);
+			btnApply.setEnabled(p != null && lstSnapshots.getSelectedIndex() != -1);
 			tfSelectedPlatformUuid.setText(p == null ? "N/A" : p.getUuid());
 		});
 
@@ -512,7 +514,6 @@ public class PlatformApiDemo {
 
 		JList<JSONObject> lstLayouts = new JList<>(layoutListModel);
 		DefaultListCellRenderer renderer = new DefaultListCellRenderer();
-		;
 		lstLayouts.setCellRenderer((list, value, index, isSelected, cellHasFocus) -> {
 			JLabel lbl = (JLabel) renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 			lbl.setText(value.getString("name"));
