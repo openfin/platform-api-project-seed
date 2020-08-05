@@ -623,7 +623,7 @@ namespace Openfin.PlatformAPI.Demo
             selectedPlatform.Application.WindowCreated += (s, e) =>
             {
                 e.Window.Closed += Window_Closed;
-                e.Window.Focused += Window_Focused;
+                
                 e.Window.ViewAttached += Window_ViewAttached;
 
                 Dispatcher.Invoke(() =>
@@ -642,7 +642,7 @@ namespace Openfin.PlatformAPI.Demo
                 var view = e.View;
 
                 view.ViewDestroyed += View_ViewDestroyed;
-                view.ViewFocused += View_ViewFocused;
+                
 
                 var window = selectedPlatform.Application.WrapWindow(e.Target.Name);
 
@@ -702,23 +702,7 @@ namespace Openfin.PlatformAPI.Demo
                     views.Remove(e.View);
                 }
             });
-        }
-
-        private void View_ViewFocused(object sender, ViewFocusedEventArgs e)
-        {
-            Dispatcher.Invoke(() =>
-            {
-                dgPlatformWindows.SelectedItem = platformWindows.FirstOrDefault(x => x.Name == e.Target.Name);
-                dgPlatformViews.SelectedItem = platformViews[e.Target.Name].FirstOrDefault(x => x.Name == e.View.Name);
-            });
-        }
-
-        private void Window_Focused(object sender, WindowEventArgs e)
-        {           
-            Dispatcher.Invoke(() => {                
-                dgPlatformWindows.SelectedItem = platformWindows.FirstOrDefault(x => x.Name ==  e.Window.Name);
-                });
-        }
+        }        
 
         private void Window_Closed(object sender, WindowEventArgs e)
         {
