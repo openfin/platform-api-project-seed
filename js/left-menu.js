@@ -16,9 +16,10 @@ class LeftMenu extends HTMLElement {
         //List of apps available in the menu.
         this.appList = [
             {
-                url: CHART_URL,
+                // A JSON manifest can be used for View Options starting in runtime v16.83.53.*+
+                // Any properties in the manifest will overwrite other properties given here
+                manifestUrl: window.location.href.replace('platform-window.html', 'view-manifest.json'),
                 printName: 'OF Chart',
-                processAffinity: 'ps_1'
             },
             {
                 url: 'https://www.tradingview.com/chart/?symbol=NASDAQ:AAPL',
