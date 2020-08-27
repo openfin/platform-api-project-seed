@@ -1,0 +1,53 @@
+<html>
+    <script>
+        function openWindow() {
+            const platform = fin.Platform.getCurrentSync();
+
+            platform
+                .createWindow({
+                    name: "new-window",
+                    layout: {
+                        content: [
+                            {
+                                type: "stack",
+                                content: [
+                                    {
+                                        type: "component",
+                                        componentName: "view",
+                                        componentState: {
+                                            name: "leases",
+                                            url: `${window.location.origin}/about.html`,
+                                        },
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                })
+                .catch(alert);
+
+            window.history.replaceState({}, "", "/");
+        }
+    </script>
+    <body>
+        <h1>About</h1>
+
+        <ul>
+            <li>
+                <a href="home.html">Home</a>
+            </li>
+            <li>
+                <a href="about.html">About</a>
+            </li>
+        </ul>
+
+        <button id="button" onclick="openWindow()">Open in new window</button>
+
+        <p>
+            1. Click <b>open in new window</b> to open this page in a new window<br />
+            2. Close the new about window (optional)<br />
+            3. Click the <b>open in new window</b> button again<br />
+            4. "Error: This action was sent from a client that is not connected to the provider."
+        </p>
+    </body>
+</html>

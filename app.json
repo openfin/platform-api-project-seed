@@ -63,7 +63,7 @@
                                     "componentName": "view",
                                     "componentState": {
                                         "processAffinity": "ps_1",
-                                        "url": "https://cdn.openfin.co/embed-web/chart.html"
+                                        "url": "http://localhost:5555/home.html"
                                     }
                                 }
                             ]

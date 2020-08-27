@@ -16,30 +16,15 @@ class LeftMenu extends HTMLElement {
         //List of apps available in the menu.
         this.appList = [
             {
-                url: CHART_URL,
-                printName: 'OF Chart',
-                processAffinity: 'ps_1'
+                url: `${window.location.origin}/home.html`,
+                printName: 'Home',
+                processAffinity: 'hm_1'
             },
             {
-                url: 'https://www.tradingview.com/chart/?symbol=NASDAQ:AAPL',
-                printName: 'TradeView',
-                processAffinity: 'tv_1'
+                url: `${window.location.origin}/about.html`,
+                printName: 'About',
+                processAffinity: 'ab_1'
             },
-            {
-                url: 'https://www.google.com/search?q=INDEXDJX:+.DJI&stick=H4sIAAAAAAAAAONgecRozC3w8sc9YSmtSWtOXmNU4eIKzsgvd80rySypFBLjYoOyeKS4uDj0c_UNkgsry3kWsfJ5-rm4Rrh4RVgp6Ll4eQIAqJT5uUkAAAA&source=lnms&sa=X&ved=0ahUKEwii_NWT9fzoAhU3mHIEHWy3AWIQ_AUIDSgA&biw=1280&bih=1366&dpr=1',
-                printName: 'News',
-                processAffinity: 'mw_1'
-            },
-            {
-                url: window.location.href.replace('platform-window', 'color-view'),
-                printName: 'Colors',
-                processAffinity: 'cv_1'
-            },
-            {
-                url: `https://cdn.openfin.co/docs/javascript/${fin.desktop.getVersion()}`,
-                printName: "Documentation",
-                processAffinity: 'ps_1'
-            }
         ];
 
         this.snapshotForm = document.querySelector('snapshot-form');
@@ -87,27 +72,6 @@ class LeftMenu extends HTMLElement {
                   <button @click=${() => this.addView(item.printName)}>${item.printName}</button>
               </li>`)}
 
-        </ul>
-        <span>Windows</span>
-        <ul>
-            <li><button @click=${() => this.layoutWindow().catch(console.error)}>Platform Window</button></li>
-            <li><button @click=${() => this.nonLayoutWindow().catch(console.error)}>OF Window</button></li>
-        </ul>
-        <span>Layouts</span>
-        <ul>
-            <li><button @click=${() => this.toGrid().catch(console.error)}>Grid</button></li>
-            <li><button @click=${() => this.toTabbed().catch(console.error)}>Tab</button></li>
-            ${layoutTemplates.map((item) => html`<li>
-                  <button @click=${() => this.replaceLayoutFromTemplate(item.name)}>${item.name}</button>
-              </li>`)}
-            <li><button @click=${() => this.cloneWindow().catch(console.error)}>Clone</button></li>
-            <li><button class="layout-button">Save Layout</button></li>
-        </ul>
-        <span>Snapshots</span>
-        <ul>
-            ${snapshotTemplates.map((item) => html`<li><button @click=${() => this.applySnapshotFromTemplate(item.name)}>${item.name}</button></li>`)}
-            <li><button class="snapshot-button">Save Snapshot</button></li>
-            <li><button @click=${() => this.share()}>Share</button></li>
         </ul>`;
         return render(menuItems, this);
     }
