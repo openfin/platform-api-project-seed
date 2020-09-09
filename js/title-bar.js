@@ -8,6 +8,23 @@ class TitleBar extends HTMLElement {
         this.DARK_THEME = 'dark';
 
         this.render();
+        $( "#logs" ).autocomplete({
+            source: [ "/openfin", "/giphy" ]
+          });
+        $('#logs').keypress(function (e) {
+            if (e.which == 13) {
+              
+              if ($(this).val().startsWith("/g")) {
+                fin.Platform.getCurrentSync().createView({url: 'https://gifimage.net/wp-content/uploads/2017/08/thats-all-folks-gif-2.gif'}, fin.me.identity);
+                console.log('okok');
+              } else {
+                window.open('http://localhost:8080/example-view.html');
+              }
+              
+              $(this).val('');
+              return false;
+            }
+          });
         fin.Platform.getCurrentSync().getWindowContext().then(initialContext => {
             if (initialContext && initialContext.theme) {
                 this.setTheme(initialContext.theme);
@@ -40,6 +57,7 @@ class TitleBar extends HTMLElement {
                     <div id="title"></div>
                 </div>
                 <div id="buttons-wrapper">
+                    <input id="logs" type="text" placeholder="search, logs, gifs...">
                     <div class="button" title="Toggle Theme" id="theme-button" @click=${this.toggleTheme}></div>
                     <div class="button" title="Toggle Sidebar" id="menu-button" @click=${this.toggleMenu}></div>
                     <div class="button" title="Toggle Layout Lock" id="lock-button" @click=${this.toggleLockedLayout}></div>

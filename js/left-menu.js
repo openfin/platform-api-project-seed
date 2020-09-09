@@ -82,6 +82,7 @@ class LeftMenu extends HTMLElement {
         const snapshotTemplates = getTemplates(SNAPSHOT_STORE_KEY);
         const menuItems = html`
         <span>Applications</span>
+<div>${fin.desktop.getVersion()}</div>
         <ul>
             ${this.appList.map((item) => html`<li>
                   <button @click=${() => this.addView(item.printName)}>${item.printName}</button>

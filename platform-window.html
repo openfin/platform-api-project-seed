@@ -8,11 +8,17 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="styles/frame-styles.css"></link>
         <link rel="stylesheet" href="styles/light-theme.css"></link>
+        <!-- <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"> -->
+        <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/vader/jquery-ui.css">
+        <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
+        
         <script type="module" src="js/platform-window.js"></script>
         <script type="module" src="js/left-menu.js"></script>
         <script type="module" src="js/title-bar.js"></script>
         <script type="module" src="js/layout-form.js"></script>
         <script type="module" src="js/snapshot-form.js"></script>
+        
     </head>
     <body>
         <div id="of-frame-main">
@@ -26,5 +32,9 @@
                 </div>
             </div>
         </div>
+        <script>
+            var _allWins = async () => (await fin.System.getAllWindows()).flatMap(w => [{uuid:w.uuid, name:w.uuid}].concat(w.childWindows.map(x => ({name: x.name, uuid: w.uuid}))))
+            var _allViews = async () => await Promise.all((await Promise.all((await _allWins()).map(w => fin.Window.wrapSync(w).getCurrentViews().then(v => v.map(vv => ({...vv, wname: w.name})))))).flatMap(x => x).map(x => ({...x.identity, wname:x.wname})).map(x=>fin.View.wrapSync(x)).map(v => v.getInfo().then(i => ({url: i.url, title: i.title, ...v.identity}))))
+        </script>
     </body>
 </html>

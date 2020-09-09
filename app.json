@@ -1,6 +1,6 @@
 {
     "runtime": {
-        "arguments": "--v=1 --inspect",
+        "arguments": "--v=1 --i-nspect",
         "version": "beta"
     },
     "shortcut": {
