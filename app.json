@@ -1,7 +1,7 @@
 {
     "runtime": {
         "arguments": "--v=1 --inspect",
-        "version": "beta"
+        "version": "canary"
     },
     "shortcut": {
         "company": "OpenFin",
@@ -9,10 +9,18 @@
         "icon": "https://openfin.github.io/golden-prototype/favicon.ico",
         "name": "Platform app seed local"
     },
+    "appAssets": [
+        {
+            "src": "http://localhost:5555/my_platform_notes.zip",
+            "alias": "my_platform_notes",
+            "target": "my_platform_notes.txt",
+            "version": "1.1.1"
+        }
+    ],
     "platform": {
         "uuid": "platform_customization_local",
         "applicationIcon": "https://openfin.github.io/golden-prototype/favicon.ico",
-        "autoShow": false,
+        "autoShow": true,
         "providerUrl": "http://localhost:5555/provider.html",
         "permissions": {
             "ExternalWindow": {
@@ -36,7 +44,12 @@
             "showBackgroundImages": true,
             "backgroundThrottling": true,
             "minHeight": 445,
-            "minWidth": 354
+            "minWidth": 354,
+            "permissions": {
+                "System": {
+                    "launchExternalProcess": true
+                }
+            }
         },
         "defaultViewOptions": {
             "experimental": {
@@ -48,7 +61,30 @@
                 "command": "stack.nextTab",
                 "keys": "Ctrl+Tab"
             }
-        ]
+        ],
+        "customData": {
+            "nativeApplications": [
+                {
+                    "name": "Notepad",
+                    "title": "my_platform_notes",
+                    "launch": {
+                        "_path": "C:\\Users\\rdepena\\Desktop\\my_platform_notes.txt",
+                        "alias": "my_platform_notes",
+                        "lifetime": "window",
+                        "arguments": ""
+                    }
+                },
+                {
+                    "name": "excel",
+                    "title": "",
+                    "launch": {
+                        "path": "excel",
+                        "lifetime": "window",
+                        "arguments": ""
+                    }
+                }
+            ]
+        }
     },
     "snapshot": {
         "windows": [

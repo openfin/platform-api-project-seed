@@ -7,6 +7,9 @@ const LAYOUT_STORE_KEY  = 'LayoutForm';
 const SNAPSHOT_STORE_KEY = 'SnapshotForm';
 
 
+//hack
+const bc = new BroadcastChannel('external-window-snapshot-tracker');
+
 //Our Left Menu element
 class LeftMenu extends HTMLElement {
     constructor() {
@@ -80,6 +83,8 @@ class LeftMenu extends HTMLElement {
     render = async () => {
         const layoutTemplates = getTemplates(LAYOUT_STORE_KEY);
         const snapshotTemplates = getTemplates(SNAPSHOT_STORE_KEY);
+        const appInfo = await fin.Application.getCurrentSync().getInfo();
+        const nativeApplications = appInfo.manifest.platform.customData.nativeApplications;
         const menuItems = html`
         <span>Applications</span>
         <ul>
@@ -92,6 +97,12 @@ class LeftMenu extends HTMLElement {
         <ul>
             <li><button @click=${() => this.layoutWindow().catch(console.error)}>Platform Window</button></li>
             <li><button @click=${() => this.nonLayoutWindow().catch(console.error)}>OF Window</button></li>
+        </ul>
+        <span>Native Applications</span>
+        <ul>
+             ${nativeApplications.map((item) => html`<li>
+            <button @click=${() => this.launchNative(item)}>${item.name}</button>
+              </li>`)}
         </ul>
         <span>Layouts</span>
         <ul>
@@ -110,6 +121,12 @@ class LeftMenu extends HTMLElement {
             <li><button @click=${() => this.share()}>Share</button></li>
         </ul>`;
         return render(menuItems, this);
+    }
+
+    launchNative = async(options) => {
+        const identity = await fin.System.launchExternalProcess(options.launch);
+        bc.postMessage({identity, options});
+
     }
 
     applySnapshotFromTemplate = async (templateName) => {
