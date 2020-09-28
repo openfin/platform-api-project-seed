@@ -1,0 +1,28 @@
+{
+    "snapshot": {
+        "windows": [
+            {
+                "url": "http://localhost:5555/main-window.html",
+                "layout": {
+                    "content": [
+                        {
+                            "type": "stack",
+                            "id": "no-drop-target",
+                            "content": [
+                                {
+                                    "type": "component",
+                                    "componentName": "view",
+                                    "componentState": {
+                                        "name": "component_A1",
+                                        "processAffinity": "ps_1",
+                                        "url": "https://cdn.openfin.co/embed-web/chart.html"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}

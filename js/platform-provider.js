@@ -1,40 +1,23 @@
-import { generateExternalWindowSnapshot, restoreExternalWindowPositionAndState } from './external-window-snapshot.js';
+//fin.me.showDeveloperTools();
 
-//We have customized out platform provider to keep track of a specific notepad window.
-//Look for the "my_platform_notes.txt" file and launch it in notepad or add another external window to this array
-const externalWindowsToTrack = [
-    {
-        name: 'Notepad',
-        title: 'my_platform_notes - Notepad'
+(async function() {
+    await fin.Platform.init();
+
+    const snapshotItem = 'snapShot';
+    const defaultSnapshotUrl = 'http://localhost:5555/default-snapshot.json';
+
+    const platform = fin.Platform.getCurrentSync();
+    const storedSnapshotValue = window.localStorage.getItem(snapshotItem);
+    const storedSnapshot = storedSnapshotValue && JSON.parse(storedSnapshotValue);
+
+    if(storedSnapshot) {
+        console.log('applying stored snapshot', storedSnapshot);
+        return platform.applySnapshot(storedSnapshot);
+    } else {
+        const defaultSnapshotReq = await window.fetch(defaultSnapshotUrl);
+        const defaultSnapshot = await defaultSnapshotReq.json();
+
+        console.log('applying default snapshot', defaultSnapshot);
+        return platform.applySnapshot(defaultSnapshot.snapshot);
     }
-];
-
-fin.Platform.init({
-    overrideCallback: async (Provider) => {
-        class Override extends Provider {
-            async getSnapshot() {
-                const snapshot = await super.getSnapshot();
-
-                //we add an externalWindows section to our snapshot
-                const externalWindows = await generateExternalWindowSnapshot(externalWindowsToTrack);
-                return {
-                    ...snapshot,
-                    externalWindows
-                };
-            }
-
-            async applySnapshot({ snapshot, options }) {
-
-                const originalPromise = super.applySnapshot({ snapshot, options });
-
-                //if we have a section with external windows we will use it.
-                if (snapshot.externalWindows) {
-                    await Promise.all(snapshot.externalWindows.map(async (i) => await restoreExternalWindowPositionAndState(i)));
-                }
-
-                return originalPromise;
-            }
-        };
-        return new Override();
-    }
-});
+})();

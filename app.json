@@ -14,17 +14,6 @@
         "applicationIcon": "https://openfin.github.io/golden-prototype/favicon.ico",
         "autoShow": false,
         "providerUrl": "http://localhost:5555/provider.html",
-        "permissions": {
-            "ExternalWindow": {
-              	"wrap": true
-            },
-            "System": {
-                "getAllExternalWindows": true,
-                "launchExternalProcess": true,
-                "readRegistryValue": false,
-                "terminateExternalProcess": true
-            }
-        },
         "defaultWindowOptions": {
             "url": "http://localhost:5555/platform-window.html",
             "contextMenu": true,
@@ -46,30 +35,6 @@
             {
                 "command": "stack.nextTab",
                 "keys": "Ctrl+Tab"
-            }
-        ]
-    },
-    "snapshot": {
-        "windows": [
-            {
-                "layout": {
-                    "content": [
-                        {
-                            "type": "stack",
-                            "id": "no-drop-target",
-                            "content": [
-                                {
-                                    "type": "component",
-                                    "componentName": "view",
-                                    "componentState": {
-                                        "processAffinity": "ps_1",
-                                        "url": "https://cdn.openfin.co/embed-web/chart.html"
-                                    }
-                                }
-                            ]
-                        }
-                    ]
-                }
             }
         ]
     }

@@ -17,10 +17,6 @@
     --layout-container-padding-left: 4px;
     --layout-container-padding-right: 5px;
 
-    --sidebar-width: 120px;
-
-    --layout-container-width: calc(100% - var(--layout-container-padding-left) - var(--layout-container-padding-right) - var(--sidebar-width));
-
     --frame-background-color: var(--frame-background);
     --title-bar-background-color: var(--title-bar);
     --tabs-bar-background-color: var(--tab-bar-background);
@@ -29,6 +25,16 @@
     --tab-text-color: var(--tab-text);
     --splitter-color: var(--frame-background);
     --color-behind-views: var(--active-tab); /* only seen if there's a problem with the view */
+
+    --top-bar-button-hover-color: var(--of-highlight)
+}
+
+#close-button.button:hover {
+    background-color: var(--top-bar-button-hover-color);
+}
+
+#close-button.quit-button:hover {
+    background-color: var(--top-bar-close-button-color);
 }
 
 body {
@@ -42,6 +48,13 @@ body {
 
 #body-container {
     display:flex;
+}
+
+.main-window {
+    --title-bar: #0e2348;
+    --title-bar-background-color: var(--title-bar);
+    --sidebar-width: 120px;
+    --layout-container-width: calc(100% - var(--layout-container-padding-left) - var(--layout-container-padding-right) - var(--sidebar-width));
 }
 
 .left-menu ul {
