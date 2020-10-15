@@ -30,16 +30,16 @@ For users who would like to test features with a different OpenFin Runtime, conf
 ## Understanding the code
 
 ### Platform configuration
-* [Platform configuration](https://developers.openfin.co/docs/platform-api#section-1-launching-a-platform) has been included in the provided [app.json](app.json) file.
-* The [defaultWindowOptions](https://developers.openfin.co/docs/platform-api#section-standard-window-customization) key in the provided `app.json` will instruct the platform to replace our Standard Window with the provided [platform-window.html](platform-window.html) file.
-* The [commands](https://developers.openfin.co/docs/platform-api#section-5-3-using-keyboard-commands) key in the provided `app.json` will allow keyboard access to the next tab command.
+* [Platform configuration](https://developers.openfin.co/docs/platform-getting-started#section-launching-a-platform) has been included in the provided [app.json](app.json) file.
+* The [defaultWindowOptions](https://developers.openfin.co/docs/platform-customization) key in the provided `app.json` will instruct the platform to replace our Standard Window with the provided [platform-window.html](platform-window.html) file.
+* The [commands](https://developers.openfin.co/docs/platform-customization#section-using-keyboard-commands) key in the provided `app.json` will allow keyboard access to the next tab command.
 * The [providerUrl]() key in the provided `app.json` will allow you to make custom changes to the Platform APIs, by pointing to a hosted [provider.html](provider.html) file. (STARTING IN v15.80.50.x)
 
 ### CSS Customization
 * A [stylesheet](https://developers.openfin.co/docs/platform-api#section-standard-window-customization) is linked in the [platform-window.html](platform-window.html) file, and allows for [visual customization](styles/frame-styles.css). For a complete view of all properties, please refer to the [example stylesheet](https://github.com/openfin/layouts-v2-style-examples)
 
 ### Platform Window
-The [platform-window.html](platform-window.html) file contains the [layout-container](https://developers.openfin.co/docs/platform-api#section-5-2-complete-window-customization) element and two custom elements: `left-menu` and `title-bar`. These elements, in conjunction with the [js/platform-window.js](js/platform-window.js) file, enable the following functionality:
+The [platform-window.html](platform-window.html) file contains the [layout-container](https://developers.openfin.co/docs/platform-customization#section-complete-window-customization) element and two custom elements: `left-menu` and `title-bar`. These elements, in conjunction with the [js/platform-window.js](js/platform-window.js) file, enable the following functionality:
 
 ##### left-menu
 Provides examples of the following functionality:
