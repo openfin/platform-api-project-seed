@@ -1,7 +1,7 @@
 {
     "runtime": {
-        "arguments": "--v=1 --inspect",
-        "version": "beta"
+        "arguments": "--disable-gpu-rasterization --disable-gpu-compositing",
+        "version": "stable"
     },
     "shortcut": {
         "company": "OpenFin",
@@ -12,8 +12,13 @@
     "platform": {
         "uuid": "platform_customization_local",
         "applicationIcon": "https://openfin.github.io/golden-prototype/favicon.ico",
-        "autoShow": false,
+        "fdc3Api": false,
+        "autoShow": true,
         "providerUrl": "http://localhost:5555/provider.html",
+        "preloadScripts": [
+            { "url": "http://localhost:5555/preload/context-api.js" }
+        ],
+        "contextMenu": true,
         "permissions": {
             "ExternalWindow": {
               	"wrap": true
@@ -22,7 +27,8 @@
                 "getAllExternalWindows": true,
                 "launchExternalProcess": true,
                 "readRegistryValue": false,
-                "terminateExternalProcess": true
+                "terminateExternalProcess": true,
+                "getInstalledApps": true
             }
         },
         "defaultWindowOptions": {
@@ -35,11 +41,22 @@
             "saveWindowState": false,
             "backgroundThrottling": true,
             "minHeight": 445,
-            "minWidth": 308
+            "minWidth": 308,
+            "preloadScripts": [
+                { "url": "http://localhost:5555/preload/context-api.js" }
+            ]
         },
         "defaultViewOptions": {
             "experimental": {
                 "childWindows": true
+            },
+            "preloadScripts": [
+                { "url": "http://localhost:5555/preload/context-api.js" }
+            ],
+            "permissions": {
+                "ExternalWindow": {
+                    "wrap": true
+                }
             }
         },
         "commands": [
@@ -50,25 +67,62 @@
         ]
     },
     "snapshot": {
+        "channels": [
+            { "id": "red",    "context": null },
+            { "id": "yellow", "context": null }
+        ],
         "windows": [
             {
+                "name": "layout-window-1",
                 "layout": {
-                    "content": [
-                        {
-                            "type": "stack",
-                            "id": "no-drop-target",
-                            "content": [
-                                {
-                                    "type": "component",
-                                    "componentName": "view",
-                                    "componentState": {
-                                        "processAffinity": "ps_1",
-                                        "url": "https://cdn.openfin.co/embed-web/chart.html"
-                                    }
+                    "content": [{
+                        "type": "stack",
+                        "content":[{
+                            "type": "component",
+                            "componentName": "view",
+                            "componentState": {
+                                "name": "my-new-test-view-1",
+                                "channelId": "red",
+                                "url": "http://www.example.com"
+                            }
+                        },{
+                            "type": "component",
+                            "componentName": "view",
+                            "componentState": {
+                                "name": "my-new-test-view-2",
+                                "channelId": "yellow",
+                                "url": "http://www.example.com"
+                            }
+                        }]
+                    }]
+                }
+            }],
+            "_windows": [{
+                "name": "simple-native-window",
+                "channelId": "red",
+                "startInfo": {
+                    "uuid": "native-app-provider",
+                    "target": "C:/Users/nicho/source/repos/nwi/single-window-app/bin/Debug/single-window-app.exe"
+                }
+            },
+            {
+                "name": "native-layout-window",
+                "layout": {
+                    "content": [{
+                        "type": "stack",
+                        "content":[{
+                            "type": "component",
+                            "componentName": "view",
+                            "componentState": {
+                                "name": "simple-native-widget",
+                                "channelId": "yellow",
+                                "process": {
+                                    "uuid": "native-app-provider",
+                                    "alias": "native-app"
                                 }
-                            ]
-                        }
-                    ]
+                            }
+                        }]
+                    }]
                 }
             }
         ]

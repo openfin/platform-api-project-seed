@@ -64,6 +64,14 @@ body {
     border-color: var(--frame-background);
 }
 
+.left-menu button.new {
+    background-color: rgb(48, 76, 153)
+}
+
+.left-menu button.secret {
+    background-color: rgb(153, 52, 48);
+}
+
 .left-menu button:hover {
     cursor: pointer;
     background-color: var(--tab-bar-background);

@@ -1,40 +1,74 @@
-import { generateExternalWindowSnapshot, restoreExternalWindowPositionAndState } from './external-window-snapshot.js';
-
-//We have customized out platform provider to keep track of a specific notepad window.
-//Look for the "my_platform_notes.txt" file and launch it in notepad or add another external window to this array
-const externalWindowsToTrack = [
-    {
-        name: 'Notepad',
-        title: 'my_platform_notes - Notepad'
-    }
-];
+import { createNativeProvider } from './platform-native.js';
 
 fin.Platform.init({
-    overrideCallback: async (Provider) => {
-        class Override extends Provider {
-            async getSnapshot() {
-                const snapshot = await super.getSnapshot();
+    overrideCallback: async (ProviderBase) => {
+        const NativeProviderBase = createNativeProvider(ProviderBase);
 
-                //we add an externalWindows section to our snapshot
-                const externalWindows = await generateExternalWindowSnapshot(externalWindowsToTrack);
-                return {
-                    ...snapshot,
-                    externalWindows
-                };
+        class CustomProvider extends NativeProviderBase {
+
+        }
+
+        return new CustomProvider();
+    },
+
+    _overrideCallback: async (ProviderBase) => {
+
+        const systemChannels = await Promise.all([
+            'red', 'yellow', 'orange', 'yellow', 'green', 'blue', 'purple' 
+        ].map(async (id) => ({
+            id,
+            type: 'system',
+            context: await fin.InterApplicationBus.Store.open(`fdc3/channel/system/${id}`, null) 
+        })));
+
+        const appChannels = [ ];
+
+        
+        class Provider extends createNativeProvider(ProviderBase) {
+            async getSnapshot() {
+                let snapshot = await super.getSnapshot();
+                Object.assign(snapshot, { 
+                    channels: systemChannels.map(({id, type, context}) => ({id, type, context: context.get()}))
+                });
+
+                return snapshot;
             }
 
-            async applySnapshot({ snapshot, options }) {
+            async applySnapshot({ snapshot }) {
+                // HACK: View creation from snaphot apply is not being intercepted correctly
+                // and needs manual tweaking beforehand
+                snapshot.windows = fin.Extensions.applyIntoWindows(snapshot.windows, fin.Extensions.downgradeOptions);
+                // ------------------------------------
 
-                const originalPromise = super.applySnapshot({ snapshot, options });
+                return await super.applySnapshot({ snapshot });
+            }
 
-                //if we have a section with external windows we will use it.
-                if (snapshot.externalWindows) {
-                    await Promise.all(snapshot.externalWindows.map(async (i) => await restoreExternalWindowPositionAndState(i)));
-                }
-
-                return originalPromise;
+            async createView(...args) {
+                return await super.createView(...args);
             }
         };
-        return new Override();
+        
+        return new Provider();
     }
 });
+
+(async function() {
+
+    class DesktopAgent {
+        open(name, context = undefined) { }
+
+        broadcast(context) { }
+        addContextListener(contextType = undefined, handler) { }
+
+        findIntents(intent, context = undefined) { }
+        findIntentsByContext(context) { }
+        raiseIntent(intent, context, target = undefined) { }
+        addIntentListener(intent, handler) { }
+
+        getOrCreateChannel(channelId) { }
+        getSystemChannels() { }
+        joinChannel(channelId) { }
+        getCurrentChannel() { }
+        leaveCurrentChannel() { }
+    }
+})();
