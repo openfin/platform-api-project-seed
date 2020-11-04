@@ -14,43 +14,6 @@ window.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    const viewCreate = fin.View.create;
-    fin.View.create = async function(...args) {
-        console.log('fin.View.create', args);
-        let view = await (viewCreate.apply(fin.View, args));
-        let handler = {
-            get: function(target, prop) {
-                if(prop === 'then') {
-                    return undefined;
-                }
-
-                console.log(`View.${prop}`);
-                return target[prop];
-            }
-        }
-        let viewProxy = new Proxy(view, handler);
-        return viewProxy;
-    }
-
-    const viewWrapSync = fin.View.wrapSync;
-    fin.View.wrapSync = function(...args) {
-        console.log('fin.View.wrapSync', args);
-        let view = viewWrapSync.apply(fin.View, args);
-        let handler = {
-            get: function(target, prop) {
-                if(prop === 'then') {
-                    return undefined;
-                }
-
-                console.log(`View.${prop}`);
-                return target[prop];
-            }
-        }
-
-        let viewProxy = new Proxy(view, handler);
-        return viewProxy;
-    }
-
     // Before .50 AI version this may throw...
     fin.Platform.Layout.init({containerId});
 });

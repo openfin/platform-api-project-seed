@@ -4,6 +4,7 @@ export function createNativeProvider(ProviderBase) {
 
     const nativeApps = new Map();
     const nativeWindows = new Map();
+    const embeddedWindows = new Map();
 
     const convertOptions = function(opts) {
         let result = Object.assign({}, {...opts});
@@ -22,41 +23,9 @@ export function createNativeProvider(ProviderBase) {
 
         async createView({ opts, target }, caller) {
             if(opts.startInfo) {
-                //TODO: refactor and consolidate with createWindow
-                let { startInfo, name, className, mainWindow, customData } = opts;
-                let { uuid } = startInfo;
-
-                let client;
-                try {
-                    client = await fin.InterApplicationBus.Channel.connect(uuid, { wait: false });
-                } catch {
-                    let process = await fin.System.launchExternalProcess(startInfo);
-                    uuid = process.uuid;
-                    
-                    client = await fin.InterApplicationBus.Channel.connect(uuid, { wait: true });
-                    await client.dispatch('register-provider', { channelName });
-                    nativeApps.set(uuid, { startInfo });
-                }
-
-                let childId = await client.dispatch('create-window', opts);
-                let nativeChild = await fin.ExternalWindow.wrap({ nativeId: childId });
-
-                let result = await super.createView({ opts: { url: 'about:blank' }, target }, caller);
+                let result = await super.createView({ opts: { ...opts, url: 'about:blank' }, target }, caller);
                 let view = fin.View.wrapSync(result.identity);
-
-                view.addListener('hidden', () => nativeChild.hide());
-                view.addListener('shown', async () => {
-                    await nativeChild.setBounds(await view.getBounds());
-                    await nativeChild.show();
-                    await nativeChild.bringToFront();
-                });
-
-                let viewWindow = await view.getCurrentWindow();
-                let parentId = await viewWindow.getNativeId();
-
-                await client.dispatch('embed-window', { parentId, childId });
-
-                await client.disconnect();
+                await this.embedIntoView(opts, view);
                 return view;
             } else {
                 return super.createView({ opts, target }, caller);
@@ -88,6 +57,41 @@ export function createNativeProvider(ProviderBase) {
             }
         }
 
+        async embedIntoView(opts, view) {
+            //TODO: refactor and consolidate with createWindow
+            let { startInfo, name, className, mainWindow, customData } = opts;
+            let { uuid } = startInfo;
+
+            let client;
+            try {
+                client = await fin.InterApplicationBus.Channel.connect(uuid, { wait: false });
+            } catch {
+                let process = await fin.System.launchExternalProcess(startInfo);
+                uuid = process.uuid;
+                
+                client = await fin.InterApplicationBus.Channel.connect(uuid, { wait: true });
+                await client.dispatch('register-provider', { channelName });
+                nativeApps.set(uuid, { startInfo });
+            }
+
+            let childId = await client.dispatch('create-window', opts);
+            let nativeChild = await fin.ExternalWindow.wrap({ nativeId: childId });
+
+            view.addListener('hidden', () => nativeChild.hide());
+            view.addListener('shown', async () => {
+                await nativeChild.setBounds(await view.getBounds());
+                await nativeChild.show();
+                await nativeChild.bringToFront();
+            });
+
+            let viewWindow = await view.getCurrentWindow();
+            let parentId = await viewWindow.getNativeId();
+
+            await client.dispatch('embed-window', { parentId, childId });
+            await this.registerEmbeddedWindow({ uuid, name, className, mainWindow, externalWindow: nativeChild, customData });
+            await client.disconnect();
+        }
+
         async registerWindow(opts) {
             let { uuid, name, className, mainWindow, nativeId, customData } = convertOptions(opts);
             let externalWindow = await fin.ExternalWindow.wrap({ nativeId });
@@ -96,12 +100,24 @@ export function createNativeProvider(ProviderBase) {
             return { uuid, name };
         }
 
+        async registerEmbeddedWindow(opts) {
+            let { uuid, name, className, mainWindow, externalWindow, customData } = convertOptions(opts);
+            embeddedWindows.set(name, Object.assign(externalWindow, { uuid, name, className, mainWindow, customData })); // externalWindow.identity is broken / unusable
+            externalWindow.addListener('closed', () => embeddedWindows.delete(name));
+            return { uuid, name };
+        }
+
         async onCustomDataChanged(evt) {
             let { name, customData } = evt;
+            
             let nativeWindow = nativeWindows.get(name);
-
             if(nativeWindow) {
                 Object.assign(nativeWindow, { customData });
+            }
+
+            let embeddedWindow = embeddedWindows.get(name);
+            if(embeddedWindow) {
+                Object.assign(embeddedWindow, { customData });
             }
         }
 
@@ -128,6 +144,12 @@ export function createNativeProvider(ProviderBase) {
                 return result;
             }));
 
+            snapshot.windows.forEach(win => {
+                if(win.layout) {
+                    win.layout.content.forEach(contentItem => this.updateContentItem(contentItem));
+                }
+            })
+
             snapshot.windows = [
                 ...snapshot.windows,
                 ...nativeEntries
@@ -136,15 +158,46 @@ export function createNativeProvider(ProviderBase) {
             return snapshot;
         }
 
+        updateContentItem(contentItem) {
+            let { type, componentName, componentState, content } = contentItem;
+
+            if(type === 'component' && componentName === 'view') {
+                let { name } = componentState;
+
+                let embeddedWindow = embeddedWindows.get(name);
+                if(embeddedWindow) {
+                    Object.assign(componentState, embeddedWindow);
+                }
+            }
+
+            if(content) {
+                content.forEach(contentItem => this.updateContentItem(contentItem));
+            }
+        }
+
+        async embedContent(contentItem) {
+            let { type, componentName, componentState, content } = contentItem;
+
+            if(type === 'component' && componentName === 'view') {
+                let { name, startInfo } = componentState;
+
+                if(startInfo) {
+                    let view = fin.View.wrapSync({ ...fin.me.identity, name });
+                    await this.embedIntoView(componentState, view);
+                }
+            }
+
+            if(content) {
+                await Promise.all(content.map(contentItem => this.embedContent(contentItem)));
+            }
+        }
+
         async applySnapshot({ snapshot, options }) {
             let nativeEntries = snapshot.windows.filter(win => win.startInfo);
             snapshot.windows = snapshot.windows.filter(win => win.startInfo === undefined);
-
-            await super.applySnapshot({ snapshot, options});
-
+            
             let { closeExistingWindows } = options || {};
-            //let windowsToClose = closeExistingWindows ? new Map(nativeWindows) : new Map();
-
+            
             if(closeExistingWindows) {
                 await Promise.all([...nativeWindows.values()].map(async (entry) => {
                     await entry.close();
@@ -152,9 +205,10 @@ export function createNativeProvider(ProviderBase) {
                 nativeWindows.clear();
             }
 
+            await super.applySnapshot({ snapshot, options});
+            
             await Promise.all(nativeEntries.map(async (entry) => {
                 let nativeWindow = nativeWindows.get(entry.name);
-                //windowsToClose.delete(entry.name);
 
                 if(nativeWindow === undefined) {
                     await this.createWindow(convertOptions(entry));
@@ -168,9 +222,11 @@ export function createNativeProvider(ProviderBase) {
                 }
             }));
 
-            // await Promise.all([...windowsToClose.values()].map(async (entry) => {
-            //     await entry.close();
-            // }));
+            await Promise.all(snapshot.windows.map(async (win) => {
+                if(win.layout) {
+                    return Promise.all(win.layout.content.map(contentItem => this.embedContent(contentItem)));
+                }
+            }));
         }
     }
 }
