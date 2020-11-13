@@ -1,7 +1,7 @@
 {
     "runtime": {
         "arguments": "--v=1 --inspect",
-        "version": "beta"
+        "version": "alpha"
     },
     "shortcut": {
         "company": "OpenFin",
@@ -35,11 +35,15 @@
             "saveWindowState": false,
             "backgroundThrottling": true,
             "minHeight": 445,
-            "minWidth": 354
+            "minWidth": 354,
+            "experimental": {
+                "analytics": true
+            }
         },
         "defaultViewOptions": {
             "experimental": {
-                "childWindows": true
+                "childWindows": true,
+                "analytics": true
             }
         },
         "commands": [
