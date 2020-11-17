@@ -1,7 +1,7 @@
 import { html, render } from 'https://unpkg.com/lit-html@1.0.0/lit-html.js';
 import { getTemplates, getTemplateByName, onStoreUpdate } from './template-store.js';
 import { CONTAINER_ID } from './platform-window.js';
-
+import * as jumpList from './jump-list.js';
 const CHART_URL = 'https://cdn.openfin.co/embed-web/chart.html';
 const LAYOUT_STORE_KEY  = 'LayoutForm';
 const SNAPSHOT_STORE_KEY = 'SnapshotForm';
@@ -49,7 +49,7 @@ class LeftMenu extends HTMLElement {
         this.render();
 
         //Whenever the store updates we will want to render any new elements.
-        onStoreUpdate(() => { this.render(); });
+        onStoreUpdate(() => { this.render(); jumpList.setWorkspaces(); });
     }
 
     clickHandler = (e) => {
@@ -117,7 +117,6 @@ class LeftMenu extends HTMLElement {
         return fin.Platform.getCurrentSync().applySnapshot(template.snapshot, {
             closeExistingWindows: template.close
         });
-
     }
 
     replaceLayoutFromTemplate = async (templateName) => {
