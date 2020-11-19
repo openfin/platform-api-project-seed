@@ -76,7 +76,7 @@
                 "name": "layout-window-1",
                 "layout": {
                     "content": [{
-                        "type": "stack",
+                        "type": "column",
                         "content":[{
                             "type": "component",
                             "componentName": "view",

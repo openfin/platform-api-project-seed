@@ -159,8 +159,8 @@ class LeftMenu extends HTMLElement {
                 <li><button @click=${() => this.nonLayoutWindow().catch(console.error)}>New Window</button></li>
                 <li><button class="new" @click=${() => this.nativeSingleWindow().catch(console.error)}>Native Single Window</button></li>
                 <li><button class="new" @click=${() => this.nativeMultiWindow().catch(console.error)}>Native Multi Window</button></li>
-                <li><button class="secret" @click=${() => this.nativeView().catch(console.error)}>Native View</button></li>
-                <li><button class="secret" @click=${() => this.nativeViewWindow().catch(console.error)}>Native View Window</button></li>
+                <li><button class="secret" @click=${() => this.nativeView().catch(console.error)}>Bonus Round</button></li>
+                <li><button class="secret" @click=${() => this.nativeViewWindow().catch(console.error)}>Bonus Window</button></li>
                 <li><button @click=${() => this.saveSnapshot().catch(console.error)}>Save Platform Snapshot</button></li>
                 <li><button @click=${() => this.restoreSnapshot().catch(console.error)}>Restore Platform Snapshot</button></li>
                 <li><button @click=${() => this.applySnapshot().catch(console.error)}>Apply Platform Snapshot</button></li>
@@ -238,7 +238,8 @@ class LeftMenu extends HTMLElement {
                 className: 'OpenFinPlatformApp.MainForm',
                 mainWindow: true,
                 startInfo: {
-                    target: 'C:/Users/nicho/source/repos/nwi/OpenFinPlatformApp/bin/Debug/openfin-platform-app.exe'
+                    target: 'C:/Users/nicho/source/repos/nwi/OpenFinPlatformApp/bin/Debug/openfin-platform-app.exe',
+                    arguments: '--platform'
                 }
             }]
         });
@@ -247,14 +248,15 @@ class LeftMenu extends HTMLElement {
     async nativeMultiWindow() {
         return fin.Platform.getCurrentSync().applySnapshot({
             windows: [{
-                defaultWidth: 460,
-                defaultHeight: 200,
-                defaultLeft: 240,
+                defaultWidth: 1000,
+                defaultHeight: 400,
+                defaultLeft: 400,
                 defaultTop: 240,
-                className: 'OpenFinPlatformApp.MainForm',
+                className: 'OpenFinPlatformApp.EquitiesTable',
                 startInfo: {
                     uuid: 'multi-window-app',
                     target: 'C:/Users/nicho/source/repos/nwi/OpenFinPlatformApp/bin/Debug/openfin-platform-app.exe',
+                    arguments: '--platform',
                     lifetime: 'application'
                 }
             }]
@@ -264,10 +266,11 @@ class LeftMenu extends HTMLElement {
     async nativeView() {
         //we want to add a chart in a new window.
         return fin.Platform.getCurrentSync().createView({
-            className: 'OpenFinPlatformApp.MainForm',
+            className: 'OpenFinPlatformApp.EquitiesTable',
             startInfo: {
                 uuid: 'multi-window-app',
                 target: 'C:/Users/nicho/source/repos/nwi/OpenFinPlatformApp/bin/Debug/openfin-platform-app.exe',
+                arguments: '--platform',
                 lifetime: 'application'
             }
         }, fin.me.identity);
@@ -276,10 +279,11 @@ class LeftMenu extends HTMLElement {
     async nativeViewWindow() {
         //we want to add a chart in a new window.
         return fin.Platform.getCurrentSync().createView({
-            className: 'OpenFinPlatformApp.MainForm',
+            className: 'OpenFinPlatformApp.StockChart',
             startInfo: {
                 uuid: 'multi-window-app',
                 target: 'C:/Users/nicho/source/repos/nwi/OpenFinPlatformApp/bin/Debug/openfin-platform-app.exe',
+                arguments: '--platform',
                 lifetime: 'application'
             }
         }, undefined);

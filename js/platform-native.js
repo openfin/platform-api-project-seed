@@ -19,11 +19,12 @@ export function createNativeProvider(ProviderBase) {
             super(...args);
             providerChannelP.then(ch => ch.register('register-window', opts => this.registerWindow(opts)));
             providerChannelP.then(ch => ch.register('custom-data-changed', evt => this.onCustomDataChanged(evt)));
+            providerChannelP.then(ch => ch.register('title-changed', evt => this.onTitleChanged(evt)));
         }
 
         async createView({ opts, target }, caller) {
             if(opts.startInfo) {
-                let result = await super.createView({ opts: { ...opts, url: 'about:blank' }, target }, caller);
+                let result = await super.createView({ opts: convertOptions({ ...opts, url: 'about:blank' }), target }, caller);
                 let view = fin.View.wrapSync(result.identity);
                 await this.embedIntoView(opts, view);
                 return view;
@@ -59,8 +60,9 @@ export function createNativeProvider(ProviderBase) {
 
         async embedIntoView(opts, view) {
             //TODO: refactor and consolidate with createWindow
-            let { startInfo, name, className, mainWindow, customData } = opts;
+            let { startInfo, className, mainWindow, customData } = opts;
             let { uuid } = startInfo;
+            let { name } = view.identity;
 
             let client;
             try {
@@ -74,21 +76,28 @@ export function createNativeProvider(ProviderBase) {
                 nativeApps.set(uuid, { startInfo });
             }
 
-            let childId = await client.dispatch('create-window', opts);
+            let childId = await client.dispatch('create-window', Object.assign(opts, { frame: false, name }));
             let nativeChild = await fin.ExternalWindow.wrap({ nativeId: childId });
 
+            let onShown, onTargetChanged;
+
+            view.addListener('destroyed', () => nativeChild.close());
             view.addListener('hidden', () => nativeChild.hide());
-            view.addListener('shown', async () => {
+            view.addListener('shown', onShown = async () => {
                 await nativeChild.setBounds(await view.getBounds());
                 await nativeChild.show();
                 await nativeChild.bringToFront();
             });
+            view.addListener('target-changed', onTargetChanged = async () => {
+                console.log('target-changed');
+                let viewWindow = await view.getCurrentWindow();
+                let parentId = await viewWindow.getNativeId();
+                await client.dispatch('embed-window', { parentId, childId });
+            });
 
-            let viewWindow = await view.getCurrentWindow();
-            let parentId = await viewWindow.getNativeId();
-
-            await client.dispatch('embed-window', { parentId, childId });
             await this.registerEmbeddedWindow({ uuid, name, className, mainWindow, externalWindow: nativeChild, customData });
+            await onTargetChanged();
+            await onShown();
             await client.disconnect();
         }
 
@@ -119,6 +128,13 @@ export function createNativeProvider(ProviderBase) {
             if(embeddedWindow) {
                 Object.assign(embeddedWindow, { customData });
             }
+        }
+
+        async onTitleChanged(evt) {
+            let { name, title } = evt;
+            let view = fin.View.wrapSync({ ...fin.me.identity, name });
+
+            await view.executeJavaScript(`document.title = '${title}'`);
         }
 
         async getSnapshot() {
