@@ -1,0 +1,36 @@
+<Application x:Class="Openfin.PlatformAPI.Demo.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:Openfin.PlatformAPI.Demo"
+             xmlns:ComponentModel="clr-namespace:System.ComponentModel;assembly=PresentationFramework"
+             xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"
+              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             Startup="Application_Startup"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <materialDesign:BundledTheme BaseTheme="Dark" PrimaryColor="DeepPurple" SecondaryColor="Indigo" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Dragablz;component/Themes/materialdesign.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/FluentWPF;component/Styles/Controls.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <SolidColorBrush x:Key="PrimaryHueMidBrush" Color="Black"/>
+            <SolidColorBrush x:Key="PrimaryHueDarkBrush" Color="#7B7BFF"/>
+            <SolidColorBrush x:Key="SecondaryAccentBrush" Color="#7B7BFF"/>
+            <Style TargetType="{x:Type dragablz:TabablzControl}" BasedOn="{StaticResource MaterialDesignTabablzControlStyle}"/>            
+            <Style TargetType="Window">
+                <Style.Triggers>
+                    <Trigger Property="ComponentModel:DesignerProperties.IsInDesignMode" Value="True">
+                        <Setter Property="Background" Value="Black"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+            <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignRaisedButton}">
+                <Setter Property="Background" Value="{StaticResource PrimaryHueDarkBrush}"/>
+                <Setter Property="materialDesign:ButtonAssist.CornerRadius" Value="14"/>
+                <Setter Property="BorderBrush" Value="Transparent"/>
+           </Style>      
+        </ResourceDictionary>  
+    </Application.Resources>
+</Application>
