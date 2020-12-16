@@ -238,7 +238,7 @@ class LeftMenu extends HTMLElement {
                 className: 'OpenFinPlatformApp.MainForm',
                 mainWindow: true,
                 startInfo: {
-                    target: 'C:/Users/nicho/source/repos/nwi/OpenFinPlatformApp/bin/Debug/openfin-platform-app.exe',
+                    alias: 'openfin-platform-app',
                     arguments: '--platform'
                 }
             }]
@@ -255,7 +255,7 @@ class LeftMenu extends HTMLElement {
                 className: 'OpenFinPlatformApp.EquitiesTable',
                 startInfo: {
                     uuid: 'multi-window-app',
-                    target: 'C:/Users/nicho/source/repos/nwi/OpenFinPlatformApp/bin/Debug/openfin-platform-app.exe',
+                    alias: 'openfin-platform-app',
                     arguments: '--platform',
                     lifetime: 'application'
                 }
@@ -269,7 +269,7 @@ class LeftMenu extends HTMLElement {
             className: 'OpenFinPlatformApp.EquitiesTable',
             startInfo: {
                 uuid: 'multi-window-app',
-                target: 'C:/Users/nicho/source/repos/nwi/OpenFinPlatformApp/bin/Debug/openfin-platform-app.exe',
+                alias: 'openfin-platform-app',
                 arguments: '--platform',
                 lifetime: 'application'
             }
@@ -282,7 +282,7 @@ class LeftMenu extends HTMLElement {
             className: 'OpenFinPlatformApp.StockChart',
             startInfo: {
                 uuid: 'multi-window-app',
-                target: 'C:/Users/nicho/source/repos/nwi/OpenFinPlatformApp/bin/Debug/openfin-platform-app.exe',
+                alias: 'openfin-platform-app',
                 arguments: '--platform',
                 lifetime: 'application'
             }

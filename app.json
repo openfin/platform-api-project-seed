@@ -66,6 +66,15 @@
             }
         ]
     },
+    "appAssets": [
+        {
+            "src": "http://localhost:5555/assets/OpenFinPlatformApp.zip",
+            "version": "0.0.1",
+            "alias": "openfin-platform-app",
+            "target": "openfin-platform-app.exe",
+            "forceDownload": true
+        }
+    ],
     "snapshot": {
         "channels": [
             { "id": "red",    "context": null },
@@ -102,7 +111,7 @@
                 "channelId": "red",
                 "startInfo": {
                     "uuid": "native-app-provider",
-                    "target": "C:/Users/nicho/source/repos/nwi/single-window-app/bin/Debug/single-window-app.exe"
+                    "alias": "openfin-platform-app"
                 }
             },
             {
