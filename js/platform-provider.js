@@ -1,5 +1,5 @@
 import { generateExternalWindowSnapshot, restoreExternalWindowPositionAndState } from './external-window-snapshot.js';
-
+import * as jumpList from './jump-list.js';
 //We have customized our platform provider to keep track of a specific notepad window.
 //Look for the "my_platform_notes.txt" file and launch it in notepad or add another external window to this array
 const externalWindowsToTrack = [
@@ -12,6 +12,14 @@ const externalWindowsToTrack = [
         title: 'my_platform_notes'
     }
 ];
+
+
+// ** jumplist logic ** //
+let snapshotOverride = undefined;
+const setSnapshotOverride = snapshot => snapshotOverride = snapshot;
+jumpList.setupLaunchListeners(setSnapshotOverride);
+jumpList.setWorkspaces();
+// ** end jumplist logic ** //
 
 fin.Platform.init({
     overrideCallback: async (Provider) => {
@@ -28,8 +36,13 @@ fin.Platform.init({
             }
 
             async applySnapshot({ snapshot, options }) {
-
-                const originalPromise = super.applySnapshot({ snapshot, options });
+                let originalPromise;
+                if(snapshotOverride) {
+                    originalPromise = super.applySnapshot({ snapshot: snapshotOverride, options });
+                    snapshotOverride = undefined; // we only want to do this on the first apply snapshot
+                } else {
+                    originalPromise = super.applySnapshot({ snapshot, options });
+                }
 
                 //if we have a section with external windows we will use it.
                 if (snapshot.externalWindows) {
