@@ -1,7 +1,7 @@
 {
     "runtime": {
         "arguments": "--v=1 --inspect",
-        "version": "canary"
+        "version": "beta"
     },
     "shortcut": {
         "company": "OpenFin",
@@ -62,7 +62,6 @@
                                     "type": "component",
                                     "componentName": "view",
                                     "componentState": {
-                                        "processAffinity": "ps_1",
                                         "url": "https://cdn.openfin.co/embed-web/chart.html"
                                     }
                                 }
