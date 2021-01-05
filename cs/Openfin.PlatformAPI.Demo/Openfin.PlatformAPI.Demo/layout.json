@@ -1,0 +1,67 @@
+{  
+        "settings": {
+            "hasHeaders": true,
+            "constrainDragToContainer": true,
+            "reorderEnabled": true,
+            "selectionEnabled": false,
+            "popoutWholeStack": false,
+            "blockedPopoutsThrowError": true,
+            "closePopoutsOnUnload": true,
+            "showPopoutIcon": false,
+            "showMaximiseIcon": false,
+            "showCloseIcon": false,
+            "responsiveMode": "onload",
+            "tabOverlapAllowance": 0,
+            "reorderOnTabMenuClick": true,
+            "tabControlOffset": 10
+        },
+        "dimensions": {
+            "borderWidth": 5,
+            "borderGrabWidth": 15,
+            "minItemHeight": 10,
+            "minItemWidth": 10,
+            "headerHeight": 20,
+            "dragProxyWidth": 300,
+            "dragProxyHeight": 200
+        },
+        "labels": {
+            "close": "close",
+            "maximise": "maximise",
+            "minimise": "minimise",
+            "popout": "open in new window",
+            "popin": "pop in",
+            "tabDropdown": "additional tabs"
+        },
+        "content": [
+            {
+                "type": "stack",
+                "id": "no-drop-target",
+                "isClosable": true,
+                "reorderEnabled": true,
+                "title": "",
+                "activeItemIndex": 0,
+                "content": [
+                    {
+                        "type": "component",
+                        "componentName": "view",
+                        "componentState": {                            
+                            "processAffinity": "ps_1",
+                            "url": "https://openfin.co",
+                            "componentName": "view",
+                            "uuid": "platform-tutorial",
+                            "initialUrl": "https://openfin.co"
+                        },
+                        "isClosable": true,
+                        "reorderEnabled": true,
+                        "title": "Home | OpenFin - The Operating System of Finance."
+                    }
+                ]
+            }
+        ],
+        "isClosable": true,
+        "reorderEnabled": true,
+        "title": "",
+        "openPopouts": [],
+        "maximisedItemId": null    
+
+}

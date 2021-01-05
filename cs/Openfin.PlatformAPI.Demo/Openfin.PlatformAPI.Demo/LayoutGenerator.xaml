@@ -1,0 +1,28 @@
+﻿<fw:AcrylicWindow
+        xmlns:fw="clr-namespace:SourceChord.FluentWPF;assembly=FluentWPF"
+        x:Class="Openfin.PlatformAPI.Demo.LayoutGenerator"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:local="clr-namespace:Openfin.PlatformAPI.Demo" 
+    xmlns:OpenFin="clr-namespace:Openfin.WPF;assembly=Openfin.WPF"
+    Foreground="White"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Medium"       
+        TextElement.FontSize="14"
+        FontFamily="{materialDesign:MaterialDesignFont}"
+        mc:Ignorable="d"
+        Title="Openfin Platform API .NET Demo - Layout Generator" Height="600" Width="1000"> 
+    <Grid>
+        <Grid.Background>
+            <VisualBrush AlignmentX="Center" AlignmentY="Center" Stretch="None">
+                <VisualBrush.Visual>
+                    <Path Stroke="#7B7BFF" Fill="#7B7BFF"  HorizontalAlignment="Center" VerticalAlignment="Center"  Stretch="None" Data="M283.38 114a50 50 0 0 0-5.75-4.94l-.75-.52c-.43-.3-.85-.61-1.29-.9s-.95-.6-1.42-.89l-.66-.41c-.59-.35-1.19-.68-1.79-1l-.35-.19a49.6 49.6 0 0 0-23-5.68 49.71 49.71 0 0 1-49.67-49.76A49.62 49.62 0 1 0 149 99.24 49.71 49.71 0 0 1 198.67 149a49.71 49.71 0 0 1-49.76 49.67A49.62 49.62 0 0 1 99.25 149a49.62 49.62 0 1 0-49.62 49.62 49.62 49.62 0 0 1 49.62 49.62 49.71 49.71 0 0 0 99.43 0 49.62 49.62 0 0 1 49.62-49.62 49.56 49.56 0 0 0 25.19-6.86c.66-.39 1.31-.8 2-1.22l.14-.09c.6-.4 1.2-.82 1.78-1.24l.26-.18c.52-.38 1-.79 1.55-1.2l.44-.34c.48-.39.94-.8 1.41-1.21l.51-.44q.9-.81 1.77-1.68l.09-.08a49.84 49.84 0 0 0 5.8-7q.56-.81 1.08-1.64a49.61 49.61 0 0 0-6.94-61.44z" />
+                </VisualBrush.Visual>
+            </VisualBrush>
+        </Grid.Background>
+        <OpenFin:EmbeddedView x:Name="embeddedView"/>
+    </Grid>
+</fw:AcrylicWindow>

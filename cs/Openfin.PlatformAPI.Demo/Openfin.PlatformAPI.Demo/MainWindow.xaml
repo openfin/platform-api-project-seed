@@ -1,0 +1,368 @@
+<fw:AcrylicWindow
+        xmlns:fw="clr-namespace:SourceChord.FluentWPF;assembly=FluentWPF"
+        x:Class="Openfin.PlatformAPI.Demo.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:local="clr-namespace:Openfin.PlatformAPI.Demo"
+        xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"    
+        Icon="openfin.ico"
+        Foreground="White"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Medium"
+        ResizeMode="NoResize"
+        TextElement.FontSize="14"  
+        FontFamily="{materialDesign:MaterialDesignFont}"
+        mc:Ignorable="d"        
+        Title="OpenFin Platform API Management" Height="450" Width="800"
+        fw:TintColor="Black"
+        fw:FallbackColor="Black">
+    <Window.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="Foreground" Value="White" />
+        </Style>
+    </Window.Resources>
+    <Grid>
+
+        <dragablz:TabablzControl x:Name="tabControl" Grid.RowSpan="2">
+            <dragablz:TabablzControl.InterTabController>
+                <dragablz:InterTabController />
+            </dragablz:TabablzControl.InterTabController>
+            <TabItem Name="tiPlatformManagement" Header="Platform"  IsSelected="True">
+                <Grid Margin="8">
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition />
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Grid.RowSpan="3">
+                        <Grid.Background>
+                            <VisualBrush AlignmentX="Center" AlignmentY="Center" Stretch="None">
+                                <VisualBrush.Visual>
+                                    <Path Stroke="#7B7BFF" Fill="#7B7BFF" Data="M283.38 114a50 50 0 0 0-5.75-4.94l-.75-.52c-.43-.3-.85-.61-1.29-.9s-.95-.6-1.42-.89l-.66-.41c-.59-.35-1.19-.68-1.79-1l-.35-.19a49.6 49.6 0 0 0-23-5.68 49.71 49.71 0 0 1-49.67-49.76A49.62 49.62 0 1 0 149 99.24 49.71 49.71 0 0 1 198.67 149a49.71 49.71 0 0 1-49.76 49.67A49.62 49.62 0 0 1 99.25 149a49.62 49.62 0 1 0-49.62 49.62 49.62 49.62 0 0 1 49.62 49.62 49.71 49.71 0 0 0 99.43 0 49.62 49.62 0 0 1 49.62-49.62 49.56 49.56 0 0 0 25.19-6.86c.66-.39 1.31-.8 2-1.22l.14-.09c.6-.4 1.2-.82 1.78-1.24l.26-.18c.52-.38 1-.79 1.55-1.2l.44-.34c.48-.39.94-.8 1.41-1.21l.51-.44q.9-.81 1.77-1.68l.09-.08a49.84 49.84 0 0 0 5.8-7q.56-.81 1.08-1.64a49.61 49.61 0 0 0-6.94-61.44z" />
+                                </VisualBrush.Visual>
+                            </VisualBrush>
+                        </Grid.Background>
+                    </Grid>
+                    <StackPanel Orientation="Vertical" HorizontalAlignment="Center"  VerticalAlignment="Center" TextBlock.FontSize="14"  Grid.Row="0" Grid.Column="0">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock>Runtime Status:</TextBlock>
+                            <TextBlock x:Name="tbRuntimeStatus">Connecting...</TextBlock>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock>Runtime Version:</TextBlock>
+                            <TextBlock x:Name="tbRuntimeVersion"></TextBlock>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock>Framework Version:</TextBlock>
+                            <TextBlock x:Name="tbFrameworkVersion"></TextBlock>
+                        </StackPanel>
+                        <Separator Margin="0,20,0,0"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical" HorizontalAlignment="Center"  VerticalAlignment="Center" Grid.Row="1" Grid.Column="0">
+                        <Button x:Name="btnStartPlatform" Content="Start Platform"  Click="btnStartPlatform_Click" Margin="0,10" IsEnabled="False"/>
+                        <Button x:Name="btnQuitPlatform" Content="Quit Platform"  Click="btnQuitPlatform_Click" IsEnabled="False" />
+                    </StackPanel>
+                    <DataGrid x:Name="dgRunningPlatforms" Opacity=".6" SelectionMode="Single" CanUserSortColumns="False" Background="Black"  AutoGenerateColumns="False" ItemsSource="{Binding}" Foreground="White" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2"  Grid.RowSpan="3">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Running Platform(s)" Binding="{Binding UUID}" IsReadOnly="True"></DataGridTextColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Window">
+                <Grid Margin="8" >
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Grid.RowSpan="3">
+                        <Grid.Background>
+                            <VisualBrush AlignmentX="Center" AlignmentY="Center" Stretch="None">
+                                <VisualBrush.Visual>
+                                    <Path Stroke="#7B7BFF" Fill="#7B7BFF" Data="M283.38 114a50 50 0 0 0-5.75-4.94l-.75-.52c-.43-.3-.85-.61-1.29-.9s-.95-.6-1.42-.89l-.66-.41c-.59-.35-1.19-.68-1.79-1l-.35-.19a49.6 49.6 0 0 0-23-5.68 49.71 49.71 0 0 1-49.67-49.76A49.62 49.62 0 1 0 149 99.24 49.71 49.71 0 0 1 198.67 149a49.71 49.71 0 0 1-49.76 49.67A49.62 49.62 0 0 1 99.25 149a49.62 49.62 0 1 0-49.62 49.62 49.62 49.62 0 0 1 49.62 49.62 49.71 49.71 0 0 0 99.43 0 49.62 49.62 0 0 1 49.62-49.62 49.56 49.56 0 0 0 25.19-6.86c.66-.39 1.31-.8 2-1.22l.14-.09c.6-.4 1.2-.82 1.78-1.24l.26-.18c.52-.38 1-.79 1.55-1.2l.44-.34c.48-.39.94-.8 1.41-1.21l.51-.44q.9-.81 1.77-1.68l.09-.08a49.84 49.84 0 0 0 5.8-7q.56-.81 1.08-1.64a49.61 49.61 0 0 0-6.94-61.44z" />
+                                </VisualBrush.Visual>
+                            </VisualBrush>
+                        </Grid.Background>
+                    </Grid>
+                    <StackPanel Grid.Row="0"  Grid.RowSpan="2" HorizontalAlignment="Center" Margin="18">
+                        <TextBlock TextWrapping="Wrap">Create and close platform windows from here. Select an open window from the list to create views for the selected window in the <Hyperlink Name="lnkViewManagement" Click="lnkViewManagement_Click">View Management</Hyperlink>  section.</TextBlock>
+                        <Separator Margin="0,30,0,0"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1" Grid.RowSpan="2">
+                        <Button  x:Name="btnCreateWindow" Click="btnCreateWindow_Click" Margin="0,10">Create Platform Window</Button>
+                        <Button  x:Name="btnCloseWindow" Click="btnCloseWindow_Click" Margin="0,10">Close Platform Window</Button>
+                    </StackPanel>
+                    <DataGrid x:Name="dgPlatformWindows" CanUserAddRows="False" Opacity=".6" Background="Black" ItemsSource="{Binding}" SelectionMode="Single" CanUserSortColumns="False"  Foreground="White" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2"  Grid.RowSpan="3" AutoGenerateColumns="False">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Platform Windows(s)" Binding="{Binding Name}" IsReadOnly="True" ></DataGridTextColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+            <TabItem x:Name="tiViewManagement" Header="View">
+                <Grid Margin="8" HorizontalAlignment="Stretch" >
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Grid.RowSpan="3">
+                        <Grid.Background>
+                            <VisualBrush AlignmentX="Center" AlignmentY="Center" Stretch="None">
+                                <VisualBrush.Visual>
+                                    <Path Stroke="#7B7BFF" Fill="#7B7BFF" Data="M283.38 114a50 50 0 0 0-5.75-4.94l-.75-.52c-.43-.3-.85-.61-1.29-.9s-.95-.6-1.42-.89l-.66-.41c-.59-.35-1.19-.68-1.79-1l-.35-.19a49.6 49.6 0 0 0-23-5.68 49.71 49.71 0 0 1-49.67-49.76A49.62 49.62 0 1 0 149 99.24 49.71 49.71 0 0 1 198.67 149a49.71 49.71 0 0 1-49.76 49.67A49.62 49.62 0 0 1 99.25 149a49.62 49.62 0 1 0-49.62 49.62 49.62 49.62 0 0 1 49.62 49.62 49.71 49.71 0 0 0 99.43 0 49.62 49.62 0 0 1 49.62-49.62 49.56 49.56 0 0 0 25.19-6.86c.66-.39 1.31-.8 2-1.22l.14-.09c.6-.4 1.2-.82 1.78-1.24l.26-.18c.52-.38 1-.79 1.55-1.2l.44-.34c.48-.39.94-.8 1.41-1.21l.51-.44q.9-.81 1.77-1.68l.09-.08a49.84 49.84 0 0 0 5.8-7q.56-.81 1.08-1.64a49.61 49.61 0 0 0-6.94-61.44z" />
+                                </VisualBrush.Visual>
+                            </VisualBrush>
+                        </Grid.Background>
+                    </Grid>
+                    <StackPanel Grid.Row="0"  Grid.RowSpan="2" HorizontalAlignment="Center" Margin="18">
+                        <TextBlock TextWrapping="Wrap"><Run Text="Create and close platform views from here."/></TextBlock>
+                        <Separator Margin="0,30,0,0"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical" Grid.Row="1" HorizontalAlignment="Center" >
+                        <Button  x:Name="btnCreateView" Click="btnCreateView_Click" Margin="0,10" Content="Create Platform View"/>
+                        <Button  x:Name="btnCloseView" Click="btnCloseView_Click" Content="Close Platform View"/>
+                    </StackPanel>
+                    <DataGrid x:Name="dgPlatformViews" Opacity=".6" Background="Black" CanUserAddRows="False" ItemsSource="{Binding}" SelectionMode="Single" CanUserSortColumns="False" Foreground="White" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2"  Grid.RowSpan="3" AutoGenerateColumns="False">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Platform View(s)" Binding="{Binding Name}" IsReadOnly="True" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Snapshot">
+                <Grid Margin="8" HorizontalAlignment="Stretch" >
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Grid.RowSpan="3">
+                        <Grid.Background>
+                            <VisualBrush AlignmentX="Center" AlignmentY="Center" Stretch="None">
+                                <VisualBrush.Visual>
+                                    <Path Stroke="#7B7BFF" Fill="#7B7BFF" Data="M283.38 114a50 50 0 0 0-5.75-4.94l-.75-.52c-.43-.3-.85-.61-1.29-.9s-.95-.6-1.42-.89l-.66-.41c-.59-.35-1.19-.68-1.79-1l-.35-.19a49.6 49.6 0 0 0-23-5.68 49.71 49.71 0 0 1-49.67-49.76A49.62 49.62 0 1 0 149 99.24 49.71 49.71 0 0 1 198.67 149a49.71 49.71 0 0 1-49.76 49.67A49.62 49.62 0 0 1 99.25 149a49.62 49.62 0 1 0-49.62 49.62 49.62 49.62 0 0 1 49.62 49.62 49.71 49.71 0 0 0 99.43 0 49.62 49.62 0 0 1 49.62-49.62 49.56 49.56 0 0 0 25.19-6.86c.66-.39 1.31-.8 2-1.22l.14-.09c.6-.4 1.2-.82 1.78-1.24l.26-.18c.52-.38 1-.79 1.55-1.2l.44-.34c.48-.39.94-.8 1.41-1.21l.51-.44q.9-.81 1.77-1.68l.09-.08a49.84 49.84 0 0 0 5.8-7q.56-.81 1.08-1.64a49.61 49.61 0 0 0-6.94-61.44z" />
+                                </VisualBrush.Visual>
+                            </VisualBrush>
+                        </Grid.Background>
+                    </Grid>
+                    <StackPanel Grid.Row="0"  Grid.RowSpan="2" HorizontalAlignment="Center" Margin="18">
+                        <ScrollViewer CanContentScroll="True" VerticalScrollBarVisibility="Visible" Height="170">
+                            <TextBlock  TextWrapping="Wrap" Margin="8">
+                            Saving a snapshot will get a snapshot of the current layout and persist it in memory to be applied to the current running platform.<LineBreak/><LineBreak/>
+                            When saving a snapshot, you can choose the option to force the platform to shut down and restart when a snapshot is applied.
+                            </TextBlock>
+                        </ScrollViewer>
+                        <Separator Margin="0,30,0,0"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <Button  x:Name="btnSaveSnapshot" Content="Save Snapshot" Click="btnSaveSnapshot_Click" Margin="0,10"/>
+                        <Button  x:Name="btnApplySnapshot" Content="Apply Snapshot" Click="btnApplySnapshot_Click" Margin="0,10"/>
+                    </StackPanel>
+                    <DataGrid x:Name="dgSavedSnapshots"  Background="Black"  CanUserAddRows="False" AutoGenerateColumns="False" SelectionMode="Single" CanUserSortColumns="False" ItemsSource="{Binding}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"  Opacity=".7"  Foreground="White" Grid.Column="1" Grid.RowSpan="3" Grid.ColumnSpan="2">
+                        <DataGrid.Columns>
+                            <DataGridTemplateColumn>
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button  Content="Delete" Command="Delete"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTextColumn Header="Saved Snapshot(s)" Binding="{Binding SnapshotName}" IsReadOnly="True"></DataGridTextColumn>
+                            <DataGridCheckBoxColumn Header="Close Platform Before Applying" Binding="{Binding ClosePlatformWhenApplying}"></DataGridCheckBoxColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Layout">
+                <Grid Margin="8" HorizontalAlignment="Stretch" >
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Grid.RowSpan="3">
+                        <Grid.Background>
+                            <VisualBrush AlignmentX="Center" AlignmentY="Center" Stretch="None">
+                                <VisualBrush.Visual>
+                                    <Path Stroke="#7B7BFF" Fill="#7B7BFF" Data="M283.38 114a50 50 0 0 0-5.75-4.94l-.75-.52c-.43-.3-.85-.61-1.29-.9s-.95-.6-1.42-.89l-.66-.41c-.59-.35-1.19-.68-1.79-1l-.35-.19a49.6 49.6 0 0 0-23-5.68 49.71 49.71 0 0 1-49.67-49.76A49.62 49.62 0 1 0 149 99.24 49.71 49.71 0 0 1 198.67 149a49.71 49.71 0 0 1-49.76 49.67A49.62 49.62 0 0 1 99.25 149a49.62 49.62 0 1 0-49.62 49.62 49.62 49.62 0 0 1 49.62 49.62 49.71 49.71 0 0 0 99.43 0 49.62 49.62 0 0 1 49.62-49.62 49.56 49.56 0 0 0 25.19-6.86c.66-.39 1.31-.8 2-1.22l.14-.09c.6-.4 1.2-.82 1.78-1.24l.26-.18c.52-.38 1-.79 1.55-1.2l.44-.34c.48-.39.94-.8 1.41-1.21l.51-.44q.9-.81 1.77-1.68l.09-.08a49.84 49.84 0 0 0 5.8-7q.56-.81 1.08-1.64a49.61 49.61 0 0 0-6.94-61.44z" />
+                                </VisualBrush.Visual>
+                            </VisualBrush>
+                        </Grid.Background>
+                    </Grid>
+                    <StackPanel Grid.Row="0"  Grid.RowSpan="2" HorizontalAlignment="Center" Margin="8">
+                        <ScrollViewer CanContentScroll="True" VerticalScrollBarVisibility="Visible" Height="100">
+                            <TextBlock  TextWrapping="Wrap" Margin="8">
+                                The layout generator is a tool used to generate layouts for platform. When the generator is launched, you can specify your window arrangement and URLs to load in each configured view.<LineBreak/><LineBreak/>
+                                When the design is done, click the "Copy to Clipboard" button in the layout generator tool and you will be prompted to save the layout here. (A unique name is required).<LineBreak/><LineBreak/>
+
+                            </TextBlock>
+                        </ScrollViewer>
+                        <Separator Margin="0,30,0,0"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="1" Grid.RowSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <Button  x:Name="btnSaveWindowLayout" Click="btnSaveWindowLayout_Click"  Grid.Column="0" Margin="0,5">Save Current Layout</Button>
+                        <Button  x:Name="btnLaunchGenerator" Click="btnLaunchGenerator_Click" Grid.Column="0" Margin="0,5">Launch Layout Generator</Button>
+                        <Button  x:Name="btnReplaceLayout" Click="btnReplaceLayout_Click" Grid.Column="0" Margin="0,5">Replace Layout</Button>
+                        <Button  x:Name="btnApplyPreset" Click="btnApplyPreset_Click" Grid.Column="0" Margin="0,5">Apply Preset</Button>
+                    </StackPanel>
+                    <DataGrid x:Name="dgSavedLayouts" Background="Black" CanUserAddRows="False" AutoGenerateColumns="False" ItemsSource="{Binding}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"  Opacity=".7"  Foreground="White" Grid.Column="1" Grid.RowSpan="3" Grid.ColumnSpan="2">
+                        <DataGrid.Columns>
+                            <DataGridTemplateColumn>
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button  Content="Delete" Command="Delete"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTextColumn Header="Saved Layout(s)" Binding="{Binding Name}" IsReadOnly="True"></DataGridTextColumn>
+                            <DataGridTextColumn Header="JSON Data" Binding="{Binding Config}" IsReadOnly="True"></DataGridTextColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+        </dragablz:TabablzControl>
+
+        <!--#region Dialogs-->
+        <materialDesign:DialogHost x:Name="dlgSaveLayout" IsOpen="False" CloseOnClickAway="True" Grid.RowSpan="2">
+            <materialDesign:DialogHost.DialogContent>
+                <StackPanel Margin="12">
+                    <TextBox x:Name="tbLayoutName" Margin="0,10,0,0" materialDesign:HintAssist.Hint="Layout name"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="8">
+                        <Button  x:Name="btnCancelSaveLayout" HorizontalAlignment="Stretch" Click="btnCancelSaveLayout_Click">Cancel</Button>
+                        <Button  x:Name="btnSaveLayout" HorizontalAlignment="Stretch" Margin="5,0,0,0" Click="btnSaveLayout_Click">Save Layout</Button>
+                    </StackPanel>
+                </StackPanel>
+            </materialDesign:DialogHost.DialogContent>
+        </materialDesign:DialogHost>
+        <materialDesign:DialogHost x:Name="dlgCreateWindow" IsOpen="False" CloseOnClickAway="True" Grid.RowSpan="2">
+            <materialDesign:DialogHost.DialogContent>
+                <Grid Margin="20" ShowGridLines="False">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0" Orientation="Vertical" Margin="0,0,0,10">
+                        <Label>Background Color</Label>
+                        <StackPanel Orientation="Horizontal">
+                            <Rectangle x:Name="rectSelectedWindowColor" Height="20" Width="20" Fill="Black"/>
+                            <TextBlock x:Name="tbSelectedWindowBackgroundColorHex"/>
+                        </StackPanel>
+                        <materialDesign:ColorPicker x:Name="cpWindowBackground" Height="200" MouseMove="cpWindowBackground_MouseMove" ></materialDesign:ColorPicker>
+                    </StackPanel>
+                    <StackPanel Grid.Row="1">
+                        <CheckBox x:Name="cbCreatePlatformWindowDefaultCentered" Content="Default Centered" Margin="0,0,0,10"/>
+                        <CheckBox x:Name="cbCreateFrame" Content="Create With Frame" Margin="0,0,0,10"/>
+                        <CheckBox x:Name="cbResizable" Content="Allow Resize" Margin="0,0,0,10"/>
+                        <CheckBox x:Name="cbMaximizable" Content="Allow Maximize" Margin="0,0,0,10"/>
+                        <CheckBox x:Name="cbMinimizable" Content="Allow Minimize" Margin="0,0,0,10"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="2" Orientation="Horizontal"  Margin="0,0,0,10">
+                        <Label Content="Opacity"/>
+                        <Slider x:Name="slOpacity" Minimum="0" Maximum="1" Value="1" Width="200" TickFrequency=".1" TickPlacement="BottomRight" IsSnapToTickEnabled="True"/>
+                    </StackPanel>
+                    <StackPanel Margin="12" Grid.Row="4" >
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="8">
+                            <Button  x:Name="btnCancelCreatePlatformWindow" HorizontalAlignment="Stretch" Click="btnCancelCreatePlatformWindow_Click">Cancel</Button>
+                            <Button  x:Name="btnCreatePlatformWindow" HorizontalAlignment="Stretch" Margin="5,0,0,0" Click="btnCreatePlatformWindow_Click">Create Window</Button>
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
+            </materialDesign:DialogHost.DialogContent>
+        </materialDesign:DialogHost>
+        <materialDesign:DialogHost x:Name="dlgCreateView" IsOpen="False"  CloseOnClickAway="True" Grid.RowSpan="2">
+            <materialDesign:DialogHost.DialogContent>
+                <Grid Margin="20" ShowGridLines="False">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0" Orientation="Vertical" Margin="0,0,0,10">
+                        <StackPanel>
+                            <Label>Target Window:</Label>
+                            <TextBlock x:Name="tbTargetWindow">(one will be generated)</TextBlock>
+                        </StackPanel>
+                    </StackPanel>
+                    <StackPanel Grid.Row="1">
+                        <Label>Background Color</Label>
+                        <StackPanel Orientation="Horizontal">
+                            <Rectangle x:Name="rectSelectedViewColor" Fill="Black" Height="20" Width="20"/>
+                            <TextBlock x:Name="tbSelectedViewBackgroundColorHex"/>
+                        </StackPanel>
+                        <materialDesign:ColorPicker x:Name="cpViewBackground" Height="200"  MouseMove="cpViewBackground_MouseMove"></materialDesign:ColorPicker>
+                        <TextBox x:Name="tbViewName" materialDesign:HintAssist.Hint="View Name (default is GUID)"/>
+                        <TextBox x:Name="tbViewUrl" materialDesign:HintAssist.Hint="URL (default https://openfin.co)"/>
+
+                    </StackPanel>
+                    <StackPanel Margin="12" Grid.Row="2" >
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="8">
+                            <Button  x:Name="btnCancelCreatePlatformView" HorizontalAlignment="Stretch" Click="btnCancelCreatePlatformView_Click">Cancel</Button>
+                            <Button  x:Name="btnCreatePlatformVieww" HorizontalAlignment="Stretch" Margin="5,0,0,0" Click="btnCreatePlatformView_Click">Create View</Button>
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
+            </materialDesign:DialogHost.DialogContent>
+        </materialDesign:DialogHost>
+        <materialDesign:DialogHost x:Name="dlgSaveSnapshot">
+            <materialDesign:DialogHost.DialogContent>
+                <StackPanel Margin="24">
+                    <TextBox x:Name="tbSnapshotName" materialDesign:HintAssist.Hint="Snapshot Name"/>
+                    <CheckBox x:Name="cbClosePlatform" Content="Close Platform before restoring Snapshot" Margin="0,10,0,0"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
+                        <Button  x:Name="btnCancelSaveSnapshot" Content="Cancel" Click="btnCancelSaveSnapshot_Click" Margin="0,0,5,0"/>
+                        <Button  x:Name="btnPersistSnapshot" Content="Save" Click="btnPersistSnapshot_Click"/>
+                    </StackPanel>
+                </StackPanel>
+            </materialDesign:DialogHost.DialogContent>
+        </materialDesign:DialogHost>
+        <materialDesign:DialogHost x:Name="dlgLayoutPreset" IsOpen="False" CloseOnClickAway="True">
+            <materialDesign:DialogHost.DialogContent>
+                <StackPanel Margin="24">
+                    <RadioButton x:Name="rbPresetColumns" GroupName="preset" Content="Columns"/>
+                    <RadioButton x:Name="rbPresetGrid" GroupName="preset" Content="Grid"/>
+                    <RadioButton x:Name="rbPresetRows" GroupName="preset" Content="Rows"/>
+                    <RadioButton x:Name="rbPresetTabs" GroupName="preset" Content="Tabs"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10">
+                        <Button  x:Name="btnPresetsCancel" Click="btnPresetsCancel_Click">Cancel</Button>
+                        <Button  x:Name="btnPresetsApply" Click="btnPresetsApply_Click">Apply</Button>
+                    </StackPanel>
+                </StackPanel>
+            </materialDesign:DialogHost.DialogContent>
+        </materialDesign:DialogHost>
+    </Grid>
+</fw:AcrylicWindow>
