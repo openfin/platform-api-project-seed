@@ -36,6 +36,20 @@ class LeftMenu extends HTMLElement {
                 processAffinity: 'cv_1'
             },
             {
+                url: window.location.href.replace('platform-window', 'intents'),
+                printName: 'Intents',
+                processAffinity: 'cv_1',
+                intentDeclaration: {
+                    ViewChart: [
+                        "fdc3.instrument"
+                    ]
+                },
+                contextDeclaration: [
+                    "fdc3.instrument",
+                    "fdc3.country"
+                ]
+            },
+            {
                 url: `https://cdn.openfin.co/docs/javascript/${fin.desktop.getVersion()}`,
                 printName: "Documentation",
                 processAffinity: 'ps_1'
@@ -114,10 +128,12 @@ class LeftMenu extends HTMLElement {
 
     applySnapshotFromTemplate = async (templateName) => {
         const template = getTemplateByName(SNAPSHOT_STORE_KEY, templateName);
-        return fin.Platform.getCurrentSync().applySnapshot(template.snapshot, {
+        window.colorChannelAPI.setColorSnapshot(template.colorChannelInfo)
+        fin.Platform.getCurrentSync().applySnapshot(template.snapshot, {
             closeExistingWindows: template.close
-        });
-
+        })
+        console.log('template', template)
+        console.log('template.colorChannelInfo', template.colorChannelInfo)
     }
 
     replaceLayoutFromTemplate = async (templateName) => {

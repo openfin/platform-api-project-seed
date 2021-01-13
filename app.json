@@ -57,7 +57,24 @@
                     "content": [
                         {
                             "type": "stack",
-                            "content": [
+                            "content": [                             
+                                {
+                                    "type": "component",
+                                    "componentName": "view",
+                                    "componentState": {
+                                        "processAffinity": "ps_1",
+                                        "url": "http://localhost:5555/intents.html",
+                                        "intentDeclaration": {
+                                            "ViewChart": [
+                                                "fdc3.instrument"
+                                            ]
+                                        },
+                                        "contextDeclaration": [
+                                            "fdc3.instrument", 
+                                            "fdc3.country"
+                                        ]
+                                    }
+                                },
                                 {
                                     "type": "component",
                                     "componentName": "view",

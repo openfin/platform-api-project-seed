@@ -128,3 +128,42 @@ fieldset label {
     align-items: center;
     font-family: Arial, Helvetica, sans-serif;
 }
+
+#red-button:after {
+    content: "";
+    background-color: red;
+    padding: 5px;
+    display: inline-block;
+    margin-left: 10px;
+    margin-top: 10px;
+}
+
+#blue-button:after {
+    content: "";
+    background-color: blue;
+    padding: 5px;
+    display: inline-block;
+    margin-left: 10px;
+    margin-top: 10px;
+}
+
+#green-button:after {
+    content: "";
+    background-color: green;
+    padding: 5px;
+    display: inline-block;
+    margin-left: 10px;
+    margin-top: 10px;
+}
+
+.red-channel {
+    border-left: 2px solid red !important;
+}
+
+.blue-channel {
+    border-left: 2px solid blue !important;
+}
+
+.green-channel {
+    border-left: 2px solid green !important;
+}
