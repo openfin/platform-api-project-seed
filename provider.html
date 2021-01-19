@@ -1,18 +1,45 @@
 <!DOCTYPE html>
 <html>
 
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title>OpenFin Template</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <script type="module" src="js/platform-provider.js"></script>
-    </head>
-    <body>
-        <div>
-            Custom Provider...
-        </div>
-    </body>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>OpenFin Template</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="module" src="js/platform-provider.js"></script>
+</head>
+<style>
+    body {
+        background-color: black;
+    }
+
+    #header {
+        background-color: green;
+        color: white;
+        width: 100%;
+        text-align: center;
+    }
+
+    #form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100vh;
+    }
+</style>
+
+<body>
+    <div id='header'>
+        Custom Provider...
+    </div>
+    <form id="form">
+        <input type="text" name="Login" id="login" placeholder="Login">Login</input>
+        <input type="password" name="Password" id="password" placeholder="Password">Password</input>
+        <input type="submit" value="Login" onclick="" id="button">
+    </form>
+</body>
 
 </html>
