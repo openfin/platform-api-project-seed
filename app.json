@@ -1,7 +1,7 @@
 {
     "runtime": {
         "arguments": "--v=1 --inspect",
-        "version": "beta"
+        "version": "18.87.56.36"
     },
     "shortcut": {
         "company": "OpenFin",
@@ -12,7 +12,7 @@
     "platform": {
         "uuid": "platform_customization_local",
         "applicationIcon": "https://openfin.github.io/golden-prototype/favicon.ico",
-        "autoShow": false,
+        "autoShow": true,
         "providerUrl": "http://localhost:5555/provider.html",
         "defaultWindowOptions": {
             "url": "http://localhost:5555/platform-window.html",
