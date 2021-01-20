@@ -8,3 +8,7 @@ OpenFinRVM.exe
 OpenFin
 
 local.json
+.vs/ProjectSettings.json
+.vs/slnx.sqlite
+.vs/VSWorkspaceState.json
+.vs/platform-api-project-seed/v16/.suo
