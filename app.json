@@ -1,7 +1,7 @@
 {
     "runtime": {
         "arguments": "--disable-gpu-rasterization --disable-gpu-compositing",
-        "version": "stable"
+        "version": "18.87.55.19"
     },
     "shortcut": {
         "company": "OpenFin",
@@ -21,9 +21,10 @@
         "contextMenu": true,
         "permissions": {
             "ExternalWindow": {
-              	"wrap": true
+                "wrap": true
             },
             "System": {
+                "downloadAsset": true,
                 "getAllExternalWindows": true,
                 "launchExternalProcess": true,
                 "readRegistryValue": false,
@@ -73,40 +74,54 @@
             "alias": "openfin-platform-app",
             "target": "openfin-platform-app.exe",
             "forceDownload": true
+        },
+        {
+            "src": "http://localhost:5555/assets/OpenFinPlatformWpfApp.zip",
+            "version": "0.0.1",
+            "alias": "openfin-platform-wpf-app",
+            "target": "OpenFinPlatformWpfApp.exe",
+            "forceDownload": true
         }
     ],
     "snapshot": {
         "channels": [
-            { "id": "red",    "context": null },
+            { "id": "red", "context": null },
             { "id": "yellow", "context": null }
         ],
         "windows": [
             {
                 "name": "layout-window-1",
                 "layout": {
-                    "content": [{
-                        "type": "column",
-                        "content":[{
-                            "type": "component",
-                            "componentName": "view",
-                            "componentState": {
-                                "name": "my-new-test-view-1",
-                                "channelId": "red",
-                                "url": "http://www.example.com"
-                            }
-                        },{
-                            "type": "component",
-                            "componentName": "view",
-                            "componentState": {
-                                "name": "my-new-test-view-2",
-                                "channelId": "yellow",
-                                "url": "http://www.example.com"
-                            }
-                        }]
-                    }]
+                    "content": [
+                        {
+                            "type": "column",
+                            "content": [
+                                {
+                                    "type": "component",
+                                    "componentName": "view",
+                                    "componentState": {
+                                        "name": "my-new-test-view-1",
+                                        "channelId": "red",
+                                        "url": "http://www.example.com"
+                                    }
+                                },
+                                {
+                                    "type": "component",
+                                    "componentName": "view",
+                                    "componentState": {
+                                        "name": "my-new-test-view-2",
+                                        "channelId": "yellow",
+                                        "url": "http://www.example.com"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
                 }
-            }],
-            "_windows": [{
+            }
+        ],
+        "_windows": [
+            {
                 "name": "simple-native-window",
                 "channelId": "red",
                 "startInfo": {
@@ -117,21 +132,25 @@
             {
                 "name": "native-layout-window",
                 "layout": {
-                    "content": [{
-                        "type": "stack",
-                        "content":[{
-                            "type": "component",
-                            "componentName": "view",
-                            "componentState": {
-                                "name": "simple-native-widget",
-                                "channelId": "yellow",
-                                "process": {
-                                    "uuid": "native-app-provider",
-                                    "alias": "native-app"
+                    "content": [
+                        {
+                            "type": "stack",
+                            "content": [
+                                {
+                                    "type": "component",
+                                    "componentName": "view",
+                                    "componentState": {
+                                        "name": "simple-native-widget",
+                                        "channelId": "yellow",
+                                        "process": {
+                                            "uuid": "native-app-provider",
+                                            "alias": "native-app"
+                                        }
+                                    }
                                 }
-                            }
-                        }]
-                    }]
+                            ]
+                        }
+                    ]
                 }
             }
         ]
