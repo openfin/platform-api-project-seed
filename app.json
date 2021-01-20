@@ -1,7 +1,7 @@
 {
     "runtime": {
         "arguments": "--v=1 --inspect",
-        "version": "18.87.56.36"
+        "version": "19.89.57.6"
     },
     "shortcut": {
         "company": "OpenFin",
@@ -14,8 +14,10 @@
         "applicationIcon": "https://openfin.github.io/golden-prototype/favicon.ico",
         "autoShow": true,
         "providerUrl": "http://localhost:5555/provider.html",
+        "backgroundColor": "#FF0000",
         "defaultWindowOptions": {
             "url": "http://localhost:5555/platform-window.html",
+            "backgroundColor": "#FF0000",
             "contextMenu": true,
             "defaultWidth": 600,
             "defaultHeight": 600,
