@@ -121,7 +121,7 @@ export function createNativeProvider(ProviderBase) {
                         startInfo
                     );
                     uuid = process.uuid;
-
+                    this.updateOptsWithNewUuid(opts, uuid);
                     client = await fin.InterApplicationBus.Channel.connect(
                         uuid,
                         { wait: true }
@@ -134,6 +134,7 @@ export function createNativeProvider(ProviderBase) {
                     "create-window",
                     opts.mainWindow
                 );
+
                 await this.registerWindow({
                     nativeId,
                     uuid,
@@ -150,14 +151,14 @@ export function createNativeProvider(ProviderBase) {
                             childWindow
                         );
 
-                        return this.registerWindow({
-                            nativeId,
-                            uuid,
-                            name,
-                            className,
-                            mainWindow,
-                            customData,
-                        });
+                        // return this.registerWindow({
+                        //     nativeId: nativeId,
+                        //     uuid: childWindow.uuid,
+                        //     name: childWindow.name,
+                        //     className: childWindow.className,
+                        //     mainWindow: childWindow.mainWindow,
+                        //     customData: childWindow.customData,
+                        // });
                     })
                 );
 
@@ -165,6 +166,13 @@ export function createNativeProvider(ProviderBase) {
             } else {
                 return super.createWindow(opts, caller);
             }
+        }
+
+        updateOptsWithNewUuid(opts, uuid) {
+            opts.mainWindow.uuid = uuid;
+            opts.childWindows.forEach((childWindow) => {
+                childWindow.uuid = uuid;
+            });
         }
 
         async embedIntoView(opts, view) {
@@ -255,9 +263,12 @@ export function createNativeProvider(ProviderBase) {
                     customData,
                 })
             ); // externalWindow.identity is broken / unusable
-            externalWindow.addListener("closed", () =>
-                nativeWindows.delete(name)
-            );
+            externalWindow.addListener("closed", () => {
+                nativeWindows.delete(name);
+                if (mainWindow) {
+                    nativeApps.delete(uuid);
+                }
+            });
             return { uuid, name };
         }
 
@@ -391,6 +402,8 @@ export function createNativeProvider(ProviderBase) {
         }
 
         async applySnapshot({ snapshot, options }) {
+            // fin.System.showDeveloperTools(fin.me.identity);
+            // debugger;
             let nativeEntries = snapshot.windows.filter((win) => win.startInfo);
             snapshot.windows = snapshot.windows.filter(
                 (win) => win.startInfo === undefined
@@ -401,7 +414,9 @@ export function createNativeProvider(ProviderBase) {
             if (closeExistingWindows) {
                 await Promise.all(
                     [...nativeWindows.values()].map(async (entry) => {
-                        await entry.close();
+                        await entry.close().catch((e) => {
+                            console.warn(e);
+                        });
                     })
                 );
                 nativeWindows.clear();
@@ -450,7 +465,7 @@ export function createNativeProvider(ProviderBase) {
                             process.childWindows = process.childWindows.map(
                                 (childWindow) => convertOptions(childWindow)
                             );
-                            return this.createWindow(process);
+                            await this.createWindow(process);
                         } else {
                             await nativeWindow.setBounds({
                                 top: process.mainWindow.defaultTop,
@@ -459,17 +474,19 @@ export function createNativeProvider(ProviderBase) {
                                 width: process.mainWindow.defaultWidth,
                             });
 
-                            return process.childWindows.map((childWindow) => {
-                                const childNativeWindow = nativeWindows.get(
-                                    childWindow.name
-                                );
-                                return childNativeWindow.setBounds({
-                                    top: childWindow.defaultTop,
-                                    left: childWindow.defaultLeft,
-                                    height: childWindow.defaultHeight,
-                                    width: childWindow.defaultWidth,
-                                });
-                            });
+                            return process.childWindows.map(
+                                async (childWindow) => {
+                                    const childNativeWindow = nativeWindows.get(
+                                        childWindow.name
+                                    );
+                                    await childNativeWindow.setBounds({
+                                        top: childWindow.defaultTop,
+                                        left: childWindow.defaultLeft,
+                                        height: childWindow.defaultHeight,
+                                        width: childWindow.defaultWidth,
+                                    });
+                                }
+                            );
                         }
                     }
                 )
