@@ -254,7 +254,7 @@ export function createNativeProvider(ProviderBase) {
             } = convertOptions(opts);
             let externalWindow = await fin.ExternalWindow.wrap({ nativeId });
             nativeWindows.set(
-                nativeId,
+                name,
                 Object.assign(externalWindow, {
                     uuid,
                     name,
@@ -265,7 +265,7 @@ export function createNativeProvider(ProviderBase) {
                 })
             ); // externalWindow.identity is broken / unusable
             externalWindow.addListener("closed", () => {
-                nativeWindows.delete(nativeId);
+                nativeWindows.delete(name);
                 if (mainWindow) {
                     nativeApps.delete(uuid);
                 }
@@ -299,14 +299,14 @@ export function createNativeProvider(ProviderBase) {
         }
 
         async onCustomDataChanged(evt) {
-            let { nativeId, customData } = evt;
+            let { name, customData } = evt;
 
-            let nativeWindow = nativeWindows.get(nativeId); // THIS NEEDS TO BE nativeId
+            let nativeWindow = nativeWindows.get(name); // THIS NEEDS TO BE nativeId
             if (nativeWindow) {
                 Object.assign(nativeWindow, { customData });
             }
 
-            let embeddedWindow = embeddedWindows.get(nativeId);
+            let embeddedWindow = embeddedWindows.get(name);
             if (embeddedWindow) {
                 Object.assign(embeddedWindow, { customData });
             }
@@ -455,7 +455,7 @@ export function createNativeProvider(ProviderBase) {
                 Object.entries(groupedNativeWindows).map(
                     async ([uuid, process]) => {
                         let nativeWindow = nativeWindows.get(
-                            process.mainWindow.nativeId // CHECK THIS!!!!!!!!!!
+                            process.mainWindow.name // CHECK THIS!!!!!!!!!!
                         );
 
                         if (nativeWindow === undefined) {
@@ -478,7 +478,7 @@ export function createNativeProvider(ProviderBase) {
                             return process.childWindows.map(
                                 async (childWindow) => {
                                     const childNativeWindow = nativeWindows.get(
-                                        childWindow.nativeId // CHECK THIS!!!!!!!!!!
+                                        childWindow.name // CHECK THIS!!!!!!!!!!
                                     );
                                     await childNativeWindow.setBounds({
                                         top: childWindow.defaultTop,
