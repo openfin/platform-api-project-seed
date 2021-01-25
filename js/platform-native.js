@@ -151,14 +151,14 @@ export function createNativeProvider(ProviderBase) {
                             childWindow
                         );
 
-                        // return this.registerWindow({
-                        //     nativeId: nativeId,
-                        //     uuid: childWindow.uuid,
-                        //     name: childWindow.name,
-                        //     className: childWindow.className,
-                        //     mainWindow: childWindow.mainWindow,
-                        //     customData: childWindow.customData,
-                        // });
+                        return this.registerWindow({
+                            nativeId: nativeId,
+                            uuid: childWindow.uuid,
+                            name: childWindow.name,
+                            className: childWindow.className,
+                            mainWindow: childWindow.mainWindow,
+                            customData: childWindow.customData,
+                        });
                     })
                 );
 
@@ -254,17 +254,18 @@ export function createNativeProvider(ProviderBase) {
             } = convertOptions(opts);
             let externalWindow = await fin.ExternalWindow.wrap({ nativeId });
             nativeWindows.set(
-                name,
+                nativeId,
                 Object.assign(externalWindow, {
                     uuid,
                     name,
                     className,
                     mainWindow,
                     customData,
+                    nativeId,
                 })
             ); // externalWindow.identity is broken / unusable
             externalWindow.addListener("closed", () => {
-                nativeWindows.delete(name);
+                nativeWindows.delete(nativeId);
                 if (mainWindow) {
                     nativeApps.delete(uuid);
                 }
@@ -298,14 +299,14 @@ export function createNativeProvider(ProviderBase) {
         }
 
         async onCustomDataChanged(evt) {
-            let { name, customData } = evt;
+            let { nativeId, customData } = evt;
 
-            let nativeWindow = nativeWindows.get(name);
+            let nativeWindow = nativeWindows.get(nativeId); // THIS NEEDS TO BE nativeId
             if (nativeWindow) {
                 Object.assign(nativeWindow, { customData });
             }
 
-            let embeddedWindow = embeddedWindows.get(name);
+            let embeddedWindow = embeddedWindows.get(nativeId);
             if (embeddedWindow) {
                 Object.assign(embeddedWindow, { customData });
             }
@@ -369,7 +370,7 @@ export function createNativeProvider(ProviderBase) {
             if (type === "component" && componentName === "view") {
                 let { name } = componentState;
 
-                let embeddedWindow = embeddedWindows.get(name);
+                let embeddedWindow = embeddedWindows.get(name); // THIS NEEDS TO BE USING nativeId
                 if (embeddedWindow) {
                     Object.assign(componentState, embeddedWindow);
                 }
@@ -454,7 +455,7 @@ export function createNativeProvider(ProviderBase) {
                 Object.entries(groupedNativeWindows).map(
                     async ([uuid, process]) => {
                         let nativeWindow = nativeWindows.get(
-                            process.mainWindow.name
+                            process.mainWindow.nativeId // CHECK THIS!!!!!!!!!!
                         );
 
                         if (nativeWindow === undefined) {
@@ -477,7 +478,7 @@ export function createNativeProvider(ProviderBase) {
                             return process.childWindows.map(
                                 async (childWindow) => {
                                     const childNativeWindow = nativeWindows.get(
-                                        childWindow.name
+                                        childWindow.nativeId // CHECK THIS!!!!!!!!!!
                                     );
                                     await childNativeWindow.setBounds({
                                         top: childWindow.defaultTop,
