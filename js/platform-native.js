@@ -53,52 +53,6 @@ export function createNativeProvider(ProviderBase) {
             }
         }
 
-        // async createWindow(opts, caller) {
-        //     if (opts.startInfo) {
-        //         let {
-        //             startInfo,
-        //             name,
-        //             className,
-        //             mainWindow,
-        //             customData,
-        //         } = opts;
-        //         let { uuid } = startInfo;
-
-        //         let client;
-        //         try {
-        //             client = await fin.InterApplicationBus.Channel.connect(
-        //                 uuid,
-        //                 { wait: false }
-        //             );
-        //         } catch {
-        //             let process = await fin.System.launchExternalProcess(
-        //                 startInfo
-        //             );
-        //             uuid = process.uuid;
-
-        //             client = await fin.InterApplicationBus.Channel.connect(
-        //                 uuid,
-        //                 { wait: true }
-        //             );
-        //             await client.dispatch("register-provider", { channelName });
-        //             nativeApps.set(uuid, { startInfo });
-        //         }
-
-        //         let nativeId = await client.dispatch("create-window", opts);
-        //         await this.registerWindow({
-        //             nativeId,
-        //             uuid,
-        //             name,
-        //             className,
-        //             mainWindow,
-        //             customData,
-        //         });
-        //         await client.disconnect();
-        //     } else {
-        //         return super.createWindow(opts, caller);
-        //     }
-        // }
-
         async createWindow(opts, caller) {
             if (opts.mainWindow) {
                 let {
@@ -301,7 +255,7 @@ export function createNativeProvider(ProviderBase) {
         async onCustomDataChanged(evt) {
             let { name, customData } = evt;
 
-            let nativeWindow = nativeWindows.get(name); // THIS NEEDS TO BE nativeId
+            let nativeWindow = nativeWindows.get(name);
             if (nativeWindow) {
                 Object.assign(nativeWindow, { customData });
             }
@@ -370,7 +324,7 @@ export function createNativeProvider(ProviderBase) {
             if (type === "component" && componentName === "view") {
                 let { name } = componentState;
 
-                let embeddedWindow = embeddedWindows.get(name); // THIS NEEDS TO BE USING nativeId
+                let embeddedWindow = embeddedWindows.get(name);
                 if (embeddedWindow) {
                     Object.assign(componentState, embeddedWindow);
                 }
@@ -455,7 +409,7 @@ export function createNativeProvider(ProviderBase) {
                 Object.entries(groupedNativeWindows).map(
                     async ([uuid, process]) => {
                         let nativeWindow = nativeWindows.get(
-                            process.mainWindow.name // CHECK THIS!!!!!!!!!!
+                            process.mainWindow.name
                         );
 
                         if (nativeWindow === undefined) {
@@ -478,7 +432,7 @@ export function createNativeProvider(ProviderBase) {
                             return process.childWindows.map(
                                 async (childWindow) => {
                                     const childNativeWindow = nativeWindows.get(
-                                        childWindow.name // CHECK THIS!!!!!!!!!!
+                                        childWindow.name
                                     );
                                     await childNativeWindow.setBounds({
                                         top: childWindow.defaultTop,
@@ -492,22 +446,6 @@ export function createNativeProvider(ProviderBase) {
                     }
                 )
             );
-            /* await Promise.all(
-                nativeEntries.map(async (entry) => {
-                    let nativeWindow = nativeWindows.get(entry.name);
-
-                    if (nativeWindow === undefined) {
-                        await this.createWindow(convertOptions(entry));
-                    } else {
-                        await nativeWindow.setBounds({
-                            top: entry.defaultTop,
-                            left: entry.defaultLeft,
-                            height: entry.defaultHeight,
-                            width: entry.defaultWidth,
-                        });
-                    }
-                })
-            ); */
 
             await Promise.all(
                 snapshot.windows.map(async (win) => {
