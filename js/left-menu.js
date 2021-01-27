@@ -19,19 +19,29 @@ class LeftMenu extends HTMLElement {
         //List of apps available in the menu.
         this.appList = [
             {
-                url: CHART_URL,
-                printName: 'OF Chart',
-                processAffinity: 'ps_1'
+                url: 'https://calendar.google.com/calendar/u/0/r',
+                printName: 'Calendar',
+                processAffinity: 'gc_1'
             },
             {
-                url: 'https://www.tradingview.com/chart/?symbol=NASDAQ:AAPL',
-                printName: 'TradeView',
-                processAffinity: 'tv_1'
+                url: 'https://mail.google.com/',
+                printName: 'Gmail',
+                processAffinity: 'gc_1'
             },
             {
-                url: 'https://www.google.com/search?q=INDEXDJX:+.DJI&stick=H4sIAAAAAAAAAONgecRozC3w8sc9YSmtSWtOXmNU4eIKzsgvd80rySypFBLjYoOyeKS4uDj0c_UNkgsry3kWsfJ5-rm4Rrh4RVgp6Ll4eQIAqJT5uUkAAAA&source=lnms&sa=X&ved=0ahUKEwii_NWT9fzoAhU3mHIEHWy3AWIQ_AUIDSgA&biw=1280&bih=1366&dpr=1',
-                printName: 'News',
-                processAffinity: 'mw_1'
+                url: 'https://drive.google.com/drive/u/0/my-drive',
+                printName: 'Docs',
+                processAffinity: 'gc_1'
+            },
+            {
+                url: 'https://appoji.jira.com/',
+                printName: 'Jira',
+                processAffinity: 'jr_1'
+            },
+            {
+                url: 'https://app.slack.com/client/T02FLNC0N/C02FLNC1C',
+                printName: 'Slack',
+                processAffinity: 'sl_1'
             },
             {
                 url: window.location.href.replace('platform-window', 'color-view'),
@@ -124,6 +134,10 @@ class LeftMenu extends HTMLElement {
     }
 
     launchNative = async(options) => {
+        const { port } = await fin.System.getRuntimeInfo();
+        //TODO: this will not do.
+        options.launch.arguments = `-port ${ port }`;
+        //hack
         const identity = await fin.System.launchExternalProcess(options.launch);
         bc.postMessage({identity, options});
 

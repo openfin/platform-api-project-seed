@@ -6,7 +6,7 @@ const { launch, connect } = require('hadouken-js-adapter');
 
 const serverParams = {
     root: path.resolve('./'),
-    port: 5555,
+    port: 5552,
     open: false,
     logLevel: 2,
     cache: -1

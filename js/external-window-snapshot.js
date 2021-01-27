@@ -1,21 +1,22 @@
+function wait(t) {
+    return new Promise(resolve => {
+        setTimeout(resolve, t);
+    });
+}
+function lowerStartsWith(a, b) {
+    return a.toLocaleLowerCase().startsWith(b.toLocaleLowerCase());
+}
+
 async function getExternalWindowsByNameTitle(name, title) {
     const externalWindows = await fin.System.getAllExternalWindows();
     // Using `startsWith` to account for the fact that notepad window titles may or may not include
     // a file extension, depending on user settings.
     return await Promise.all(
-        externalWindows.filter(ew => (ew.name === name && ew.title.startsWith(title)))
-            .map((ew) => fin.ExternalWindow.wrap(ew)));
-}
-
-async function getExternalWindowByNameTitle(name, title) {
-    //TODO: Optimize this.
-    const externalWindows = await fin.System.getAllExternalWindows();
-    const externalWin = externalWindows.find(w => (w.name === name && w.title == title));
-    if (externalWin) {
-        return await fin.ExternalWindow.wrap(externalWin);
-    } else {
-        return void 0;
-    }
+        externalWindows.filter(ew => (lowerStartsWith(ew.name, name) && lowerStartsWith(ew.title, title)))
+            .map((ew) => {
+                ew.uuid = void 0;
+                return fin.ExternalWindow.wrap(ew);
+            }));
 }
 
 //Object shape for TS later:
@@ -46,8 +47,8 @@ async function generateExternalWindowSnapshot(config) {
     return getCurrentStateByConfig(config);
 }
 
-//this should be called a snapshotFragment or something
 //returns { config: externalWindowConfig, info: ExternalWindowInfo[]}
+//this should be called a snapshotFragment or something
 async function getCurrentStateByConfig(configurations) {
     const externalWindows = await fin.System.getAllExternalWindows();
 
@@ -63,19 +64,17 @@ async function getCurrentStateByConfig(configurations) {
         };
     }));
 }
+
 //snapshotFragement: { config: externalWindowConfig, info: ExternalWindowInfo[]}
 async function restoreExternalWindowPositionAndState(snapshotFragment) {
     const matchedWindows = await matchWindows(snapshotFragment);
     console.log(matchedWindows);
 
     //TODO: this needs to return an array of promises.
-    matchedWindows.forEach(m => {
-        restore(m.restoreList);
-
-        reLaunch(m.config, m.missingList);
-    });
-
-
+    return Promise.all(matchedWindows.map(async (m) => {
+        await restore(m.restoreList);
+        await reLaunch(m.config, m.missingList);
+    }));
 }
 
 async function restore(restoreList) {
@@ -100,7 +99,6 @@ async function reLaunch(config, missingList) {
     const restoreList = await Promise.all(missingList.map(async (m) => {
 
         const procIdentity = await fin.System.launchExternalProcess(config.launch);
-
         //we return an object that is compatible with restore
         //TODO: Change restore to accept a list of {identity, info}
         return {
@@ -108,8 +106,11 @@ async function reLaunch(config, missingList) {
             snapshotInfo: m
         };
     }));
-
-    return restore(restoreList);
+    //we need to re-run the match algo here. Bold strategy cotton.
+    //here we go. Looks like excel locks up if I restore it after launching.... could be I have the wrong window.... yea mostl likely.
+    //So for sure we have a bug:
+    //Investigate this https://gitlab.com/openfin/core/-/blob/develop/src/browser/api/external_window.ts#L296
+    restore(restoreList);
 }
 
 export { generateExternalWindowSnapshot, restoreExternalWindowPositionAndState };
