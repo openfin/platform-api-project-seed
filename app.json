@@ -26,7 +26,8 @@
             "backgroundThrottling": true,
             "minHeight": 445,
             "minWidth": 308,
-            "backgroundColor": "#161615"
+            "backgroundColor": "#161615",
+            "state": "maximized"
         },
         "defaultViewOptions": {
             "experimental": {
