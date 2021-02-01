@@ -9,8 +9,8 @@ function lowerStartsWith(a, b) {
 
 async function getExternalWindowsByNameTitle(name, title) {
     const externalWindows = await fin.System.getAllExternalWindows();
-    // Using `startsWith` to account for the fact that notepad window titles may or may not include
-    // a file extension, depending on user settings.
+    // Using `startsWith` to account for the fact that window titles may or may not include
+    // file extensions, depending on user settings.
     return await Promise.all(
         externalWindows.filter(ew => (lowerStartsWith(ew.name, name) && lowerStartsWith(ew.title, title)))
             .map((ew) => {
@@ -23,7 +23,8 @@ async function getExternalWindowsByNameTitle(name, title) {
 //externalWindowConfig
 // [{
 //     name: string,
-//     title: string
+//     title: string, 
+//     launch: ExternalProcessRequestType - https://cdn.openfin.co/docs/javascript/19.89.58.7/global.html#ExternalProcessRequestType
 // }]
 /// Object externalWindowInfo:
 //[{
@@ -42,14 +43,8 @@ async function getExternalWindowsByNameTitle(name, title) {
 //     maximized: boolean,
 //     minimized: boolean
 //}]
-//TODO: This is a terrible name.
-async function generateExternalWindowSnapshot(config) {
-    return getCurrentStateByConfig(config);
-}
-
 //returns { config: externalWindowConfig, info: ExternalWindowInfo[]}
-//this should be called a snapshotFragment or something
-async function getCurrentStateByConfig(configurations) {
+async function generateSnapshotFragment(configurations) {
     const externalWindows = await fin.System.getAllExternalWindows();
 
     //filter allExternal Windows.
@@ -68,9 +63,9 @@ async function getCurrentStateByConfig(configurations) {
 //snapshotFragement: { config: externalWindowConfig, info: ExternalWindowInfo[]}
 async function restoreExternalWindowPositionAndState(snapshotFragment) {
     const matchedWindows = await matchWindows(snapshotFragment);
-    console.log(matchedWindows);
+    //console.log(matchedWindows);
 
-    //TODO: this needs to return an array of promises.
+    //TODO: flow errors back.
     return Promise.all(matchedWindows.map(async (m) => {
         await restore(m.restoreList);
         await reLaunch(m.config, m.missingList);
@@ -95,7 +90,6 @@ async function restore(restoreList) {
 }
 
 async function reLaunch(config, missingList) {
-    //TODO: Make this real.
     const restoreList = await Promise.all(missingList.map(async (m) => {
 
         const procIdentity = await fin.System.launchExternalProcess(config.launch);
@@ -106,14 +100,13 @@ async function reLaunch(config, missingList) {
             snapshotInfo: m
         };
     }));
-    //we need to re-run the match algo here. Bold strategy cotton.
-    //here we go. Looks like excel locks up if I restore it after launching.... could be I have the wrong window.... yea mostl likely.
-    //So for sure we have a bug:
+    //we need to re-run the match algo here.
+    //Looks like excel locks up if I restore it after launching. Could be we have the wrong window. for sure a bug:
     //Investigate this https://gitlab.com/openfin/core/-/blob/develop/src/browser/api/external_window.ts#L296
     restore(restoreList);
 }
 
-export { generateExternalWindowSnapshot, restoreExternalWindowPositionAndState };
+export { generateSnapshotFragment, restoreExternalWindowPositionAndState };
 
 
 //pseudocode for Restoring a given snapshot:
@@ -158,8 +151,6 @@ export { generateExternalWindowSnapshot, restoreExternalWindowPositionAndState }
 //         //Action: Apply same matching logic as the code above, then call out for launch -> this is pending.
 //     }
 // }
-
-//Ok let's get cranking, foken write it. =)
 
 async function matchWindows(externalWindowSnapshotFragment) {
 
@@ -246,21 +237,3 @@ async function matchWindows(externalWindowSnapshotFragment) {
         return s;
     }));
 }
-
-
-//TESTING SHIT:
-//save snapshot so we can Open more instances of windows.
-async function saveThisForLater() {
-    var p = fin.Platform.getCurrentSync();
-    var snap = await p.getSnapshot();
-    localStorage.setItem('myNativeTests', JSON.stringify(snap));
-}
-
-function getStoredSnapshot() {
-
-    return JSON.parse(localStorage.getItem('myNativeTests'));
-}
-
-window.saveThisForLater = saveThisForLater;
-window.getStoredSnapshot = getStoredSnapshot;
-window.matchWindows = matchWindows;

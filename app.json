@@ -11,7 +11,7 @@
     },
     "appAssets": [
         {
-            "src": "http://localhost:5551/my_platform_notes.zip",
+            "src": "http://localhost:5552/my_platform_notes.zip",
             "alias": "my_platform_notes",
             "version": "1.1.6"
         }
@@ -19,8 +19,8 @@
     "platform": {
         "uuid": "platform_customization_local_native_window",
         "applicationIcon": "https://openfin.github.io/golden-prototype/favicon.ico",
-        "autoShow": false,
-        "providerUrl": "http://localhost:5551/provider.html",
+        "autoShow": true,
+        "providerUrl": "http://localhost:5552/provider.html",
         "permissions": {
             "ExternalWindow": {
               	"wrap": true
@@ -33,7 +33,7 @@
             }
         },
         "defaultWindowOptions": {
-            "url": "http://localhost:5551/platform-window.html",
+            "url": "http://localhost:5552/platform-window.html",
             "contextMenu": true,
             "defaultWidth": 600,
             "defaultHeight": 600,
@@ -109,6 +109,15 @@
                     "launch": {
                         "alias": "my_platform_notes",
                         "target": "MySimpleDotNetApp.exe",
+                        "lifetime": "application",
+                        "arguments": ""
+                    }
+                },
+                {
+                    "name": "firefox",
+                    "title": "",
+                    "launch": {
+                        "target": "firefox.exe",
                         "lifetime": "application",
                         "arguments": ""
                     }

@@ -7,7 +7,7 @@ const LAYOUT_STORE_KEY  = 'LayoutForm';
 const SNAPSHOT_STORE_KEY = 'SnapshotForm';
 
 
-//hack
+//Hacky way of launching apps and keeping track of them for snapshot purposes:
 const bc = new BroadcastChannel('external-window-snapshot-tracker');
 
 //Our Left Menu element
@@ -135,9 +135,9 @@ class LeftMenu extends HTMLElement {
 
     launchNative = async(options) => {
         const { port } = await fin.System.getRuntimeInfo();
-        //TODO: this will not do.
+        //TODO: this will not do, will need a better way to sync up launches.
         options.launch.arguments = `-port ${ port }`;
-        //hack
+        
         const identity = await fin.System.launchExternalProcess(options.launch);
         bc.postMessage({identity, options});
 
