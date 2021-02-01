@@ -13,7 +13,7 @@
         "uuid": "platform_customization_local",
         "applicationIcon": "https://openfin.github.io/golden-prototype/favicon.ico",
         "fdc3Api": false,
-        "autoShow": true,
+        "autoShow": false,
         "providerUrl": "http://localhost:5555/provider.html",
         "preloadScripts": [
             { "url": "http://localhost:5555/preload/context-api.js" }
