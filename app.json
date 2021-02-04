@@ -1,7 +1,7 @@
 {
     "runtime": {
         "arguments": "--v=1 --inspect",
-        "version": "19.89.57.6"
+        "version": "18.87.57.28"
     },
     "shortcut": {
         "company": "OpenFin",
@@ -14,7 +14,7 @@
         "applicationIcon": "https://openfin.github.io/golden-prototype/favicon.ico",
         "autoShow": true,
         "providerUrl": "http://localhost:5555/provider.html",
-        "backgroundColor": "#FF0000",
+        "backgroundColor": "#161615",
         "defaultWindowOptions": {
             "url": "http://localhost:5555/platform-window.html",
             "backgroundColor": "#FF0000",
@@ -26,7 +26,9 @@
             "saveWindowState": false,
             "backgroundThrottling": true,
             "minHeight": 445,
-            "minWidth": 308
+            "minWidth": 308,
+            "backgroundColor": "#161615",
+            "state": "maximized"
         },
         "defaultViewOptions": {
             "experimental": {
