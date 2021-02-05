@@ -162,6 +162,10 @@ class TitleBar extends HTMLElement {
 
         this.render();
         this.maxOrRestore = this.maxOrRestore.bind(this);
+        
+        fin.Window.getCurrentSync().on('close-requested', () => {
+            this.closeAll();
+        });    
     }
 
     async render() {
