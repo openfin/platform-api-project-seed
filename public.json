@@ -51,7 +51,6 @@
                     "content": [
                         {
                             "type": "stack",
-                            "id": "no-drop-target",
                             "content": [
                                 {
                                     "type": "component",
