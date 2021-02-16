@@ -129,6 +129,14 @@ fieldset label {
     font-family: Arial, Helvetica, sans-serif;
 }
 
+.channel-button:after {
+    content: "";
+    padding: 5px;
+    display: inline-block;
+    margin-left: 10px;
+    margin-top: 10px;
+}
+/* 
 #red-button:after {
     content: "";
     background-color: red;
@@ -166,4 +174,4 @@ fieldset label {
 
 .green-channel {
     border-left: 2px solid green !important;
-}
+} */

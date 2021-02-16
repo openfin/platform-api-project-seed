@@ -22,28 +22,29 @@ class TitleBar extends HTMLElement {
                 this.setTheme(evt.context.theme);
             }
         });
-        
-        fin.Platform.getCurrentSync().on('platform-snapshot-applied', async (evt) => {
-            function sleep(ms) {
-                return new Promise(resolve => setTimeout(resolve, ms));
-            }
-            await sleep(2000);
 
-            colorChannelAPI.getColorSnapshot()
-                .then((colorChannelInfo) => {
-                    console.log('colorChannelInfo', colorChannelInfo)
-                    const { colorMap, colorContextMap } = colorChannelInfo;
-                    const colorMapIterable = Object.entries(colorMap);
-                    for (const [name, color] of colorMapIterable) {
-                        console.log('name', name)
-                        console.log('color', color)
-                        const tab = document.getElementById(`tab-${name}`)
-                        if (tab) {
-                            tab.classList.add(`${color}-channel`);
-                        }
-                    }
-                })
-        });
+        
+        // fin.Platform.getCurrentSync().on('platform-snapshot-applied', async (evt) => {
+            // function sleep(ms) {
+            //     return new Promise(resolve => setTimeout(resolve, ms));
+            // }
+            // await sleep(2000);
+
+            // colorChannelAPI.getColorSnapshot()
+            //     .then((colorChannelInfo) => {
+            //         console.log('colorChannelInfo', colorChannelInfo)
+            //         const { colorMap, colorContextMap } = colorChannelInfo;
+            //         const colorMapIterable = Object.entries(colorMap);
+            //         for (const [name, color] of colorMapIterable) {
+            //             console.log('name', name)
+            //             console.log('color', color)
+            //             const tab = document.getElementById(`tab-${name}`)
+            //             if (tab) {
+            //                 tab.classList.add(`${color}-channel`);
+            //             }
+            //         }
+            //     })
+        // });
 
         fin.me.on('layout-ready', async () => {
             // Whenever a new layout is ready on this window (on init, replace, or applyPreset)
@@ -54,6 +55,25 @@ class TitleBar extends HTMLElement {
             } else {
                 document.getElementById('lock-button').classList.add('layout-locked');
             }
+
+
+            const styleObj = document.styleSheets[0];
+            const buttonsWrapper = document.getElementById('buttons-wrapper');
+
+            fin.me.interop.getSystemChannels()
+                .then(systemChannels => {
+                    systemChannels.forEach(systemChannel => {
+                        styleObj.insertRule(`.${systemChannel.displayMetadata.name}-channel { border-left: 2px solid ${systemChannel.displayMetadata.color} !important;}`);
+                        styleObj.insertRule(`#${systemChannel.displayMetadata.name}-button:after { background-color: ${systemChannel.displayMetadata.color}}`);
+                        const newButton = document.createElement('div')
+                        newButton.classList.add('button');
+                        newButton.classList.add('channel-button');
+                        newButton.id = `${systemChannel.displayMetadata.name}-button`;
+                        newButton.title = systemChannel.displayMetadata.name;
+                        newButton.onclick = this.changeColorChannel.bind(this);
+                        buttonsWrapper.prepend(newButton);
+                    })
+                })
         });
 
 
@@ -74,15 +94,16 @@ class TitleBar extends HTMLElement {
         })
     }
 
+    // <div class="button" title="red" id="red-button" @click=${ this.changeColorChannel }></div>
+    // <div class="button" title="blue" id="blue-button" @click=${ this.changeColorChannel }></div>
+    // <div class="button" title="green" id="green-button" @click=${ this.changeColorChannel }></div>
+
     render = async () => {
         const titleBar = html`
                 <div class="title-bar-draggable">
                     <div id="title"></div>
                 </div>
                 <div id="buttons-wrapper">
-                    <div class="button" title="red" id="red-button" @click=${this.changeColorChannel}></div>
-                    <div class="button" title="blue" id="blue-button" @click=${this.changeColorChannel}></div>
-                    <div class="button" title="green" id="green-button" @click=${this.changeColorChannel}></div>
                     <div class="button" title="Toggle Theme" id="theme-button" @click=${this.toggleTheme}></div>
                     <div class="button" title="Toggle Sidebar" id="menu-button" @click=${this.toggleMenu}></div>
                     <div class="button" title="Toggle Layout Lock" id="lock-button" @click=${this.toggleLockedLayout}></div>
@@ -97,10 +118,11 @@ class TitleBar extends HTMLElement {
         console.log('evt', evt);
         console.log('this.lastFocusedView', this.lastFocusedView);
         const color = evt.target.title;
-        window.colorChannelAPI.changeColorChannel(this.lastFocusedView, color);
-        document.getElementById(`tab-${this.lastFocusedView.name}`).classList.remove('red-channel', 'blue-channel', 'green-channel');
+        // window.colorChannelAPI.changeColorChannel(this.lastFocusedView, color);
+        fin.me.interop.joinChannel(color, this.lastFocusedView);
+        document.getElementById(`tab-${this.lastFocusedView.name}`).classList.remove('red-channel', 'green-channel', 'pink-channel', 'orange-channel', 'purple-channel', 'yellow-channel');
         document.getElementById(`tab-${this.lastFocusedView.name}`).classList.add(`${color}-channel`);
-        fin.View.wrapSync(this.lastFocusedView).updateOptions({ customData: { colorChannelDeclaration: color}})
+        // fin.View.wrapSync(this.lastFocusedView).updateOptions({ customData: { colorChannelDeclaration: color}})
     }
 
     maxOrRestore = async () => {

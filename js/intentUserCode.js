@@ -40,38 +40,26 @@ class ColorPicker extends HTMLElement {
    broadcastInstrumentContext = async (event) => {
         event.preventDefault();
        const ticker = document.getElementById('ticker-input').value;
-        interopAPI.broadcastContext('fdc3.instrument', {id: {ticker}})
+        fin.me.interop.setContext({type: 'instrument', id: {ticker}})
     }
    broadcastCountryContext = async (event) => {
         event.preventDefault();
        const ISOALPHA3 = document.getElementById('country-input').value;
-        interopAPI.broadcastContext('fdc3.country', {id: {ISOALPHA3}})
+       fin.me.interop.setContext({type: 'country', id: {ISOALPHA3}})
     }
 }
 
 window.addEventListener('DOMContentLoaded', async () => {
-    function sleep(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
-    while (interopAPI === null) {
-        await sleep(500);
-    }
-
     customElements.define('color-picker', ColorPicker);
 
     function handleInteropChange(contextInfo) {
-        const {contextType, contextPayload } = contextInfo;
-        console.log('contextInfo', contextInfo)
-        switch (contextType) {
-            case 'fdc3.instrument':
-                console.log('fdc3.instrument');
-                console.log('contextPayload', contextPayload);
-                document.getElementById('ticker').innerText = contextPayload.id.ticker
+        const { type, id } = contextInfo;
+        switch (type) {
+            case 'instrument':
+                handleInstrumentChange(contextInfo);
                 break;
-            case 'fdc3.country':
-                console.log('fdc3.country');
-                console.log('contextPayload', contextPayload);
-                document.getElementById('country').innerText = contextPayload.id.ISOALPHA3
+            case 'country':
+                handleCountryChange(contextInfo);
                 break;
 
             default:
@@ -79,5 +67,22 @@ window.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-    interopAPI.receiveContext(handleInteropChange);
+    fin.me.interop.addContextHandler(handleInteropChange);
+
+    function handleInstrumentChange(contextInfo) {
+        const { type, id } = contextInfo;
+        console.log('contextInfo for instrument', contextInfo)
+        console.log('instrument');
+        document.getElementById('ticker').innerText = id.ticker
+    }
+    function handleCountryChange(contextInfo) {
+        const { type, id } = contextInfo;
+        console.log('contextInfo for country', contextInfo)
+        console.log('country');
+        document.getElementById('country').innerText = id.ISOALPHA3
+    }
+
+
+    // fin.me.interop.addContextListener('instrument', handleInstrumentChange)
+    // fin.me.interop.addContextListener('country', handleCountryChange)
 });

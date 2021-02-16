@@ -15,12 +15,12 @@ class SnapshotForm extends LayoutForm {
 
         console.log(name, close);
 
-        const colorChannelInfo = await window.colorChannelAPI.getColorSnapshot();
+        // const colorChannelInfo = await window.colorChannelAPI.getColorSnapshot();
 
         const templateObject = {
             name,
             snapshot: await fin.Platform.getCurrentSync().getSnapshot(),
-            colorChannelInfo,
+            // colorChannelInfo,
             close
         };
 
