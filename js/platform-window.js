@@ -5,14 +5,14 @@ window.addEventListener('DOMContentLoaded', () => {
     // Before .50 AI version this may throw...
     fin.Platform.Layout.init({containerId: CONTAINER_ID});
 
-    // fin.me.interop = fin.Interop.connectSync(fin.me.uuid);
+    fin.me.interop = fin.Interop.connectSync(fin.me.uuid);
     fin.Window.getCurrentSync().addListener('view-shown', (evt) => {
         console.log('evt view shown', evt);
         fin.View.wrapSync(evt.viewIdentity).getOptions().then((opts) => {
             console.log('opts', opts)
-            if (opts.interop && opts.interop.channelDeclaration) {
+            if (opts.interop && opts.interop.contextGroupDeclaration) {
                 document.getElementById(`tab-${evt.viewIdentity.name}`).classList.remove('red-channel', 'green-channel', 'pink-channel', 'orange-channel', 'purple-channel', 'yellow-channel');
-                document.getElementById(`tab-${evt.viewIdentity.name}`).classList.add(`${opts.interop.channelDeclaration}-channel`);    
+                document.getElementById(`tab-${evt.viewIdentity.name}`).classList.add(`${opts.interop.contextGroupDeclaration}-channel`);    
             }
         })
     });
@@ -20,9 +20,9 @@ window.addEventListener('DOMContentLoaded', () => {
         console.log('evt view attached', evt);
         fin.View.wrapSync(evt.viewIdentity).getOptions().then((opts) => {
             console.log('opts', opts)
-            if (opts.interop && opts.interop.channelDeclaration) {
+            if (opts.interop && opts.interop.contextGroupDeclaration) {
                 document.getElementById(`tab-${evt.viewIdentity.name}`).classList.remove('red-channel', 'green-channel', 'pink-channel', 'orange-channel', 'purple-channel', 'yellow-channel');
-                document.getElementById(`tab-${evt.viewIdentity.name}`).classList.add(`${opts.interop.channelDeclaration}-channel`);    
+                document.getElementById(`tab-${evt.viewIdentity.name}`).classList.add(`${opts.interop.contextGroupDeclaration}-channel`);    
             }
         })
     });

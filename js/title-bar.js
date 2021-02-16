@@ -60,7 +60,7 @@ class TitleBar extends HTMLElement {
             const styleObj = document.styleSheets[0];
             const buttonsWrapper = document.getElementById('buttons-wrapper');
 
-            fin.me.interop.getSystemChannels()
+            fin.me.interop.getContextGroups()
                 .then(systemChannels => {
                     systemChannels.forEach(systemChannel => {
                         styleObj.insertRule(`.${systemChannel.displayMetadata.name}-channel { border-left: 2px solid ${systemChannel.displayMetadata.color} !important;}`);
@@ -70,7 +70,7 @@ class TitleBar extends HTMLElement {
                         newButton.classList.add('channel-button');
                         newButton.id = `${systemChannel.displayMetadata.name}-button`;
                         newButton.title = systemChannel.displayMetadata.name;
-                        newButton.onclick = this.changeColorChannel.bind(this);
+                        newButton.onclick = this.changeContextGroup.bind(this);
                         buttonsWrapper.prepend(newButton);
                     })
                 })
@@ -87,16 +87,16 @@ class TitleBar extends HTMLElement {
             // const view = fin.View.wrapSync(viewEvent);
             // const options = await view.getOptions()
             // if (options.customData && options.customData.colorChannelDeclaration) {
-            //     window.colorChannelAPI.changeColorChannel(viewEvent, color);
+            //     window.colorChannelAPI.changeContextGroup(viewEvent, color);
             //     document.getElementById(`tab-${this.lastFocusedView.name}`).classList.remove('red-channel', 'blue-channel', 'green-channel');
             //     document.getElementById(`tab-${this.lastFocusedView.name}`).classList.add(`${color}-channel`);
             // }
         })
     }
 
-    // <div class="button" title="red" id="red-button" @click=${ this.changeColorChannel }></div>
-    // <div class="button" title="blue" id="blue-button" @click=${ this.changeColorChannel }></div>
-    // <div class="button" title="green" id="green-button" @click=${ this.changeColorChannel }></div>
+    // <div class="button" title="red" id="red-button" @click=${ this.changeContextGroup }></div>
+    // <div class="button" title="blue" id="blue-button" @click=${ this.changeContextGroup }></div>
+    // <div class="button" title="green" id="green-button" @click=${ this.changeContextGroup }></div>
 
     render = async () => {
         const titleBar = html`
@@ -114,12 +114,12 @@ class TitleBar extends HTMLElement {
         return render(titleBar, this);
     }
 
-    changeColorChannel = async (evt) => {
+    changeContextGroup = async (evt) => {
         console.log('evt', evt);
         console.log('this.lastFocusedView', this.lastFocusedView);
         const color = evt.target.title;
-        // window.colorChannelAPI.changeColorChannel(this.lastFocusedView, color);
-        fin.me.interop.joinChannel(color, this.lastFocusedView);
+        // window.colorChannelAPI.changeContextGroup(this.lastFocusedView, color);
+        fin.me.interop.joinContextGroup(color, this.lastFocusedView);
         document.getElementById(`tab-${this.lastFocusedView.name}`).classList.remove('red-channel', 'green-channel', 'pink-channel', 'orange-channel', 'purple-channel', 'yellow-channel');
         document.getElementById(`tab-${this.lastFocusedView.name}`).classList.add(`${color}-channel`);
         // fin.View.wrapSync(this.lastFocusedView).updateOptions({ customData: { colorChannelDeclaration: color}})

@@ -83,6 +83,6 @@ window.addEventListener('DOMContentLoaded', async () => {
     }
 
 
-    // fin.me.interop.addContextListener('instrument', handleInstrumentChange)
-    // fin.me.interop.addContextListener('country', handleCountryChange)
+    // fin.me.interop.addContextHandler('instrument', handleInstrumentChange)
+    // fin.me.interop.addContextHandler('country', handleCountryChange)
 });
