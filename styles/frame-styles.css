@@ -92,3 +92,7 @@ body {
     width: 100%;
     height: auto;
 }
+
+.wrapper_title {
+    visibility: hidden !important;
+}
