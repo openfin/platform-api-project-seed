@@ -43,10 +43,10 @@ fin.Platform.init({
     },
     interopOverride: async (InteropBroker, provider, options, ...args) => {
         class Override extends InteropBroker {
-            async joinChannel(channelName = 'default', target) {
-                console.log('before super joinChannel')
-                super.joinChannel(channelName, target);
-                console.log('after super joinChannel')
+            async joinContextGroup(channelName = 'default', target) {
+                console.log('before super joinContextGroup')
+                super.joinContextGroup(channelName, target);
+                console.log('after super joinContextGroup')
             }
         }
 
