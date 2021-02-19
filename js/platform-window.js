@@ -5,7 +5,7 @@ window.addEventListener('DOMContentLoaded', () => {
     // Before .50 AI version this may throw...
     fin.Platform.Layout.init({containerId: CONTAINER_ID});
 
-    fin.me.interop = fin.Interop.connectSync(fin.me.uuid);
+    // fin.me.interop = fin.Interop.connectSync(fin.me.uuid);
     fin.Window.getCurrentSync().addListener('view-shown', (evt) => {
         console.log('evt view shown', evt);
         fin.View.wrapSync(evt.viewIdentity).getOptions().then((opts) => {

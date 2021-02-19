@@ -16,28 +16,20 @@ const externalWindowsToTrack = [
 fin.Platform.init({
     overrideCallback: async (Provider) => {
         class Override extends Provider {
-            // async getSnapshot() {
-            //     const snapshot = await super.getSnapshot();
+            async getSnapshot() {
+                console.log('before getSnapshot')
+                const snapshot = await super.getSnapshot();
+                console.log('after getSnapshot')
+                return snapshot;
+            }
 
-            //     //we add an externalWindows section to our snapshot
-            //     const externalWindows = await generateExternalWindowSnapshot(externalWindowsToTrack);
-            //     return {
-            //         ...snapshot,
-            //         externalWindows
-            //     };
-            // }
+            async applySnapshot({ snapshot, options }) {
+                console.log('before applySnapshot')
+                const originalPromise = super.applySnapshot({ snapshot, options });
+                console.log('after applySnapshot')
 
-            // async applySnapshot({ snapshot, options }) {
-
-            //     const originalPromise = super.applySnapshot({ snapshot, options });
-
-            //     //if we have a section with external windows we will use it.
-            //     if (snapshot.externalWindows) {
-            //         await Promise.all(snapshot.externalWindows.map(async (i) => await restoreExternalWindowPositionAndState(i)));
-            //     }
-
-            //     return originalPromise;
-            // }
+                return originalPromise;
+            }
         };
         return new Override();
     },

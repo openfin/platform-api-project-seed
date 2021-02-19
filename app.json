@@ -36,10 +36,7 @@
             "showBackgroundImages": true,
             "backgroundThrottling": true,
             "minHeight": 445,
-            "minWidth": 354,
-            "interop": {
-                "test": "test"
-            }
+            "minWidth": 354
         },
         "defaultViewOptions": {
             "experimental": {
@@ -52,8 +49,8 @@
                 "keys": "Ctrl+Tab"
             }
         ],
-        "interop": {
-            "systemChannels": [
+        "interopBrokerConfiguration": {
+            "contextGroups": [
                             {
                 "id": "green",
                 "displayMetadata": {
