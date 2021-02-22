@@ -237,3 +237,17 @@ async function matchWindows(externalWindowSnapshotFragment) {
         return s;
     }));
 }
+
+//We seem to be having issues getting the promise returned for:
+var launchApps = [{alias: "odp.dotnetcore", lifetime: "application", arguments: "17.85.54.32 --width=140 --height=70"}, {alias: "odp.dotnetcoree", lifetime: "application", arguments: "17.85.54.32 --width=140 --height=70"}];
+
+let promiseMapp = launchApps.map(async(m) => {
+    const procIdentity = await fin.System.launchExternalProcess(m);
+    return m;
+});
+
+console.log(promiseMapp);
+
+Promise.all(promiseMapp)
+    .then(() => { console.log('hi');})
+    .catch(err => {console.log('this failed'); console.error(err)});

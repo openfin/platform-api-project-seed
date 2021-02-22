@@ -1,7 +1,7 @@
 {
     "runtime": {
         "arguments": "--v=1 --inspect",
-        "version": "17.85.55.11"
+        "version": "stable"
     },
     "shortcut": {
         "company": "OpenFin",
@@ -11,7 +11,7 @@
     },
     "appAssets": [
         {
-            "src": "http://localhost:5552/my_platform_notes.zip",
+            "src": "http://localhost:5562/my_platform_notes.zip",
             "alias": "my_platform_notes",
             "version": "1.1.6"
         }
@@ -20,7 +20,7 @@
         "uuid": "platform_customization_local_native_window",
         "applicationIcon": "https://openfin.github.io/golden-prototype/favicon.ico",
         "autoShow": true,
-        "providerUrl": "http://localhost:5552/provider.html",
+        "providerUrl": "http://localhost:5562/provider.html",
         "permissions": {
             "ExternalWindow": {
               	"wrap": true
@@ -33,7 +33,7 @@
             }
         },
         "defaultWindowOptions": {
-            "url": "http://localhost:5552/platform-window.html",
+            "url": "http://localhost:5562/platform-window.html",
             "contextMenu": true,
             "defaultWidth": 600,
             "defaultHeight": 600,
