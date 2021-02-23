@@ -1,7 +1,7 @@
 {
     "runtime": {
         "arguments": "--v=1 --inspect",
-        "version": "canary-master"
+        "version": "18.87.57.28"
     },
     "shortcut": {
         "company": "OpenFin",
@@ -16,6 +16,7 @@
         "providerUrl": "http://localhost:5555/provider.html",
         "backgroundColor": "#161615",
         "defaultWindowOptions": {
+            "showBackgroundImages": true,
             "contextMenu": true,
             "defaultWidth": 600,
             "defaultHeight": 600,
@@ -29,6 +30,7 @@
             "state": "maximized"
         },
         "defaultViewOptions": {
+            "title": "&#8226;",
             "experimental": {
                 "childWindows": true
             }

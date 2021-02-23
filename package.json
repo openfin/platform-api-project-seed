@@ -3,8 +3,12 @@
   "version": "0.0.0",
   "devDependencies": {
     "@types/openfin": "^34.0.0",
+    "connect": "^3.7.0",
+    "connect-slow": "^0.4.0",
     "hadouken-js-adapter": "^0.34.3",
-    "http-server": "^0.12.3"
+    "http-server": "^0.12.3",
+    "openfin-adapter": "^18.56.37",
+    "serve-static": "^1.14.1"
   },
   "license": "Apache-2.0"
 }
