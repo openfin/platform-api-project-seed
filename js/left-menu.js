@@ -31,13 +31,19 @@ class LeftMenu extends HTMLElement {
                 processAffinity: 'mw_1'
             },
             {
-                url: window.location.href.replace('platform-window', 'color-view'),
-                printName: 'Colors',
-                processAffinity: 'cv_1'
+                url: window.location.href.replace('platform-window', 'color-linking'),
+                printName: 'Color Linking Example',
+                processAffinity: 'cv_1',
+                interop: {
+                    contextDeclaration: [
+                        "instrument",
+                        "country"
+                    ]
+                }
             },
             {
-                url: window.location.href.replace('platform-window', 'intents'),
-                printName: 'Intents',
+                url: window.location.href.replace('platform-window', 'color-linking'),
+                printName: 'Replace Me To Add Your Own App',
                 processAffinity: 'cv_1',
                 interop: {
                     contextDeclaration: [

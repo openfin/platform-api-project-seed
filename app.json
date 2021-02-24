@@ -109,7 +109,7 @@
                                     "componentName": "view",
                                     "componentState": {
                                         "processAffinity": "ps_1",
-                                        "url": "http://localhost:5555/intents.html",
+                                        "url": "http://localhost:5555/color-linking.html",
                                         "interop": {
                                             "contextDeclaration": [
                                                 "instrument",

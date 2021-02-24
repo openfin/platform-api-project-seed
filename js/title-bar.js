@@ -23,29 +23,6 @@ class TitleBar extends HTMLElement {
             }
         });
 
-        
-        // fin.Platform.getCurrentSync().on('platform-snapshot-applied', async (evt) => {
-            // function sleep(ms) {
-            //     return new Promise(resolve => setTimeout(resolve, ms));
-            // }
-            // await sleep(2000);
-
-            // colorChannelAPI.getColorSnapshot()
-            //     .then((colorChannelInfo) => {
-            //         console.log('colorChannelInfo', colorChannelInfo)
-            //         const { colorMap, colorContextMap } = colorChannelInfo;
-            //         const colorMapIterable = Object.entries(colorMap);
-            //         for (const [name, color] of colorMapIterable) {
-            //             console.log('name', name)
-            //             console.log('color', color)
-            //             const tab = document.getElementById(`tab-${name}`)
-            //             if (tab) {
-            //                 tab.classList.add(`${color}-channel`);
-            //             }
-            //         }
-            //     })
-        // });
-
         fin.me.on('layout-ready', async () => {
             // Whenever a new layout is ready on this window (on init, replace, or applyPreset)
             const { settings } = await fin.Platform.Layout.getCurrentSync().getConfig();
@@ -94,9 +71,6 @@ class TitleBar extends HTMLElement {
         })
     }
 
-    // <div class="button" title="red" id="red-button" @click=${ this.changeContextGroup }></div>
-    // <div class="button" title="blue" id="blue-button" @click=${ this.changeContextGroup }></div>
-    // <div class="button" title="green" id="green-button" @click=${ this.changeContextGroup }></div>
 
     render = async () => {
         const titleBar = html`
@@ -118,11 +92,9 @@ class TitleBar extends HTMLElement {
         console.log('evt', evt);
         console.log('this.lastFocusedView', this.lastFocusedView);
         const color = evt.target.title;
-        // window.colorChannelAPI.changeContextGroup(this.lastFocusedView, color);
         fin.me.interop.joinContextGroup(color, this.lastFocusedView);
         document.getElementById(`tab-${this.lastFocusedView.name}`).classList.remove('red-channel', 'green-channel', 'pink-channel', 'orange-channel', 'purple-channel', 'yellow-channel');
         document.getElementById(`tab-${this.lastFocusedView.name}`).classList.add(`${color}-channel`);
-        // fin.View.wrapSync(this.lastFocusedView).updateOptions({ customData: { colorChannelDeclaration: color}})
     }
 
     maxOrRestore = async () => {
