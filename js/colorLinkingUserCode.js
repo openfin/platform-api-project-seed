@@ -11,7 +11,7 @@ class ColorPicker extends HTMLElement {
         const content = html`
         <fieldset>
             <p>
-                TICKER
+                INSTRUMENT
             </p>
             <p id="ticker">
                 I am context-sensitive
