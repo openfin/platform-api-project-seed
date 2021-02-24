@@ -74,4 +74,5 @@ fin.Platform.init({
         return new Override(provider, options, ...args);
     }
 });
-    fin.me.showDeveloperTools().then(() => console.log('Showing dev tools')).catch(err => console.error(err));
+
+// fin.me.showDeveloperTools().then(() => console.log('Showing dev tools')).catch(err => console.error(err));
