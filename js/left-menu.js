@@ -16,23 +16,8 @@ class LeftMenu extends HTMLElement {
         //List of apps available in the menu.
         this.appList = [
             {
-                url: CHART_URL,
-                printName: 'OF Chart',
-                processAffinity: 'ps_1'
-            },
-            {
-                url: 'https://www.tradingview.com/chart/?symbol=NASDAQ:AAPL',
-                printName: 'TradeView',
-                processAffinity: 'tv_1'
-            },
-            {
-                url: 'https://www.google.com/search?q=INDEXDJX:+.DJI&stick=H4sIAAAAAAAAAONgecRozC3w8sc9YSmtSWtOXmNU4eIKzsgvd80rySypFBLjYoOyeKS4uDj0c_UNkgsry3kWsfJ5-rm4Rrh4RVgp6Ll4eQIAqJT5uUkAAAA&source=lnms&sa=X&ved=0ahUKEwii_NWT9fzoAhU3mHIEHWy3AWIQ_AUIDSgA&biw=1280&bih=1366&dpr=1',
-                printName: 'News',
-                processAffinity: 'mw_1'
-            },
-            {
                 url: window.location.href.replace('platform-window', 'color-linking'),
-                printName: 'Color Linking Example',
+                printName: 'Color Linking',
                 processAffinity: 'cv_1',
                 interop: {
                     contextDeclaration: [
@@ -43,7 +28,7 @@ class LeftMenu extends HTMLElement {
             },
             {
                 url: window.location.href.replace('platform-window', 'color-linking'),
-                printName: 'Replace Me To Add Your Own App',
+                printName: 'Replace Me With Your App',
                 processAffinity: 'cv_1',
                 interop: {
                     contextDeclaration: [
@@ -51,11 +36,6 @@ class LeftMenu extends HTMLElement {
                         "country"
                     ]
                 }
-            },
-            {
-                url: `https://cdn.openfin.co/docs/javascript/${fin.desktop.getVersion()}`,
-                printName: "Documentation",
-                processAffinity: 'ps_1'
             }
         ];
 
