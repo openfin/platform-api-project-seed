@@ -117,14 +117,6 @@
                                             ]
                                         }
                                     }
-                                },
-                                {
-                                    "type": "component",
-                                    "componentName": "view",
-                                    "componentState": {
-                                        "processAffinity": "ps_1",
-                                        "url": "https://cdn.openfin.co/embed-web/chart.html"
-                                    }
                                 }
                             ]
                         }

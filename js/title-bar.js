@@ -58,17 +58,6 @@ class TitleBar extends HTMLElement {
         fin.Application.getCurrentSync().addListener('view-focused', (viewEvent) => {
             this.lastFocusedView = viewEvent.viewIdentity;
         })
-
-        fin.Application.getCurrentSync().addListener('view-created', async (viewEvent) => {
-            console.log('viewEvent', viewEvent)
-            // const view = fin.View.wrapSync(viewEvent);
-            // const options = await view.getOptions()
-            // if (options.customData && options.customData.colorChannelDeclaration) {
-            //     window.colorChannelAPI.changeContextGroup(viewEvent, color);
-            //     document.getElementById(`tab-${this.lastFocusedView.name}`).classList.remove('red-channel', 'blue-channel', 'green-channel');
-            //     document.getElementById(`tab-${this.lastFocusedView.name}`).classList.add(`${color}-channel`);
-            // }
-        })
     }
 
 
