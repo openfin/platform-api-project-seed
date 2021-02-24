@@ -22,13 +22,13 @@ class ColorPicker extends HTMLElement {
             <p id="country">
                 I am context-sensitive
             </p>
-            <form @submit=${this.broadcastInstrumentContext}>
+            <form @submit=${this.setInstrumentContext}>
                 <input id="ticker-input" type="text" placeholder="Enter ticker" autofocus>
-                <button action="submit">Broadcast Intrument Context</button>
+                <button action="submit">Set Intrument Context</button>
             </form>
-            <form @submit=${this.broadcastCountryContext}>
+            <form @submit=${this.setCountryContext}>
                 <input id="country-input" type="text" placeholder="Enter country code" autofocus>
-                <button action="submit">Broadcast Country Context</button>
+                <button action="submit">Set Country Context</button>
             </form>
             <button @click=${() => fin.me.showDeveloperTools()}>
                 Show dev tools
@@ -37,12 +37,12 @@ class ColorPicker extends HTMLElement {
         return render(content, this);
     }
 
-   broadcastInstrumentContext = async (event) => {
+   setInstrumentContext = async (event) => {
         event.preventDefault();
        const ticker = document.getElementById('ticker-input').value;
         fin.me.interop.setContext({type: 'instrument', id: {ticker}})
     }
-   broadcastCountryContext = async (event) => {
+   setCountryContext = async (event) => {
         event.preventDefault();
        const ISOALPHA3 = document.getElementById('country-input').value;
        fin.me.interop.setContext({type: 'country', id: {ISOALPHA3}})
