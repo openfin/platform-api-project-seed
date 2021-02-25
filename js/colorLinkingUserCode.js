@@ -70,11 +70,11 @@ window.addEventListener('DOMContentLoaded', async () => {
     fin.me.interop.addContextHandler(handleInteropChange);
 
     function handleInstrumentChange(contextInfo) {
+        // throw new Error(`testing errors in handlers ${JSON.stringify(contextInfo)}`)
         const { type, id } = contextInfo;
         console.log('contextInfo for instrument', contextInfo)
         console.log('instrument');
         document.getElementById('ticker').innerText = id.ticker
-        // throw new Error('testing thing')
     }
     function handleCountryChange(contextInfo) {
         const { type, id } = contextInfo;
@@ -84,6 +84,6 @@ window.addEventListener('DOMContentLoaded', async () => {
     }
 
 
-    // fin.me.interop._addContextHandler(handleInstrumentChange, 'instrument')
-    // fin.me.interop._addContextHandler(handleCountryChange, 'country')
+    // fin.me.interop.addContextHandler(handleInstrumentChange, 'instrument')
+    // fin.me.interop.addContextHandler(handleCountryChange, 'country')
 });

@@ -23,7 +23,7 @@ class TitleBar extends HTMLElement {
             }
         });
 
-        fin.me.on('layout-ready', async () => {
+        fin.me.on('layout-ready', async (layoutInfo) => {
             // Whenever a new layout is ready on this window (on init, replace, or applyPreset)
             const { settings } = await fin.Platform.Layout.getCurrentSync().getConfig();
             // determine whether it is locked and update the icon
@@ -33,24 +33,16 @@ class TitleBar extends HTMLElement {
                 document.getElementById('lock-button').classList.add('layout-locked');
             }
 
-
-            const styleObj = document.styleSheets[0];
-            const buttonsWrapper = document.getElementById('buttons-wrapper');
-
-            fin.me.interop.getContextGroups()
-                .then(systemChannels => {
-                    systemChannels.forEach(systemChannel => {
-                        styleObj.insertRule(`.${systemChannel.displayMetadata.name}-channel { border-left: 2px solid ${systemChannel.displayMetadata.color} !important;}`);
-                        styleObj.insertRule(`#${systemChannel.displayMetadata.name}-button:after { background-color: ${systemChannel.displayMetadata.color}}`);
-                        const newButton = document.createElement('div')
-                        newButton.classList.add('button');
-                        newButton.classList.add('channel-button');
-                        newButton.id = `${systemChannel.displayMetadata.name}-button`;
-                        newButton.title = systemChannel.displayMetadata.name;
-                        newButton.onclick = this.changeContextGroup.bind(this);
-                        buttonsWrapper.prepend(newButton);
-                    })
-                })
+            // Also, this should be where we're querying for all of the views and resetting color. Looks like layout applications don't give us view-shown or view-attached events.
+            layoutInfo.views.forEach((view) => {
+                fin.View.wrapSync(view.identity).getOptions().then((opts) => {
+                    console.log('opts layout-ready', opts)
+                    if (opts.interop && opts.interop.currentContextGroup) {
+                        document.getElementById(`tab-${view.identity.name}`).classList.remove('red-channel', 'green-channel', 'pink-channel', 'orange-channel', 'purple-channel', 'yellow-channel');
+                        document.getElementById(`tab-${view.identity.name}`).classList.add(`${opts.interop.currentContextGroup}-channel`);
+                    }
+                });
+            })
         });
 
 
@@ -58,6 +50,24 @@ class TitleBar extends HTMLElement {
         fin.Application.getCurrentSync().addListener('view-focused', (viewEvent) => {
             this.lastFocusedView = viewEvent.viewIdentity;
         })
+
+        const styleObj = document.styleSheets[0];
+        const buttonsWrapper = document.getElementById('buttons-wrapper');
+
+        fin.me.interop.getContextGroups()
+            .then(systemChannels => {
+                systemChannels.forEach(systemChannel => {
+                    styleObj.insertRule(`.${systemChannel.displayMetadata.name}-channel { border-left: 2px solid ${systemChannel.displayMetadata.color} !important;}`);
+                    styleObj.insertRule(`#${systemChannel.displayMetadata.name}-button:after { background-color: ${systemChannel.displayMetadata.color}}`);
+                    const newButton = document.createElement('div')
+                    newButton.classList.add('button');
+                    newButton.classList.add('channel-button');
+                    newButton.id = `${systemChannel.displayMetadata.name}-button`;
+                    newButton.title = systemChannel.displayMetadata.name;
+                    newButton.onclick = this.changeContextGroup.bind(this);
+                    buttonsWrapper.prepend(newButton);
+                })
+            })
     }
 
 
