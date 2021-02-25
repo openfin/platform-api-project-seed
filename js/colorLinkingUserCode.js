@@ -74,6 +74,7 @@ window.addEventListener('DOMContentLoaded', async () => {
         console.log('contextInfo for instrument', contextInfo)
         console.log('instrument');
         document.getElementById('ticker').innerText = id.ticker
+        // throw new Error('testing thing')
     }
     function handleCountryChange(contextInfo) {
         const { type, id } = contextInfo;

@@ -10,9 +10,9 @@ window.addEventListener('DOMContentLoaded', () => {
         console.log('evt view shown', evt);
         fin.View.wrapSync(evt.viewIdentity).getOptions().then((opts) => {
             console.log('opts view-shown', opts)
-            if (opts.interop && opts.interop.contextGroupDeclaration) {
+            if (opts.interop && opts.interop.currentContextGroup) {
                 document.getElementById(`tab-${evt.viewIdentity.name}`).classList.remove('red-channel', 'green-channel', 'pink-channel', 'orange-channel', 'purple-channel', 'yellow-channel');
-                document.getElementById(`tab-${evt.viewIdentity.name}`).classList.add(`${opts.interop.contextGroupDeclaration}-channel`);    
+                document.getElementById(`tab-${evt.viewIdentity.name}`).classList.add(`${opts.interop.currentContextGroup}-channel`);    
             }
         })
     });
@@ -22,9 +22,9 @@ window.addEventListener('DOMContentLoaded', () => {
         console.log('evt view attached', evt);
         fin.View.wrapSync(evt.viewIdentity).getOptions().then((opts) => {
             console.log('opts view-attached', opts)
-            if (opts.interop && opts.interop.contextGroupDeclaration) {
+            if (opts.interop && opts.interop.currentContextGroup) {
                 document.getElementById(`tab-${evt.viewIdentity.name}`).classList.remove('red-channel', 'green-channel', 'pink-channel', 'orange-channel', 'purple-channel', 'yellow-channel');
-                document.getElementById(`tab-${evt.viewIdentity.name}`).classList.add(`${opts.interop.contextGroupDeclaration}-channel`);    
+                document.getElementById(`tab-${evt.viewIdentity.name}`).classList.add(`${opts.interop.currentContextGroup}-channel`);    
             }
         })
     });
