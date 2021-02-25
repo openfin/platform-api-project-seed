@@ -47,7 +47,7 @@ server.listen(serverParams.port);
         });
 
         //Once OpenFin exists we shut down the server.
-        fin.once('disconnected', process.exit);
+        // fin.once('disconnected', process.exit);
     } catch (err) {
         console.error(err);
     }

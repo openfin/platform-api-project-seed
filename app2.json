@@ -1,7 +1,7 @@
 {
     "runtime": {
-        "arguments": "--v=1",
-        "version": "canary"
+        "arguments": "--v=1 --inspect --inspect-brk",
+        "version": "19.89.58.15"
     },
     "shortcut": {
         "company": "OpenFin",
@@ -10,7 +10,7 @@
         "name": "Platform app seed local"
     },
     "platform": {
-        "uuid": "platform_customization_local",
+        "uuid": "platform_customization_local2",
         "applicationIcon": "https://openfin.github.io/golden-prototype/favicon.ico",
         "autoShow": false,
         "providerUrl": "http://localhost:5555/provider.html",
