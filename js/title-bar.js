@@ -91,7 +91,7 @@ class TitleBar extends HTMLElement {
         console.log('evt', evt);
         console.log('this.lastFocusedView', this.lastFocusedView);
         const color = evt.target.title;
-        fin.me.interop.joinContextGroup(color, this.lastFocusedView);
+        await fin.me.interop.joinContextGroup(color, this.lastFocusedView);
         document.getElementById(`tab-${this.lastFocusedView.name}`).classList.remove('red-channel', 'green-channel', 'pink-channel', 'orange-channel', 'purple-channel', 'yellow-channel');
         document.getElementById(`tab-${this.lastFocusedView.name}`).classList.add(`${color}-channel`);
     }
