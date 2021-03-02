@@ -13,9 +13,9 @@
         const storedSnapshotValue = window.localStorage.getItem(snapshotItem);
         const storedSnapshot = storedSnapshotValue && JSON.parse(storedSnapshotValue);
 
-        if (false) {
+        if (storedSnapshot) {
             console.log('applying stored snapshot', storedSnapshot);
-            return platform.applySnapshot(storedSnapshot);
+            return platform.applySnapshot({ windows: storedSnapshot.windows });
         } else {
             const defaultSnapshotReq = await window.fetch(defaultSnapshotUrl);
             const defaultSnapshot = await defaultSnapshotReq.json();
