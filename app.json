@@ -1,7 +1,7 @@
 {
     "runtime": {
         "arguments": "--v=1 --inspect",
-        "version": "18.87.57.28"
+        "version": "18.87.57.35"
     },
     "shortcut": {
         "company": "OpenFin",
@@ -26,8 +26,7 @@
             "backgroundThrottling": true,
             "minHeight": 445,
             "minWidth": 308,
-            "backgroundColor": "#161615",
-            "state": "maximized"
+            "backgroundColor": "#161615"
         },
         "defaultViewOptions": {
             "title": "&#8226;",
