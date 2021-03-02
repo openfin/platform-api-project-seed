@@ -14,6 +14,7 @@
         const storedSnapshot = storedSnapshotValue && JSON.parse(storedSnapshotValue);
 
         if (storedSnapshot) {
+             fin.me.hide();
             console.log('applying stored snapshot', storedSnapshot);
             return platform.applySnapshot({ windows: storedSnapshot.windows });
         } else {
