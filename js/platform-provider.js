@@ -14,9 +14,10 @@
         const storedSnapshot = storedSnapshotValue && JSON.parse(storedSnapshotValue);
 
         if (storedSnapshot) {
-             fin.me.hide();
+            fin.me.hide();
             console.log('applying stored snapshot', storedSnapshot);
-            return platform.applySnapshot({ windows: storedSnapshot.windows });
+            // return platform.applySnapshot({ windows: storedSnapshot.windows });
+            return platform.applySnapshot(storedSnapshot);
         } else {
             const defaultSnapshotReq = await window.fetch(defaultSnapshotUrl);
             const defaultSnapshot = await defaultSnapshotReq.json();
