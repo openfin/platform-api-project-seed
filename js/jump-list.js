@@ -17,7 +17,7 @@ export const setWorkspaces = () => {
             type: 'task',
             title: 'Launch',
             description: `Launches the default workspace.`,
-            deepLink: `fin://localhost:5555/app.json`
+            deepLink: `fin://localhost:5555/app.json`,
         }, 
         { type: 'separator' },
         {

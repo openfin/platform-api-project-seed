@@ -1,6 +1,6 @@
 {
     "runtime": {
-        "arguments": "--v=1",
+        "arguments": "--v=1 --inspect",
         "version": "canary"
     },
     "shortcut": {

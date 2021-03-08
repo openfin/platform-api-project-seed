@@ -1,7 +1,7 @@
 {
     "runtime": {
-        "arguments": "--v=1 --inspect --inspect-brk",
-        "version": "19.89.58.15"
+        "arguments": "--v=1 --inspect",
+        "version": "19.89.58.14"
     },
     "shortcut": {
         "company": "OpenFin",
