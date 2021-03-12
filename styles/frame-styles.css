@@ -94,5 +94,5 @@ body {
 }
 
 .wrapper_title {
-    visibility: hidden !important;
+  display: none !important;
 }
