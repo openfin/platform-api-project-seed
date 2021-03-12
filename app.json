@@ -16,18 +16,21 @@
         "providerUrl": "http://localhost:5555/provider.html",
         "backgroundColor": "#161615",
         "defaultWindowOptions": {
-            "url": "http://localhost:5555/platform-window.html",
-            "showBackgroundImages": true,
             "contextMenu": true,
             "defaultWidth": 600,
             "defaultHeight": 600,
             "defaultLeft": 0,
             "defaultTop": 0,
             "saveWindowState": false,
-            "backgroundThrottling": true,
             "minHeight": 445,
             "minWidth": 308,
-            "backgroundColor": "#161615"
+            "backgroundColor": "#161615",
+            "showBackgroundImages": true,
+            "preloadScripts": [
+                {
+                    "url": "http://localhost:5555/js/preload-example-script.js"
+                }
+            ]
         },
         "defaultViewOptions": {
             "title": "&#8226;",
