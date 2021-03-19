@@ -20,7 +20,7 @@ var app = connectLib();
 app.use(
     slow({
         url: /\.html$/i,
-        delay: 1,
+        delay: 1000,
     })
 ).use(serveStatic("./"));
 
