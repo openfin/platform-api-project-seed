@@ -15,6 +15,7 @@
         "autoShow": true,
         "providerUrl": "http://localhost:5555/provider.html",
         "backgroundColor": "#161615",
+         "state": "maximized",
         "defaultWindowOptions": {
             "contextMenu": true,
             "defaultWidth": 600,
@@ -26,6 +27,7 @@
             "minWidth": 308,
             "backgroundColor": "#161615",
             "showBackgroundImages": true,
+            "state": "maximized",
             "preloadScripts": [
                 {
                     "url": "http://localhost:5555/js/preload-example-script.js"
