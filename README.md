@@ -1,4 +1,4 @@
-# Platform API Project Seed
+# Platform API Project Seed - NWI Branch
 
 This project seed includes the following [Platform API](https://openfin.co/platform-api) capabilites:
 
@@ -20,12 +20,67 @@ This project seed includes the following [Platform API](https://openfin.co/platf
 * Install the dependencies: `npm install`
 * Start the live-server and launch the application: `npm start`
 
+
 **Advanced Usage:**
 
 For users who would like to test features with a different OpenFin Runtime, configure your workspace as follows:
 
 * Generate a local manifest file, _local.json_, with the specified Runtime version, e.g. canary: `npm start -- canary`
 * Subsequent launches will automatically use _local.json_; delete this file to revert to _app.json_
+
+## Native Window Integration
+Running the Native Window integration changes require an external .NET component, at the moment we don't have a client library so you will have to compile and run the [PWI-Provider](https://github.com/openfin/dotnet-nativewindows-adapterless-poc) manually.
+
+NWI changes are restricted to three files:
+
+The prototyope [NWIClient](js/nwi-lib.js) only exposes two functions (`getSnapshotFragment`, `applySnapshotFragment`), each function will try to connect to the [PWI-Provider](https://github.com/openfin/dotnet-nativewindows-adapterless-poc) using the Channel API before dispatching it's action (same pattern to Platforms API).
+
+``` js
+    //full implementation found in [NWIClient](js/nwi-lib.js)
+    //Extent of the functions defined by the prototype NWIClient 
+    async getSnapshotFragment(configurations) {
+        const client = await this.getClient();
+        return client.dispatch("get:snapshot:fragment", configurations);
+    }
+
+    async applySnapshotFragment(snapshotFragement) {
+        const client = await this.getClient();
+        return await client.dispatch("apply:snapshot:fragment", snapshotFragement);
+    }
+
+```
+
+The [custom Provider](js/platform-provider.js) will use the NWIClient to enhace the snapshots with NWI data.
+
+``` js
+            //full implementation found in [custom Provider](js/platform-provider.js)
+            async getSnapshot() {
+                const snapshot = await super.getSnapshot();
+                const appInfo = await fin.Application.getCurrentSync().getInfo();
+                const nativeApplications = appInfo.manifest.platform.customData.nativeApplications;
+
+                const nwiFragment = await nwiClient.getSnapshotFragment(nativeApplications);
+
+                return {
+                    ...snapshot,
+                    nwiFragment
+                };
+            }
+
+            async applySnapshot({ snapshot, options }) {
+
+                const originalPromise = super.applySnapshot({ snapshot, options });
+                if (snapshot.nwiFragment) {
+                    try {
+                        await nwiClient.applySnapshotFragment(snapshot.nwiFragment);
+                    } catch (err) {
+                        console.error(err);
+                    }
+                }
+
+                return originalPromise;
+            }
+```
 
 ## Understanding the code
 
