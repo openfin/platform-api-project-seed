@@ -1,14 +1,5 @@
-import { generateSnapshotFragment, restoreExternalWindowPositionAndState } from './external-window-snapshot.js';
 import { NWIClient } from './nwi-lib.js';
-
-const externalWindowsLaunched = [];
-const NWI_SNAPSHOT_PROVIDER = "nwi:snapshot:provider";
-let nwiClient = new NWIClient(NWI_SNAPSHOT_PROVIDER); 
-
- nwiClient.connect().then((client) => { 
-    window.nwiClient = nwiClient;
-    console.log('Connected');
-   });
+let nwiClient = new NWIClient("nwi:snapshot:provider"); 
 
 fin.Platform.init({
     overrideCallback: async (Provider) => {
@@ -19,8 +10,8 @@ fin.Platform.init({
                 const nativeApplications = appInfo.manifest.platform.customData.nativeApplications;
 
                 //we add an externalWindows section to our snapshot
-                //const externalWindows = await generateSnapshotFragment();
                 const nwiFragment = await nwiClient.getSnapshotFragment(nativeApplications);
+
                 return {
                     ...snapshot,
                     nwiFragment
@@ -35,6 +26,9 @@ fin.Platform.init({
                 if (snapshot.nwiFragment) {
                     try {
                         //await restoreExternalWindowPositionAndState(snapshot.externalWindows);
+                        //should we send our configuration so that we don't launch anything that has not been configured.
+                        //  This will involve fixing the issue in the .NET adapter where we cannot pass channel API connection arguments.
+                        //should the NWI-Provider only send back a snapshot ID.
                         await nwiClient.applySnapshotFragment(snapshot.nwiFragment);
                     } catch (err) {
                         console.error(err);
@@ -46,14 +40,4 @@ fin.Platform.init({
         };
         return new Override();
     }
-});
-
-
-//Hacky way of launching apps and keeping track of them for snapshot purposes:
-const bc = new BroadcastChannel('external-window-snapshot-tracker');
-bc.addEventListener('message', e => {
-
-    console.log(e.data);
-    externalWindowsLaunched.push(e.data);
-    console.log(externalWindowsLaunched);
 });

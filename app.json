@@ -1,7 +1,7 @@
 {
     "runtime": {
         "arguments": "--v=1 --inspect",
-        "version": "stable"
+        "version": "alpha"
     },
     "shortcut": {
         "company": "OpenFin",
@@ -14,7 +14,13 @@
             "src": "http://localhost:5562/my_platform_notes.zip",
             "alias": "my_platform_notes",
             "version": "1.1.6"
+        },
+        {
+            "src": "http://localhost:5562/my_platform_notes.zip",
+            "alias": "nwi-provider",
+            "version": "1.1.6"
         }
+
     ],
     "platform": {
         "uuid": "platform_customization_local_native_window",
@@ -105,7 +111,7 @@
                 },
                 {
                     "name": "MySimpleDotNetApp",
-                    "title": "Form1",
+                    "Otitle": "Form1",
                     "launch": {
                         "alias": "my_platform_notes",
                         "target": "MySimpleDotNetApp.exe",
@@ -114,12 +120,27 @@
                     }
                 },
                 {
-                    "name": "firefox",
-                    "title": "",
+                    "name": "Procexp64",
+                    "title": "Process Explorer",
                     "launch": {
-                        "target": "firefox.exe",
-                        "lifetime": "application",
-                        "arguments": ""
+                        "path": "C:\\Users\\openfin\\Downloads\\ProcessExplorer\\procexp64.exe",
+                        "lifetime": "application"
+                    }
+                }, 
+                {
+                    "name": "Symphony",
+                    "title": "Symphony",
+                    "launch": {
+                        "path": "C:\\Users\\openfin\\AppData\\Local\\Programs\\Symphony\\Symphony\\Symphony.exe",
+                        "lifetime": "application"
+                    }
+                },
+                {
+                    "name": "Tableau",
+                    "title": "Tableau",
+                    "launch": {
+                        "path": "C:\\Program Files\\Tableau\\Tableau 2020.4\bin\tableau.exe",
+                        "lifetime": "application"
                     }
                 }
             ]
