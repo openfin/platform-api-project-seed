@@ -7,7 +7,7 @@ export class NWIClient {
         this.provider = provider;
     }
 
-    //TODO: shit name.
+    //TODO: Bad name
     async getClient(provider) {
         const target = provider || this.provider;        
         if (!clientMap.has(target)) {
