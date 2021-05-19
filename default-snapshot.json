@@ -3,7 +3,8 @@
         "windows": [
             {
                 "url": "http://localhost:5555/main-window.html",
-                "layout": {
+                "name": "SC-main-window",
+                "layout": {      
                     "content": [
                         {
                             "type": "stack",

@@ -165,7 +165,45 @@ class TitleBar extends HTMLElement {
         
         fin.Window.getCurrentSync().on('close-requested', () => {
             this.closeAll();
-        });    
+        });
+
+        fin.Window.getCurrentSync().on('view-attached', () => {
+            this.hideTabsIfOnlyOneTabPresent()
+        });
+
+        fin.Window.getCurrentSync().on('view-detached', () => {
+            this.hideTabsIfOnlyOneTabPresent()
+        });
+    }
+
+    async hideTabsIfOnlyOneTabPresent() {
+        const myWin = fin.Window.getCurrentSync()
+        const viewsArray = await myWin.getCurrentViews();
+        const oldLayout = await fin.Platform.Layout.getCurrentSync().getConfig();
+        const { settings, dimensions } = oldLayout;
+        if (viewsArray.length === 1) {
+            if (settings.hasHeaders) {
+                fin.Platform.Layout.getCurrentSync().replace({
+                    ...oldLayout,
+                    settings: {
+                        ...settings,
+                        hasHeaders: false
+                    }
+                });
+            }
+        } else if (!settings.hasHeaders) {
+            fin.Platform.Layout.getCurrentSync().replace({
+                ...oldLayout,
+                settings: {
+                    ...settings,
+                    hasHeaders: true
+                },
+                dimensions: {
+                    ...dimensions,
+                    headerHeight: 20
+                }
+            });
+        }
     }
 
     async render() {
