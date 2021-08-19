@@ -1,7 +1,7 @@
 {
     "runtime": {
         "arguments": "--v=1 --inspect",
-        "version": "canary"
+        "version": "23.94.64.1113"
     },
     "shortcut": {
         "company": "OpenFin",
@@ -12,7 +12,7 @@
     "platform": {
         "uuid": "platform_customization_local",
         "applicationIcon": "https://openfin.github.io/golden-prototype/favicon.ico",
-        "autoShow": false,
+        "autoShow": true,
         "providerUrl": "http://localhost:5555/provider.html",
         "permissions": {
             "ExternalWindow": {
@@ -25,6 +25,8 @@
                 "terminateExternalProcess": true
             }
         },
+        "backgroundColor": "#111118",
+        "state": "maximized",
         "defaultWindowOptions": {
             "url": "http://localhost:5555/platform-window.html",
             "contextMenu": true,
@@ -38,7 +40,9 @@
             "minWidth": 354,
             "experimental": {
                 "analytics": true
-            }
+            },
+            "backgroundColor": "#111118",
+            "state": "maximized"
         },
         "defaultViewOptions": {
             "experimental": {
