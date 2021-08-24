@@ -1,7 +1,7 @@
 {
     "runtime": {
         "arguments": "--v=1 --inspect",
-        "version": "canary"
+        "version": "20.91.63.5"
     },
     "shortcut": {
         "company": "OpenFin",
@@ -12,7 +12,7 @@
     "platform": {
         "uuid": "platform_customization_local",
         "applicationIcon": "https://openfin.github.io/golden-prototype/favicon.ico",
-        "autoShow": false,
+        "autoShow": true,
         "providerUrl": "http://localhost:5555/provider.html",
         "permissions": {
             "ExternalWindow": {
@@ -26,6 +26,7 @@
             }
         },
         "defaultWindowOptions": {
+            "fdc3InteropApi": "1.2",
             "url": "http://localhost:5555/platform-window.html",
             "contextMenu": true,
             "defaultWidth": 600,
@@ -38,13 +39,20 @@
             "minWidth": 354,
             "experimental": {
                 "analytics": true
+            },
+            "customContext": {
+                "selectedChannel": "red"
             }
         },
         "defaultViewOptions": {
+            "fdc3InteropApi": "1.2",
             "experimental": {
                 "childWindows": true,
                 "analytics": true
-            }
+            },
+            "preloadScripts": [
+                { "url": "http://localhost:5555/js/view-preload.js" }
+            ]
         },
         "commands": [
             {
@@ -66,8 +74,14 @@
                                     "type": "component",
                                     "componentName": "view",
                                     "componentState": {
-                                        "processAffinity": "ps_1",
-                                        "url": "https://cdn.openfin.co/embed-web/chart.html"
+                                        "url": "https://www.google.com"
+                                    }
+                                },
+                                {
+                                    "type": "component",
+                                    "componentName": "view",
+                                    "componentState": {
+                                        "url": "https://www.bbc.com"
                                     }
                                 }
                             ]
