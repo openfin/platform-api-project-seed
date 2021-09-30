@@ -128,3 +128,16 @@ fieldset label {
     align-items: center;
     font-family: Arial, Helvetica, sans-serif;
 }
+
+/* CSS that adds a colored border to view */
+
+#layout-container {
+    background-color: indigo;
+}
+
+/* CSS that adds color border to window; height and width has to be changed as 100% leaves window out of bound */
+#of-frame-main {
+    height: 99.25%;
+    width: 99.25%;
+    border: solid red;
+}
