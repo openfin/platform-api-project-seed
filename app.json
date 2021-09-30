@@ -28,8 +28,8 @@
         "defaultWindowOptions": {
             "url": "http://localhost:5555/platform-window.html",
             "contextMenu": true,
-            "defaultWidth": 600,
-            "defaultHeight": 600,
+            "defaultWidth": 900,
+            "defaultHeight": 720,
             "defaultLeft": 0,
             "defaultTop": 0,
             "saveWindowState": false,
@@ -67,7 +67,7 @@
                                     "componentName": "view",
                                     "componentState": {
                                         "processAffinity": "ps_1",
-                                        "url": "https://cdn.openfin.co/embed-web/chart.html"
+                                        "url": "https://cdn.openfin.co/health/deployment/index.html"
                                     }
                                 }
                             ]
