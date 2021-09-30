@@ -39,6 +39,11 @@ class LeftMenu extends HTMLElement {
                 url: `https://cdn.openfin.co/docs/javascript/${fin.desktop.getVersion()}`,
                 printName: "Documentation",
                 processAffinity: 'ps_1'
+            },
+            {
+                url: `https://cdn.openfin.co/health/deployment/index.html`,
+                printName: "Health check",
+                processAffinity: 'ps_1'
             }
         ];
 
