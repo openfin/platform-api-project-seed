@@ -1,0 +1,11 @@
+/* copy the following sample custom styles to styles/frame-styles.css */
+
+#layout-container {
+    background-color: indigo;
+}
+
+#of-frame-main {
+    height: 99.25%;
+    width: 99.25%;
+    border: solid red;
+}
