@@ -16,7 +16,7 @@
         "providerUrl": "http://localhost:5555/provider.html",
         "permissions": {
             "ExternalWindow": {
-              	"wrap": true
+                "wrap": true
             },
             "System": {
                 "getAllExternalWindows": true,
@@ -38,7 +38,12 @@
             "minWidth": 354,
             "experimental": {
                 "analytics": true
-            }
+            },
+            "preloadScripts": [
+                {
+                    "url": "http://localhost:5555/js/tab-header.js"
+                }
+            ]
         },
         "defaultViewOptions": {
             "experimental": {
