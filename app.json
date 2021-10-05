@@ -16,7 +16,7 @@
         "providerUrl": "http://localhost:5555/provider.html",
         "permissions": {
             "ExternalWindow": {
-              	"wrap": true
+                "wrap": true
             },
             "System": {
                 "getAllExternalWindows": true,
@@ -35,15 +35,11 @@
             "saveWindowState": false,
             "backgroundThrottling": true,
             "minHeight": 445,
-            "minWidth": 354,
-            "experimental": {
-                "analytics": true
-            }
+            "minWidth": 354
         },
         "defaultViewOptions": {
             "experimental": {
-                "childWindows": true,
-                "analytics": true
+                "childWindows": true
             }
         },
         "commands": [

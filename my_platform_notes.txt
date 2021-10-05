@@ -1,9 +1,0 @@
-Platform Talking points:
-    View Composition done via metadata
-    Snapshots are powerfull
-        Window position
-        Window State(max, min, normal)
-        Window Layout
-        Context
-        Process Model
-        Customizable

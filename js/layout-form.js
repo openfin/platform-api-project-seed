@@ -1,5 +1,5 @@
 import { html, render } from 'https://unpkg.com/lit-html@1.0.0/lit-html.js';
-import { storeTemplate } from './template-store.js';
+import { storeTemplate, getTemplateByName } from './template-store.js';
 
 export class LayoutForm extends HTMLElement {
     constructor() {
@@ -9,16 +9,20 @@ export class LayoutForm extends HTMLElement {
         this.render();
     }
 
-     saveAsTemplate = async () => {
+    saveAsTemplate = async () => {
         const name = this.querySelector('.template-name').value;
         const templateObject = {
             name,
             layout: await fin.Platform.Layout.getCurrentSync().getConfig()
         };
+        var existingTemplate = getTemplateByName(this.templateStorageKey, name);
+        if (existingTemplate) {
+            alert(`Cannot save template "${name}", as it already exists!`);
+        } else {
+            storeTemplate(this.templateStorageKey, templateObject);
+            this.toggleVisibility();
+        }
 
-        storeTemplate(this.templateStorageKey, templateObject);
-
-        this.toggleVisibility();
         return;
     }
 

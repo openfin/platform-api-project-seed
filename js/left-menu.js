@@ -1,9 +1,9 @@
 import { html, render } from 'https://unpkg.com/lit-html@1.0.0/lit-html.js';
-import { getTemplates, getTemplateByName, onStoreUpdate } from './template-store.js';
+import { getTemplates, getTemplateByName, onStoreUpdate, deleteTemplateByName } from './template-store.js';
 import { CONTAINER_ID } from './platform-window.js';
 
 const CHART_URL = 'https://cdn.openfin.co/embed-web/chart.html';
-const LAYOUT_STORE_KEY  = 'LayoutForm';
+const LAYOUT_STORE_KEY = 'LayoutForm';
 const SNAPSHOT_STORE_KEY = 'SnapshotForm';
 
 
@@ -97,8 +97,9 @@ class LeftMenu extends HTMLElement {
         <ul>
             <li><button @click=${() => this.toGrid().catch(console.error)}>Grid</button></li>
             <li><button @click=${() => this.toTabbed().catch(console.error)}>Tab</button></li>
-            ${layoutTemplates.map((item) => html`<li>
-                  <button @click=${() => this.replaceLayoutFromTemplate(item.name)}>${item.name}</button>
+            ${layoutTemplates.map((item) => html`<li style="display:flex">
+                  <button style="width:auto" @click=${() => this.replaceLayoutFromTemplate(item.name)}>${item.name}</button>
+                  <button style="width:auto" @click=${() => this.deleteLayoutFromTemplate(item.name)}>X</button>
               </li>`)}
             <li><button @click=${() => this.cloneWindow().catch(console.error)}>Clone</button></li>
             <li><button class="layout-button">Save Layout</button></li>
@@ -124,6 +125,11 @@ class LeftMenu extends HTMLElement {
         const templates = getTemplates(LAYOUT_STORE_KEY);
         const templateToUse = templates.find(i => i.name === templateName);
         fin.Platform.Layout.getCurrentSync().replace(templateToUse.layout);
+    }
+
+    deleteLayoutFromTemplate = (templateName) => {
+        deleteTemplateByName(LAYOUT_STORE_KEY, templateName);
+        this.render();
     }
 
     addView = async (printName) => {
@@ -191,7 +197,7 @@ class LeftMenu extends HTMLElement {
 
     share = async () => {
         const { windows } = await fin.Platform.getCurrentSync().getSnapshot();
-        const contentConfig = {snapshot: { windows } };
+        const contentConfig = { snapshot: { windows } };
         const res = await fetch('https://jsonblob.com/api/jsonBlob', {
             method: 'POST', // or 'PUT'
             body: JSON.stringify(contentConfig), // data can be `string` or {object}!

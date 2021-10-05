@@ -5,6 +5,12 @@ async function publishUpdateEvents() {
     return fin.InterApplicationBus.publish(STORE_UPDATED_TOPIC, '');
 }
 
+function deleteTemplateByName(templateStoreKey, name) {
+    var allTemplates = getTemplates(templateStoreKey);
+    var remainingTemplates = allTemplates.filter(template => template.name !== name);
+    localStorage.setItem(templateStoreKey, JSON.stringify(remainingTemplates));
+}
+
 //templates need to have a name { name:"", ... }
 function storeTemplate(templateStoreKey, template) {
     const storedTemplates = getTemplates(templateStoreKey);
@@ -39,4 +45,4 @@ function onStoreUpdate(fn) {
     fin.InterApplicationBus.subscribe({ uuid: '*' }, STORE_UPDATED_TOPIC, fn);
 }
 
-export { storeTemplate, getTemplates, getTemplateByName, onStoreUpdate };
+export { storeTemplate, getTemplates, getTemplateByName, onStoreUpdate, deleteTemplateByName };

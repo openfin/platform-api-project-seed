@@ -26,7 +26,7 @@ class TitleBar extends HTMLElement {
             // Whenever a new layout is ready on this window (on init, replace, or applyPreset)
             const { settings } = await fin.Platform.Layout.getCurrentSync().getConfig();
             // determine whether it is locked and update the icon
-            if(settings.hasHeaders && settings.reorderEnabled) {
+            if (settings.hasHeaders && settings.reorderEnabled) {
                 document.getElementById('lock-button').classList.remove('layout-locked');
             } else {
                 document.getElementById('lock-button').classList.add('layout-locked');
@@ -41,7 +41,6 @@ class TitleBar extends HTMLElement {
                 </div>
                 <div id="buttons-wrapper">
                     <div class="button" title="Toggle Theme" id="theme-button" @click=${this.toggleTheme}></div>
-                    <div class="button" title="Toggle Sidebar" id="menu-button" @click=${this.toggleMenu}></div>
                     <div class="button" title="Toggle Layout Lock" id="lock-button" @click=${this.toggleLockedLayout}></div>
                     <div class="button" title="Minimize Window" id="minimize-button" @click=${() => fin.me.minimize().catch(console.error)}></div>
                     <div class="button" title="Maximize Window" id="expand-button" @click=${() => this.maxOrRestore().catch(console.error)}></div>
@@ -61,7 +60,7 @@ class TitleBar extends HTMLElement {
     toggleLockedLayout = async () => {
         const oldLayout = await fin.Platform.Layout.getCurrentSync().getConfig();
         const { settings, dimensions } = oldLayout;
-        if(settings.hasHeaders && settings.reorderEnabled) {
+        if (settings.hasHeaders && settings.reorderEnabled) {
             fin.Platform.Layout.getCurrentSync().replace({
                 ...oldLayout,
                 settings: {
@@ -106,12 +105,8 @@ class TitleBar extends HTMLElement {
 
         const context = await fin.Platform.getCurrentSync().getWindowContext() || {};
         if (context.theme !== theme) {
-            fin.Platform.getCurrentSync().setWindowContext({theme});
+            fin.Platform.getCurrentSync().setWindowContext({ theme });
         }
-    }
-
-    toggleMenu = () => {
-        document.querySelector('left-menu').classList.toggle('hidden');
     }
 }
 
