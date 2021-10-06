@@ -129,10 +129,18 @@ fieldset label {
     font-family: Arial, Helvetica, sans-serif;
 }
 
+.lm_header .lm_tab i {
+    position: relative;
+}
+
 .lm_header .lm_tab .lm_close_tab {
     border-radius: 0%;
     --tab-close-button-url: url("/images/trash-alt-solid.svg");
     background-repeat: no-repeat;
     filter: invert();
     right: 4px;
+}
+
+.lm_active .messageCounter{
+    background: #ee7813;
 }
