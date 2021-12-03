@@ -1,7 +1,8 @@
-{
+{    
+    "devtools_port": 9090,
     "runtime": {
-        "arguments": "--v=1 --inspect",
-        "version": "canary"
+        "arguments": "--v=1 --inspect --no-sandbox  --disable-init-reload --enable-chromium-window-alert --allow-http-screen-capture --allow-insecure-localhost",
+        "version": "21.93.65.4"
     },
     "shortcut": {
         "company": "OpenFin",
