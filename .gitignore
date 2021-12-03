@@ -6,5 +6,5 @@ bower_components
 logs
 OpenFinRVM.exe
 OpenFin
-
+wdio-chromedriver.log
 local.json
