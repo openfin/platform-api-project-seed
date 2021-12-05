@@ -11,7 +11,8 @@ exports.config = {
         browserName: 'openfin'
     }],
 
-    logLevel: 'verbose',
+    reporters: ['spec'],
+    logLevel: 'warn',
     coloredLogs: true,
 
     waitforTimeout: 10000,
