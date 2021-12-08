@@ -9,8 +9,7 @@ let browser;
 
 const config = {
     debuggerPort: 9090,
-    manifestURL: 'http://localhost:5555/app.json',
-    runtimeVersion: '25.96.68.2' // '22.94.66.4'
+    manifestURL: 'http://localhost:5555/app.json'
 }
 
 async function getWindowByTitle(title) {
@@ -76,7 +75,7 @@ describe('OpenFin Version', function() {
         const result = await page.evaluate((x) => {
             return fin.System.getVersion();
           });
-        assert.equal(result, config.runtimeVersion);
+        assert.ok(typeof result === 'string');
     });
 
     let healthPage;
