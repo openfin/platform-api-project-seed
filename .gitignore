@@ -12,3 +12,5 @@ local.json
 **/.idea
 *.iml
 *.log
+
+build

@@ -3,13 +3,8 @@ exports.config = {
     port: 9515,
     path: '/',
     specs: [
-        './test.js'
+        'build/test.js'
     ],
-
-    capabilities: [{
-        maxInstances: 1,
-        browserName: 'openfin'
-    }],
 
     reporters: ['spec'],
     logLevel: 'warn',

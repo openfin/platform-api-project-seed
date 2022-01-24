@@ -1,16 +1,17 @@
 
-const assert = require('assert');
+import assert from 'assert';
 
-let switchWindowByTitle = require('wdio-openfin-service').switchWindowByTitle;
-let waitForFinDesktop = require('wdio-openfin-service').waitForFinDesktop;
+import { switchWindowByTitle, waitForFinDesktop } from 'wdio-openfin-service';
 
+declare var fin:any;
+declare var browser:any;
 
 describe('Click Re-Run button in Health Check page', function() {
         const healthCheckTitle = 'OpenFin Deployment Health Check';
         it(`Switch to ${healthCheckTitle}`, async () => {
             await switchWindowByTitle(healthCheckTitle);
             const title = await browser.getTitle();
-            assert.equal(title,  healthCheckTitle);
+            assert.strictEqual(title,  healthCheckTitle);
         });
 
         it('Wait for OpenFin API ready', async () => {
