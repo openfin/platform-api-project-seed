@@ -6,7 +6,8 @@ This example demonstrates how to test apps, based on OpenFin Platform, with [WDI
 ## Run the example
 
 1. host app.json of the Platform Seeed project on localhost:5555
-2. run "npm run test"
+2. run "npm run build"
+3. run "npm run test"
 
 ## Guidelines for writing tests
 
