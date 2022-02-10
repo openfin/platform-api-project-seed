@@ -1,15 +1,20 @@
 
 import assert from 'assert';
 
-import { switchWindowByTitle, waitForFinDesktop } from 'wdio-openfin-service';
+import { switchWebContentByTitle, switchWebContentByURL, waitForFinDesktop } from 'wdio-openfin-service';
 
 declare var fin:any;
-declare var browser:any;
+
+after('All done', async () => {
+    console.log('all done');
+    await browser.deleteSession();
+    browser.getUrl()
+})
 
 describe('Click Re-Run button in Health Check page', function() {
         const healthCheckTitle = 'OpenFin Deployment Health Check';
         it(`Switch to ${healthCheckTitle}`, async () => {
-            await switchWindowByTitle(healthCheckTitle);
+            await switchWebContentByTitle(healthCheckTitle);
             const title = await browser.getTitle();
             assert.strictEqual(title,  healthCheckTitle);
         });
@@ -29,7 +34,7 @@ describe('Close Health Check page', function() {
     const healthCheckTitle = 'OpenFin Deployment Health Check';
     const providerPageTitle = 'Platform Window Template';
     it(`Switch to ${providerPageTitle}`, async () => {
-        await switchWindowByTitle(providerPageTitle);
+        await switchWebContentByTitle(providerPageTitle);
         const title = await browser.getTitle();
         assert.equal(title,  providerPageTitle);
     });
@@ -37,7 +42,7 @@ describe('Close Health Check page', function() {
     it("Click Close tab button", async () => {
         const lmTabs = await browser.$$("li.lm_tab");
         return new Promise((resolve) => {
-            lmTabs.forEach(async (element) => {
+            lmTabs.forEach(async (element: WebdriverIO.Element) => {
                 const title = await element.getAttribute('title');
                 if (title === healthCheckTitle) {
                     const closeDiv = element.$('div.lm_close_tab');
@@ -47,4 +52,18 @@ describe('Close Health Check page', function() {
             });    
         });
      });
+});
+
+describe('Close App', function() {
+    const providerUrl = 'http://localhost:5555/provider.html';
+    it(`Switch to ${providerUrl}`, async () => {
+        await switchWebContentByURL(providerUrl);
+        const url = await browser.getUrl();
+        assert.strictEqual(url,  providerUrl);
+        await browser.execute(function () {
+            fin.desktop.System.exit();
+        });
+        await browser.pause(2000);  // pause here to give Runtime time to exit
+    });
+
 });
