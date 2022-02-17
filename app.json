@@ -38,13 +38,15 @@
             "minWidth": 354,
             "experimental": {
                 "analytics": true
-            }
+            },
+            "sequentialBeforeUnloadInBrowserViews": true
         },
         "defaultViewOptions": {
             "experimental": {
                 "childWindows": true,
                 "analytics": true
-            }
+            },
+            "enableWillPreventUnload": false
         },
         "commands": [
             {

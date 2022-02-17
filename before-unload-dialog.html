@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <p>before unload dialog</p>
+    <button onclick="destroyViews()">OK</button>
+    <button onclick="cancel()">Cancel</button>
+
+    <script>
+        
+        function cancel() {
+            window.close();
+        }
+        
+        async function destroyViews() {
+            const params = new URLSearchParams(window.location.search);
+            const winIdString = params.get('winId');
+            const winId = JSON.parse(params.get('winId'));
+            const win = fin.Window.wrapSync(winId); 
+            const viewsToDestroy = await win.getCurrentViews();
+            viewsToDestroy.forEach(view => {
+                view.destroy();
+            });
+        }      
+
+        document.addEventListener('DOMContentLoaded', () => {
+
+        });
+    </script>
+</body>
+
+</html>
