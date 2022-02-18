@@ -46,7 +46,7 @@
                 "childWindows": true,
                 "analytics": true
             },
-            "enableWillPreventUnload": false
+            "enableWillPreventUnload": true
         },
         "commands": [
             {
@@ -61,7 +61,7 @@
                 "layout": {
                     "content": [
                         {
-                            "type": "stack",
+                            "type": "column",
                             "id": "no-drop-target",
                             "content": [
                                 {
@@ -69,7 +69,23 @@
                                     "componentName": "view",
                                     "componentState": {
                                         "processAffinity": "ps_1",
-                                        "url": "https://cdn.openfin.co/health/deployment/index.html"
+                                        "url": "http://localhost:5555/view.html?title=View1"
+                                    }
+                                },
+                                {
+                                    "type": "component",
+                                    "componentName": "view",
+                                    "componentState": {
+                                        "processAffinity": "ps_1",
+                                        "url": "http://localhost:5555/view.html?title=View2"
+                                    }
+                                },
+                                {
+                                    "type": "component",
+                                    "componentName": "view",
+                                    "componentState": {
+                                        "processAffinity": "ps_1",
+                                        "url": "http://localhost:5555/view.html?title=View3"
                                     }
                                 }
                             ]

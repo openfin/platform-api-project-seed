@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1 id="view-title">View</h1>
+    <button onclick="triggerBeforeUnload()">Trigger Before Unload</button>
+    <script>
+        async function populateViewTitle() {
+
+        }
+
+        async function triggerBeforeUnload() {
+            return fin.me.triggerBeforeUnload();
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const viewTitle = params.get('title');
+            document.title = viewTitle;
+            const viewHeader = document.querySelector('#view-title');
+            viewHeader.innerHTML = viewTitle;
+
+            if (viewTitle !== 'View3') {
+                window.addEventListener('beforeunload', function (e) {
+                    // Cancel the event
+                    e.preventDefault(); // If you prevent default behavior in Mozilla Firefox prompt will always be shown
+                    // Chrome requires returnValue to be set
+                    e.returnValue = '';
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>
