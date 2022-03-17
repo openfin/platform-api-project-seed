@@ -12,12 +12,9 @@
     <h1 id="view-title">View</h1>
     <button onclick="triggerBeforeUnload()">Trigger Before Unload</button>
     <script>
-        async function populateViewTitle() {
-
-        }
-
         async function triggerBeforeUnload() {
-            return fin.me.triggerBeforeUnload();
+            const willPreventUnload = await fin.me.triggerBeforeUnload();
+            console.log(willPreventUnload);
         }
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -27,12 +24,17 @@
             const viewHeader = document.querySelector('#view-title');
             viewHeader.innerHTML = viewTitle;
 
-            if (viewTitle !== 'View3') {
+            if (viewTitle === 'view1' || viewTitle === 'view3') {
                 window.addEventListener('beforeunload', function (e) {
-                    // Cancel the event
-                    e.preventDefault(); // If you prevent default behavior in Mozilla Firefox prompt will always be shown
-                    // Chrome requires returnValue to be set
+                    console.log('BEFOREUNLOAD HANDLER FIRED FROM: ' + viewTitle);
+                    e.preventDefault();
                     e.returnValue = '';
+                });
+            }
+
+            if (viewTitle === 'view2') {
+                window.addEventListener('beforeunload', function (e) {
+                    console.log('BEFOREUNLOAD HANDLER FIRED FROM: ' + viewTitle);
                 });
             }
         });

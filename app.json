@@ -10,9 +10,10 @@
         "name": "Platform app seed local"
     },
     "platform": {
+        "enableBeforeUnload": true,
         "uuid": "platform_customization_local",
         "applicationIcon": "https://openfin.github.io/golden-prototype/favicon.ico",
-        "autoShow": false,
+        "autoShow": true,
         "providerUrl": "http://localhost:5555/provider.html",
         "permissions": {
             "ExternalWindow": {
@@ -38,15 +39,13 @@
             "minWidth": 354,
             "experimental": {
                 "analytics": true
-            },
-            "sequentialBeforeUnloadInBrowserViews": true
+            }
         },
         "defaultViewOptions": {
             "experimental": {
                 "childWindows": true,
                 "analytics": true
-            },
-            "enableWillPreventUnload": true
+            }
         },
         "commands": [
             {
@@ -69,7 +68,8 @@
                                     "componentName": "view",
                                     "componentState": {
                                         "processAffinity": "ps_1",
-                                        "url": "http://localhost:5555/view.html?title=View1"
+                                        "url": "http://localhost:5555/view.html?title=view1",
+                                        "name": "view1"
                                     }
                                 },
                                 {
@@ -77,7 +77,8 @@
                                     "componentName": "view",
                                     "componentState": {
                                         "processAffinity": "ps_1",
-                                        "url": "http://localhost:5555/view.html?title=View2"
+                                        "url": "http://localhost:5555/view.html?title=view2",
+                                        "name": "view2"
                                     }
                                 },
                                 {
@@ -85,7 +86,17 @@
                                     "componentName": "view",
                                     "componentState": {
                                         "processAffinity": "ps_1",
-                                        "url": "http://localhost:5555/view.html?title=View3"
+                                        "url": "http://localhost:5555/view.html?title=view3",
+                                        "name": "view3"
+                                    }
+                                },
+                                {
+                                    "type": "component",
+                                    "componentName": "view",
+                                    "componentState": {
+                                        "processAffinity": "ps_1",
+                                        "url": "http://localhost:5555/view.html?title=view4",
+                                        "name": "view4"
                                     }
                                 }
                             ]

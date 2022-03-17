@@ -9,26 +9,64 @@
 </head>
 
 <body>
-    <p>before unload dialog</p>
-    <button onclick="destroyViews()">OK</button>
-    <button onclick="cancel()">Cancel</button>
+    <div>
+        <p>Are you sure you want to close this window?</p>
+        <p>Changes you made may not be saved by: </p>
+    </div>
+    <div id="views"></div>
+    <div>
+        <button onclick="goAheadWithClose()">OK</button>
+        <button onclick="cancel()">Cancel</button>
+    </div>
 
     <script>
+        const params = new URLSearchParams(window.location.search);
 
-        function cancel() {
-            window.close();
+        async function cancel() {
+            try {
+                await fin.InterApplicationBus.publish('user-decision', false);
+                window.close();
+            } catch (error) {
+                console.log(error);
+            }
         }
 
-        async function destroyViews() {
-            const params = new URLSearchParams(window.location.search);
-            const winIdString = params.get('winId');
-            const winId = JSON.parse(params.get('winId'));
-            const win = fin.Window.wrapSync(winId);
-            const viewsToDestroy = await win.getCurrentViews();
-            viewsToDestroy.forEach(view => {
-                view.destroy();
+        function populatePreventedViews() {
+            const viewsObj = params.get('views');
+            const viewsArr = JSON.parse(viewsObj).views;
+
+            viewsArr.forEach(view => {
+                const viewP = document.createElement('p');
+                viewP.innerHTML = view.name;
+                document.querySelector('#views').appendChild(viewP);
             });
         }
+
+        // async function destroyViews() {
+        //     const winIdString = params.get('winId');
+        //     const winId = JSON.parse(winIdString);
+        //     const win = fin.Window.wrapSync(winId);
+        //     const platform = fin.Platform.getCurrentSync();
+        //     const viewsToDestroy = await win.getCurrentViews();
+        //     const destroyViews = viewsToDestroy.map(async (view) => {
+        //         await platform.closeView(view.identity);
+        //     });
+        //     await Promise.all(destroyViews);
+        //     window.close(true);
+        // }
+
+        async function goAheadWithClose() { 
+            try {
+                await fin.InterApplicationBus.publish('user-decision', true);
+                window.close();
+            } catch (error) {
+                console.log(error);
+            }  
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            populatePreventedViews();
+        });
 
         // fin.InterApplicationBus.subscribe({ uuid: '*' }, 'view-prevent-unload', (msg) => {
 

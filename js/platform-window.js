@@ -1,57 +1,83 @@
 export const CONTAINER_ID = 'layout-container';
+
 window.addEventListener('DOMContentLoaded', async () => {
-    const preventedViews = [];
-    const notPreventedViews = [];
-    const beforeUnloadDialog = fin.Window.wrapSync({ name: 'before-unload-dialog', uuid: fin.me.identity.uuid });
+    // let willPreventUnload = [];
+    // let beforeUnloadFired = []
+    // let currentViews = await fin.me.getCurrentViews();
+    // let windowClose = true;
 
-    beforeUnloadDialog.on('closed', () => {
-        unloadedViews.clear();
-    });
+    // const beforeUnloadDialog = await fin.Window.create({ 
+    //     name: 'before-unload-dialog', 
+    //     uuid: fin.me.identity.uuid, 
+    //     defaultHeight: 225, 
+    //     defaultWidth: 400, 
+    //     autoShow: false,
+    //     defaultCentered: true,
+    //     alwaysOnTop: true,
+    //     saveWindowState: false,
+    //     maximizable: false,
+    //     resizable: false,
+    //     modalParentIdentity: fin.me.identity
+    // });
 
-    fin.me.on('close-requested', async (event) => {
-        const viewsToDestroy = await fin.me.getCurrentViews();
-        viewsToDestroy.forEach(view => {
-            view.triggerBeforeUnload();
-        });
-    });
+    // beforeUnloadDialog.on('blurred', () => {
+    //     beforeUnloadDialog.focus();
+    // })
 
-    const finishedGoingThroughViews = async () => {
-        const views = await fin.me.getCurrentViews();
-        const viewNamesArr = views.map(view => view.name);
-        const processedViews = [...preventedViews, ...notPreventedViews];
-        return checker(viewNamesArr, processedViews) && preventedViews.length > 0;
-    }
+    // beforeUnloadDialog.on('close-requested', async () => {
+    //     await beforeUnloadDialog.hide();
+    //     willPreventUnload = [];
+    //     beforeUnloadFired = []
+    // });
 
-    const checker = (arr, target) => target.every(v => arr.includes(v));
+    // fin.me.on('close-requested', async (event) => {
+    //     // windowClose = true;
+    //     currentViews = await fin.me.getCurrentViews();
 
-    fin.me.on('view-before-unload-not-needed', async (event) => {
-        console.log('UNLOAD NOT NEEDED');
-        console.log(event);
-        notPreventedViews.push(event.viewIdentity.name);
+    //     const triggerBeforeUnloadOnAllViews = currentViews.map(async (view) => {
+    //         const unloadPrevented = await view.triggerBeforeUnload();
+            
+    //         if (unloadPrevented) {
+    //             willPreventUnload.push(view.identity.name);
+    //         }
 
-        if (await finishedGoingThroughViews()) {
-            const winIdString = JSON.stringify(fin.me.identity);
-            const queryString = new URLSearchParams(`winId=${winIdString}`);
-            const baseUrl = window.location.href.replace('platform-window', 'before-unload-dialog');
-            const url = `${baseUrl}?${queryString.toString()}`;
-            await fin.Window.create({ name: 'before-unload-dialog', url });
-        }
-        
-    });
+    //         beforeUnloadFired.push(view.identity.name);
+    //     });
 
-    fin.me.on('view-will-prevent-unload', async (event) => {
-        console.log('UNLOAD PREVENTED');
-        console.log(event);
-        preventedViews.push(event.viewIdentity.name);
+    //     await Promise.all(triggerBeforeUnloadOnAllViews);
 
-        if (await finishedGoingThroughViews()) {
-            const winIdString = JSON.stringify(fin.me.identity);
-            const queryString = new URLSearchParams(`winId=${winIdString}`);
-            const baseUrl = window.location.href.replace('platform-window', 'before-unload-dialog');
-            const url = `${baseUrl}?${queryString.toString()}`;
-            await fin.Window.create({ name: 'before-unload-dialog', url });
-        }
-    });
+    //     // fin.me.close(true);
+
+    //     if (willPreventUnload.length > 0) { 
+    //         launchDialog();
+    //     }
+    // });
+
+    // fin.me.on('view-destroyed', async () => {
+    //     currentViews = await fin.me.getCurrentViews();
+
+    //     if (currentViews.length === 0) {
+    //         fin.me.close(true);
+    //     }
+    // });
+
+    // const checker = (arr, target) => target.every(v => arr.includes(v));
+
+    // const finishedGoingThroughViews = async () => {
+    //     const viewNamesArr = currentViews.map(v => v.identity.name);
+    //     return checker(beforeUnloadFired, viewNamesArr) && willPreventUnload.length > 0;
+    // }
+
+    // const launchDialog = async () => {
+    //     const winIdString = JSON.stringify(fin.me.identity);
+    //     const willPreventUnloadString = JSON.stringify({ willPreventUnload });
+    //     const queryString = new URLSearchParams(`winId=${winIdString}&willPreventUnload=${willPreventUnloadString}`);
+    //     const baseUrl = window.location.href.replace('platform-window', 'before-unload-dialog');
+    //     const url = `${baseUrl}?${queryString.toString()}`;
+    //     // await fin.Window.create({ name: 'before-unload-dialog', url });
+    //     await beforeUnloadDialog.navigate(url);
+    //     await beforeUnloadDialog.show();
+    // }
 
     // Before .50 AI version this may throw...
     await fin.Platform.Layout.init({ containerId: CONTAINER_ID });
