@@ -11,31 +11,38 @@
 <body>
     <h1 id="view-title">View</h1>
     <button onclick="triggerBeforeUnload()">Trigger Before Unload</button>
+    <button onclick="removeBeforeUnload()">Remove Before Unload Listener</button>
     <script>
+        const params = new URLSearchParams(window.location.search);
+        const viewTitle = params.get('title');
+        document.title = viewTitle;
+        console.log(viewTitle);
+
         async function triggerBeforeUnload() {
             const willPreventUnload = await fin.me.triggerBeforeUnload();
             console.log(willPreventUnload);
         }
 
+        function beforeUnloadListener(e) {
+            console.log('BEFOREUNLOAD HANDLER FIRED FROM: ' + viewTitle);
+            
+            if (viewTitle === 'view1' || viewTitle === 'view3') {
+                e.preventDefault();
+                e.returnValue = '';
+            }
+        }
+
+        function removeBeforeUnload() {
+            window.removeEventListener('beforeunload', beforeUnloadListener);
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
-            const params = new URLSearchParams(window.location.search);
-            const viewTitle = params.get('title');
-            document.title = viewTitle;
             const viewHeader = document.querySelector('#view-title');
             viewHeader.innerHTML = viewTitle;
-
-            if (viewTitle === 'view1' || viewTitle === 'view3') {
-                window.addEventListener('beforeunload', function (e) {
-                    console.log('BEFOREUNLOAD HANDLER FIRED FROM: ' + viewTitle);
-                    e.preventDefault();
-                    e.returnValue = '';
-                });
-            }
-
-            if (viewTitle === 'view2') {
-                window.addEventListener('beforeunload', function (e) {
-                    console.log('BEFOREUNLOAD HANDLER FIRED FROM: ' + viewTitle);
-                });
+            console.log(viewTitle);
+            console.log(viewTitle !== 'view4');
+            if (viewTitle !== 'view4') {
+                window.addEventListener('beforeunload', beforeUnloadListener);
             }
         });
     </script>

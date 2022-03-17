@@ -42,19 +42,6 @@
             });
         }
 
-        // async function destroyViews() {
-        //     const winIdString = params.get('winId');
-        //     const winId = JSON.parse(winIdString);
-        //     const win = fin.Window.wrapSync(winId);
-        //     const platform = fin.Platform.getCurrentSync();
-        //     const viewsToDestroy = await win.getCurrentViews();
-        //     const destroyViews = viewsToDestroy.map(async (view) => {
-        //         await platform.closeView(view.identity);
-        //     });
-        //     await Promise.all(destroyViews);
-        //     window.close(true);
-        // }
-
         async function goAheadWithClose() { 
             try {
                 await fin.InterApplicationBus.publish('user-decision', true);
@@ -67,10 +54,6 @@
         document.addEventListener('DOMContentLoaded', () => {
             populatePreventedViews();
         });
-
-        // fin.InterApplicationBus.subscribe({ uuid: '*' }, 'view-prevent-unload', (msg) => {
-
-        // });
     </script>
 </body>
 

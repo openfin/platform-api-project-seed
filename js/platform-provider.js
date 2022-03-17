@@ -24,10 +24,10 @@ const overrideCallback = async (PlatformProvider) => {
         async getUserDecisionForBeforeUnload(payload) {
             console.log('getUserDecisionForBeforeUnload override', payload);
             const { windowClose, viewsPreventingUnload, viewsNotPreventingUnload, windowId } = payload;
-            const decision = await launchDialog(viewsPreventingUnload, windowId);
-            console.log('decision', decision);
 
-            if (decision) {
+            const continueWithClose = await launchDialog(viewsPreventingUnload, windowId);
+
+            if (continueWithClose) {
                 return { windowShouldClose: windowClose, viewsToClose: [...viewsNotPreventingUnload, ...viewsPreventingUnload] };
             } else {
                 return { windowShouldClose: false, viewsToClose: [] };
