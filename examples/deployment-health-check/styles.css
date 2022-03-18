@@ -59,6 +59,7 @@ button {
     color: var(--color-btn-text);
     background-color: var(--color-btn);
     font-size: 18px;
+    cursor: pointer;
 }
 ul {
     list-style-type: none;

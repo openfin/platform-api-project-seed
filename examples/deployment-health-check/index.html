@@ -3,79 +3,53 @@
     <title>OpenFin Deployment Health Check</title>
     <link rel="shortcut icon" type="image/ico" href="favicon.ico">
     <link rel="stylesheet" type="text/css" href="styles.css">
-    <script src="pinger.js"></script>
+    <script src="https://cdn.openfin.co/tools/deployment/1.0.0/openfin-deployment.js"></script>
     <script>
     document.addEventListener('DOMContentLoaded', async function () {
         const resultsDiv = document.getElementById('results');
-        const manifestDiv = document.getElementById('manifest');
-        const purl = new URL(window.location.href);
-        const manifURL = purl.searchParams.get('manifest');
         const rerunBtn = document.getElementById('rerun');
-        const manStat = document.getElementById('manifestStatus');
-        const appStat = document.getElementById('appStatus');
 
         // add cloud url status item
-        function addURLItem(idx, urlInfo) {
+        function addEndpointItem(idx, urlInfo) {
             const li = document.createElement('li');
             li.setAttribute('id', `url_${idx}`);
             const led = document.createElement('led');
             li.appendChild(led);
             const msg = document.createElement('span');
-            msg.setAttribute('title', urlInfo.href);
-            msg.innerHTML = urlInfo.description;
+            msg.setAttribute('title', urlInfo.url);
+            msg.innerHTML = urlInfo.displayName;
+            li.classList.add((urlInfo.success ? 'good' : 'bad'));
             li.appendChild(msg);
             resultsDiv.appendChild(li);
         }
-        // create a good url handler
-        function urlHandler(idx, passFail, msg) {
-            const li = document.getElementById(`url_${idx}`);
-            li.classList.add((passFail ? 'good' : 'bad'));
-            const led = li.querySelector('led');
-            led.setAttribute('title', msg.version);
+
+        function launchOpenFinApp() {
+            window.open('fins://s3.amazonaws.com/ftp.openfin.co/Deployment/Deploymentapp.json');
         }
 
-        function resetManifestResults() {
-            manifestDiv.classList.add('noshow');
-            manStat.classList.add('noshow');
-            appStat.classList.add('noshow');
-            manStat.querySelector('span').innerHTML = 'Checking Manifest';
-            appStat.querySelector('span').innerHTML = 'Checking Application';
-        }
-
-        function manifestHandler(result) {
-            const manMsg = manStat.querySelector('span');
-            manMsg.setAttribute('title', result.msg);
-            manMsg.innerHTML = result.url;
-            if (result.status === 'ok') {
-                manStat.classList.add('good');
-                appStat.classList.remove('noshow');
-            } else {
-                manStat.classList.add('bad');
-            }
-            manStat.classList.remove('noshow');
-        }
-
-        function appHandler(result) {
-            const manMsg = appStat.querySelector('span');
-            manMsg.setAttribute('title', result.msg);
-            manMsg.innerHTML = result.url;
-            if (result.status === 'ok') {
-                appStat.classList.add('good');
-            } else {
-                appStat.classList.add('bad');
+        function addProtocolItem(supportInfo, endpointCheckResult) {
+            const allGood = endpointCheckResult.every((currentValue) => currentValue.success); 
+            if (allGood && supportInfo.isFinsDetectionSupported && supportInfo.isFinsSupported) {
+                const li = document.createElement('li');
+                li.setAttribute('id', 'protocol_support');
+                const led = document.createElement('led');
+                li.appendChild(led);
+                const msg  = document.createElement('button')
+                msg.textContent = "RVM detected, launch desktop application";
+                msg.onclick = launchOpenFinApp;
+                li.classList.add('good');
+                li.appendChild(msg);
+                resultsDiv.appendChild(li);
             }
         }
 
-        function runIt() {
+        async function runIt() {
             resultsDiv.innerHTML = '';
-            OpenFinPinger.phoneHome(addURLItem, urlHandler);
+            const endpointCheckResult = await openfinDeployment.checkEndpoints();
+            endpointCheckResult.forEach((status, idx) => addEndpointItem(idx, status))
 
-            // test the manifest url if it's present
-            resetManifestResults();
-            if (manifURL && manifURL.length > 0) {
-                manifestDiv.classList.remove('noshow');
-                OpenFinPinger.pingManifest(manifURL, manifestHandler, appHandler);
-            }
+            const finsProtocolResult = await openfinDeployment.checkForFinsProtocol();
+            addProtocolItem(finsProtocolResult, endpointCheckResult);
         }
 
         rerunBtn.addEventListener('click', runIt);
@@ -92,10 +66,6 @@
         </header>
         <content>
             <ul id="results"></ul>
-            <ul id="manifest" class="noshow">
-                <li id="manifestStatus" class="noshow"><led></led><span></span></li>
-                <li id="appStatus" class="noshow"><led></led><span></span></li>
-            </ul>    
         </content>
         <footer>
             <button id="rerun">Run Again</button>
