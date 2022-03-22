@@ -9,9 +9,7 @@
 </head>
 
 <body>
-    <div>
-        <p>Are you sure you want to close this window?</p>
-        <p>Changes you made may not be saved by: </p>
+    <div id="text">
     </div>
     <div id="views"></div>
     <div>
@@ -42,6 +40,28 @@
             });
         }
 
+        function populate() {
+            const closeType = params.get('closeType');
+
+            if (closeType === 'view') {
+                const p = document.createElement('p');
+                p.innerHTML = 'Are you sure you want to close this view? It may have unsaved changes.';
+                document.querySelector('#text').appendChild(p);
+            }
+
+            if (closeType === 'window') {
+                const p1 = document.createElement('p');
+                p1.innerHTML = 'Are you sure you want to close this window?';
+                document.querySelector('#text').appendChild(p1);
+
+                const p2 = document.createElement('p');
+                p2.innerHTML = 'The following views may have unsaved changes:';
+                document.querySelector('#text').appendChild(p2);
+
+                populatePreventedViews();
+            }
+        }
+
         async function goAheadWithClose() { 
             try {
                 await fin.InterApplicationBus.publish('user-decision', true);
@@ -52,7 +72,7 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            populatePreventedViews();
+            populate();
         });
     </script>
 </body>

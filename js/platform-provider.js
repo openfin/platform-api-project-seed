@@ -1,9 +1,9 @@
-const launchDialog = async (viewsPreventingUnload, windowId) => {
+const launchDialog = async (viewsPreventingUnload, windowId, closeType) => {
     return new Promise(async (resolve, reject) => {
         fin.InterApplicationBus.subscribe({ uuid: '*' }, 'user-decision', resolve).catch(reject);
 
         const views = { views: viewsPreventingUnload };
-        const queryString = new URLSearchParams(`views=${JSON.stringify(views)}`);
+        const queryString = new URLSearchParams(`views=${JSON.stringify(views)}&closeType=${closeType}`);
         const baseUrl = window.location.href.replace('provider', 'before-unload-dialog');
         console.log('baseUrl', baseUrl);
         const url = `${baseUrl}?${queryString.toString()}`;
@@ -23,9 +23,9 @@ const overrideCallback = async (PlatformProvider) => {
     class MyOverride extends PlatformProvider {
         async getUserDecisionForBeforeUnload(payload) {
             console.log('getUserDecisionForBeforeUnload override', payload);
-            const { windowClose, viewsPreventingUnload, viewsNotPreventingUnload, windowId } = payload;
+            const { windowClose, viewsPreventingUnload, viewsNotPreventingUnload, windowId, closeType } = payload;
 
-            const continueWithClose = await launchDialog(viewsPreventingUnload, windowId);
+            const continueWithClose = await launchDialog(viewsPreventingUnload, windowId, closeType);
 
             if (continueWithClose) {
                 return { windowShouldClose: windowClose, viewsToClose: [...viewsNotPreventingUnload, ...viewsPreventingUnload] };
