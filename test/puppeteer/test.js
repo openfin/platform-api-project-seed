@@ -12,6 +12,10 @@ const config = {
     manifestURL: 'http://localhost:5555/app.json'
 }
 
+async function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 async function getWindowByTitle(title) {
     let matchPage;
     while (!matchPage) {
@@ -23,11 +27,12 @@ async function getWindowByTitle(title) {
                 break;
             }
         }
+        await sleep(1000);
     }
     return matchPage;
 }
 
-const beforeFunc = async function() {
+const beforeFunc = async function() { 
     const binary = path.resolve('./RunOpenFin.bat');
     const rvmArgs = [];
     rvmArgs.push(`--config=${config.manifestURL}`);
@@ -63,17 +68,18 @@ const afterFunc = async function() {
     console.log('done with after hook');
 };
 
-describe('OpenFin Version', function() {
+describe('Click Re-Run button in Health Check page', function() {
     const healthCheckTitle = 'OpenFin Deployment Health Check';
-    this.timeout(0);
+    this.timeout(50000);
 
     before(beforeFunc);
     after(afterFunc);
 
     it('should match the version in the app manifest', async function() {
         let page = await getWindowByTitle(healthCheckTitle);
-        const result = await page.evaluate((x) => {
-            return fin.System.getVersion();
+        const title = await page.title();
+        const result = await page.evaluate(async () => {
+            return await fin.System.getVersion();
           });
         assert.ok(typeof result === 'string');
     });
@@ -112,6 +118,4 @@ describe('OpenFin Version', function() {
             });    
         });
      });
-
-
 });
