@@ -8,3 +8,9 @@ OpenFinRVM.exe
 OpenFin
 
 local.json
+
+**/.idea
+*.iml
+*.log
+
+build

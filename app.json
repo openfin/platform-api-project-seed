@@ -1,7 +1,7 @@
 {
     "runtime": {
         "arguments": "--v=1 --inspect",
-        "version": "canary"
+        "version": "stable"
     },
     "shortcut": {
         "company": "OpenFin",
@@ -27,7 +27,11 @@
         },
         "defaultWindowOptions": {
             "url": "http://localhost:5555/platform-window.html",
-            "contextMenu": true,
+            "contextMenuSettings": {
+                "reload": false,
+                "devtools": false,
+                "enable": false
+            },
             "defaultWidth": 900,
             "defaultHeight": 720,
             "defaultLeft": 0,
@@ -56,6 +60,7 @@
     "snapshot": {
         "windows": [
             {
+                "name": "Seed Window",
                 "layout": {
                     "content": [
                         {
@@ -68,6 +73,14 @@
                                     "componentState": {
                                         "processAffinity": "ps_1",
                                         "url": "https://cdn.openfin.co/health/deployment/index.html"
+                                    }
+                                },
+                                {
+                                    "type": "component",
+                                    "componentName": "view",
+                                    "componentState": {
+                                        "processAffinity": "ps_1",
+                                        "url": "https://google.com"
                                     }
                                 }
                             ]
