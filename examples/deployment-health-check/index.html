@@ -7,30 +7,49 @@
     <script>
     document.addEventListener('DOMContentLoaded', async function () {
         const resultsDiv = document.getElementById('results');
-        const manifestDiv = document.getElementById('manifest');
-        const purl = new URL(window.location.href);
-        const manifURL = purl.searchParams.get('manifest');
         const rerunBtn = document.getElementById('rerun');
-        const manStat = document.getElementById('manifestStatus');
-        const appStat = document.getElementById('appStatus');
 
-        function addEndpointItem(status) {
+        // add cloud url status item
+        function addEndpointItem(idx, urlInfo) {
             const li = document.createElement('li');
-            li.setAttribute('id', `url_${status.id}`);
-            li.classList.add(status.success ? 'good' : 'bad');
+            li.setAttribute('id', `url_${idx}`);
             const led = document.createElement('led');
             li.appendChild(led);
             const msg = document.createElement('span');
-            msg.setAttribute('title', status.url);
-            msg.innerHTML = status.displayName;
+            msg.setAttribute('title', urlInfo.url);
+            msg.innerHTML = urlInfo.displayName;
+            li.classList.add((urlInfo.success ? 'good' : 'bad'));
             li.appendChild(msg);
             resultsDiv.appendChild(li);
+        }
+
+        function launchOpenFinApp() {
+            window.open('fins://s3.amazonaws.com/ftp.openfin.co/Deployment/Deploymentapp.json');
+        }
+
+        function addProtocolItem(supportInfo, endpointCheckResult) {
+            const allGood = endpointCheckResult.every((currentValue) => currentValue.success); 
+            if (allGood && supportInfo.isFinsDetectionSupported && supportInfo.isFinsSupported) {
+                const li = document.createElement('li');
+                li.setAttribute('id', 'protocol_support');
+                const led = document.createElement('led');
+                li.appendChild(led);
+                const msg  = document.createElement('button')
+                msg.textContent = "RVM detected, launch desktop application";
+                msg.onclick = launchOpenFinApp;
+                li.classList.add('good');
+                li.appendChild(msg);
+                resultsDiv.appendChild(li);
+            }
         }
 
         async function runIt() {
             resultsDiv.innerHTML = '';
             const endpointCheckResult = await openfinDeployment.checkEndpoints();
-            endpointCheckResult.forEach((status) => addEndpointItem(status))
+            endpointCheckResult.forEach((status, idx) => addEndpointItem(idx, status))
+
+            const finsProtocolResult = await openfinDeployment.checkForFinsProtocol();
+            addProtocolItem(finsProtocolResult, endpointCheckResult);
         }
 
         rerunBtn.addEventListener('click', runIt);
@@ -47,10 +66,6 @@
         </header>
         <content>
             <ul id="results"></ul>
-            <ul id="manifest" class="noshow">
-                <li id="manifestStatus" class="noshow"><led></led><span></span></li>
-                <li id="appStatus" class="noshow"><led></led><span></span></li>
-            </ul>    
         </content>
         <footer>
             <button id="rerun">Run Again</button>
