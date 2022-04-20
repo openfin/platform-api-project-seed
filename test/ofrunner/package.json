@@ -1,0 +1,13 @@
+{
+    "name": "platform-example",
+    "version": "1.0.0",
+    "scripts": {
+        "test": "openfin-test-runner http://localhost:5555/app.json ./build/*.spec.js",
+        "build": "tsc"
+    },
+    "devDependencies": {
+        "@types/mocha": "^9.1.0",
+        "mocha": "^9.2.2",
+        "typescript": "4.6.3"
+    }
+}

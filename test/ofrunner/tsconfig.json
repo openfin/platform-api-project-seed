@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+      "baseUrl": ".",
+      "outDir": "./build",
+      "allowJs": true,
+      "module": "commonjs",
+      "moduleResolution": "node",
+      "allowSyntheticDefaultImports": true,
+      "esModuleInterop": true,
+      "target": "es2020",
+      "types" : []
+    },
+    "include": ["./*.ts"],
+    "exclude": ["node_modules"]
+}
+
