@@ -39,7 +39,7 @@ describe('Close Health Check page', function() {
         console.log('lmTabs', lmTabs);
         return new Promise((resolve) => {
             lmTabs.forEach(async (element) => {
-                const title = await WebDriver.raw().getElementAttribute(element, 'title');
+                const title = await WebDriver.elementGetAttribute(element, 'title');
                 if (title === healthCheckTitle) {
                     const closeDiv = await WebDriver.findElementsFromElementByPath(element, '//div[@class="lm_close_tab"]');
                     console.log('lmTabs closeDiv', closeDiv);
