@@ -1,18 +1,26 @@
 {
     "runtime": {
-        "arguments": "--v=1 --inspect",
-        "version": "stable"
+        "arguments": "--v=1 --inspect --enable-mesh --autoplay-policy=no-user-gesture-required",
+        "version": "22.94.66.4"
     },
     "shortcut": {
         "company": "OpenFin",
-        "description": "Platform app seed local",
+        "description": "bidfx_channel_issues",
         "icon": "https://openfin.github.io/golden-prototype/favicon.ico",
-        "name": "Platform app seed local"
+        "name": "bidfx_channel_issues"
     },
+    "appAssets" : [
+        {
+            "alias" : "dotnet-provider",
+            "src" : "http://localhost:8080/bidfx_channel_issues.zip",
+            "target" : "BidFXChannelIssues.exe",
+            "version": "1.0.0"
+        }
+    ],
     "platform": {
-        "uuid": "platform_customization_local",
+        "uuid": "bidfx_channel_issues",
         "applicationIcon": "https://openfin.github.io/golden-prototype/favicon.ico",
-        "autoShow": false,
+        "autoShow": true,
         "providerUrl": "http://localhost:5555/provider.html",
         "permissions": {
             "ExternalWindow": {
