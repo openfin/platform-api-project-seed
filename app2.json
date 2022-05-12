@@ -1,0 +1,128 @@
+{
+    "runtime": {
+        "arguments": "--v=1 --inspect",
+        "version": "canary"
+    },
+    "platform": {
+        "_viewProcessAffinityStrategy": "same",
+        "uuid": "platform_customization_local-2",
+        "icon": "https://openfin.github.io/golden-prototype/favicon.ico",
+        "autoShow": true,
+        "providerUrl": "http://localhost:5555/provider2.html",
+        "_apiDiagnostics": false,
+        "permissions": {
+            "ExternalWindow": {
+              	"wrap": true
+            },
+            "System": {
+                "getAllExternalWindows": true,
+                "launchExternalProcess": true,
+                "readRegistryValue": false,
+                "terminateExternalProcess": true
+            }
+        },
+        "defaultWindowOptions": {
+            "url": "http://localhost:5555/platform-window.html",
+            "contextMenu": true,
+            "defaultWidth": 600,
+            "defaultHeight": 600,
+            "defaultLeft": 0,
+            "defaultTop": 0,
+            "saveWindowState": false,
+            "showBackgroundImages": true,
+            "backgroundThrottling": true,
+            "minHeight": 445,
+            "minWidth": 354
+        },
+        "defaultViewOptions": {
+            "experimental": {
+                "childWindows": true
+            },
+            "fdc3InteropApi": "1.2",
+            "accelerator": { 
+                "zoom": true 
+            }
+        },
+        "commands": [
+            {
+                "command": "stack.nextTab",
+                "keys": "Ctrl+Tab"
+            }
+        ],
+        "interopBrokerConfiguration": {
+            "contextGroups": [
+                            {
+                "id": "green",
+                "displayMetadata": {
+                    "color": "#00CC88",
+                    "name": "green"
+                                }
+                            },
+                                        {
+                "id": "purple",
+                "displayMetadata": {
+                    "color": "#8C61FF",
+                    "name": "purple"
+                                            }
+                                        },
+                                        {
+                "id": "orange",
+                "displayMetadata": {
+                    "color": "#FF8C4C",
+                    "name": "orange"
+                                            }
+                                        },
+                            {
+                "id": "red",
+                "displayMetadata": {
+                    "color": "#FF5E60",
+                    "name": "red"
+                                }
+                            },
+                            {
+                "id": "pink",
+                "displayMetadata": {
+                    "color": "#FF8FB8",
+                    "name": "pink"
+                                }
+                            },
+                            {
+                "id": "yellow",
+                "displayMetadata": {
+                    "color": "#E9FF8F",
+                    "name": "yellow"
+                                }
+                            }
+                        ]
+        }
+    },
+    "snapshot": {
+        "windows": [
+            {
+                "name": "foo2",
+                "layout": {
+                    "content": [
+                        {
+                            "type": "stack",
+                            "content": [                             
+                                {
+                                    "type": "component",
+                                    "componentName": "view",
+                                    "componentState": {
+                                        "url": "http://localhost:5555/color-linking.html",
+                                        "interop": {
+                                            "contextDeclaration": [
+                                                "instrument",
+                                                "country"
+                                            ]
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}

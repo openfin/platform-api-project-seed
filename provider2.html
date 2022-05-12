@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>OpenFin Template</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="module" src="js/platform-provider2.js"></script>
+</head>
+
+<body>
+    <div>
+        <p id="uuid"></p>
+        Custom Provider...
+    </div>
+</body>
+
+<script>
+    const p = document.querySelector('#uuid');
+    p.innerHTML = fin.me.uuid;
+</script>
+
+</html>
