@@ -10,6 +10,7 @@ class ColorPicker extends HTMLElement {
     render = () => {
         const content = html`
         <fieldset>
+            <p id="uuid"></p>
             <p>
                 INSTRUMENT
             </p>
@@ -68,6 +69,9 @@ window.addEventListener('DOMContentLoaded', async () => {
     }
 
     fin.me.interop.addContextHandler(handleInteropChange);
+    // fdc3.addContextListener(handleInteropChange);
+    // fdc3.addContextListener(null, handleInteropChange);
+    // fdc3.addContextListener('instrument', handleInstrumentChange);
 
     function handleInstrumentChange(contextInfo) {
         // throw new Error(`testing errors in handlers ${JSON.stringify(contextInfo)}`)
@@ -82,6 +86,9 @@ window.addEventListener('DOMContentLoaded', async () => {
         console.log('country');
         document.getElementById('country').innerText = id.ISOALPHA3
     }
+
+    const uuid = document.querySelector('#uuid');
+    uuid.innerHTML = fin.me.uuid;
 
 
     // fin.me.interop.addContextHandler(handleInstrumentChange, 'instrument')

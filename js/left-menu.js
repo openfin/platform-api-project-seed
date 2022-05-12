@@ -18,7 +18,6 @@ class LeftMenu extends HTMLElement {
             {
                 url: window.location.href.replace('platform-window', 'color-linking'),
                 printName: 'Color Linking',
-                processAffinity: 'cv_1',
                 interop: {
                     contextDeclaration: [
                         "instrument",
@@ -29,7 +28,6 @@ class LeftMenu extends HTMLElement {
             {
                 url: window.location.href.replace('platform-window', 'color-linking'),
                 printName: 'Replace Me With Your App',
-                processAffinity: 'cv_1',
                 interop: {
                     contextDeclaration: [
                         "instrument",

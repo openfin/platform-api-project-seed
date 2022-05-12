@@ -1,19 +1,21 @@
 {
     "runtime": {
         "arguments": "--v=1 --inspect",
-        "version": "alpha-v19"
+        "version": "canary"
     },
     "shortcut": {
         "company": "OpenFin",
         "description": "Platform app seed local",
-        "icon": "https://openfin.github.io/golden-prototype/favicon.ico",
+        "_icon": "https://openfin.github.io/golden-prototype/favicon.ico",
         "name": "Platform app seed local"
     },
     "platform": {
+        "_viewProcessAffinityStrategy": "same",
         "uuid": "platform_customization_local",
-        "applicationIcon": "https://openfin.github.io/golden-prototype/favicon.ico",
-        "autoShow": false,
+        "icon": "https://openfin.github.io/golden-prototype/favicon.ico",
+        "autoShow": true,
         "providerUrl": "http://localhost:5555/provider.html",
+        "_apiDiagnostics": false,
         "permissions": {
             "ExternalWindow": {
               	"wrap": true
@@ -41,6 +43,10 @@
         "defaultViewOptions": {
             "experimental": {
                 "childWindows": true
+            },
+            "fdc3InteropApi": "1.2",
+            "accelerator": { 
+                "zoom": true 
             }
         },
         "commands": [
@@ -99,6 +105,7 @@
     "snapshot": {
         "windows": [
             {
+                "name": "foo",
                 "layout": {
                     "content": [
                         {
@@ -108,7 +115,6 @@
                                     "type": "component",
                                     "componentName": "view",
                                     "componentState": {
-                                        "processAffinity": "ps_1",
                                         "url": "http://localhost:5555/color-linking.html",
                                         "interop": {
                                             "contextDeclaration": [

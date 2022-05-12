@@ -29,6 +29,7 @@ const manifestFile = fs.existsSync(localJson) ? localJson : appJson;
 
 //To Launch the OpenFin Application we need a manifestUrl.
 const manifestUrl = `http://localhost:${serverParams.port}/${manifestFile}`;
+const manifestUrl2 = `http://localhost:${serverParams.port}/app2.json`;
 
 //Start the server server
 const server = httpServer.createServer(serverParams);
@@ -52,3 +53,26 @@ server.listen(serverParams.port);
         console.error(err);
     }
 })();
+
+setTimeout(() => {
+    (async() => {
+        try {
+            console.log('Launching application from:', manifestUrl2);
+            //Once the server is running we can launch OpenFin and retrieve the port.
+            const port = await launch({ manifestUrl: manifestUrl2 });
+    
+            //We will use the port to connect from Node to determine when OpenFin exists.
+            const fin = await connect({
+                uuid: 'server-connection-2', //Supply an addressable Id for the connection
+                address: `ws://localhost:${port}`, //Connect to the given port.
+                nonPersistent: true //We want OpenFin to exit as our application exists.
+            });
+    
+            //Once OpenFin exists we shut down the server.
+            fin.once('disconnected', process.exit);
+        } catch (err) {
+            console.error(err);
+        }
+    })();
+}, 3000);
+
