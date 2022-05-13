@@ -6,8 +6,8 @@
         "build": "tsc"
     },
     "devDependencies": {
-        "@openfin/automation-cli": "0.0.1",
-        "@openfin/automation-helpers": "0.0.2",
+        "@openfin/automation-cli": "0.1.0",
+        "@openfin/automation-helpers": "0.1.0",
         "@types/mocha": "^9.1.0",
         "mocha": "^9.2.2",
         "typescript": "4.6.3"

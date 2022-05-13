@@ -20,7 +20,7 @@ describe('Click Re-Run button in Health Check page', function() {
 
         it("Click Run Again button", async () => {
             const rerunButton = await WebDriver.findElementById("rerun");
-            WebDriver.elementClick(rerunButton);
+            await rerunButton.click();
         });
     });
 
@@ -39,11 +39,11 @@ describe('Close Health Check page', function() {
         console.log('lmTabs', lmTabs);
         return new Promise((resolve) => {
             lmTabs.forEach(async (element) => {
-                const title = await WebDriver.elementGetAttribute(element, 'title');
-                if (title === healthCheckTitle) {
-                    const closeDiv = await WebDriver.findElementsFromElementByPath(element, '//div[@class="lm_close_tab"]');
+                const title = await element.getAttribute('title');
+                if (title === healthCheckTitle) {                    
+                    const closeDiv = await element.findElements('xpath', '//div[@class="lm_close_tab"]');
                     console.log('lmTabs closeDiv', closeDiv);
-                    await WebDriver.elementClick(closeDiv[0]);
+                    await closeDiv[0].click();
                     resolve();
                 }
             });    
