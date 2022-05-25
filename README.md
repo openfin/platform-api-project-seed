@@ -1,6 +1,18 @@
-# Platform API Project Seed
+# Platform API Project Seed for Context Menu Testing
 
-This project seed includes the following [Platform API](https://openfin.co/platform-api) capabilites:
+This is a branch of the Platform API Project Seed intended to test the implementation of electron context menus.
+
+Because this requires a runtime change, this branch requires that the application run from a runtime dist.  This is too big to include in this git repository, and so some manual installation is required:
+
+1. [Download the runtime dist](https://openfin.slack.com/files/U0HLPFR39/F03GKV5RWS1/dist.zip) (if needed, poke Sim for it), and place it in the root directory.
+2. Replace the app.asar under `dist/resources` with the one from the repository root.
+3. Start the platform API project seed per the usual method (see README below).
+
+For a description of the expected behavior, see the user-facing options spec (included in the root repository), or the [implementation plan on CODA](https://coda.io/d/Engineering-Home_dkhu116g0na/Context-Menu-Testing-Rollout-Plan_su8z9#_lu5uZ).
+
+The content below is the ordinary repository README:
+
+This project seed includes the following [Platform API](https://openfin.co/platform-api) capabilities:
 
 * Examples of the configuration required to use the Platform API and apply customizations
 * Usage of the Platform API to group, tab, and rearrange application windows
