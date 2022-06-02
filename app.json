@@ -1,7 +1,7 @@
 {
     "runtime": {
         "arguments": "--v=1 --inspect",
-        "version": "stable-v19"
+        "version": "canary"
     },
     "shortcut": {
         "company": "OpenFin",
@@ -41,9 +41,6 @@
         },
         "defaultViewOptions": {
             "spellCheck": true,
-            "contextMenuSettings": {
-                "enable": true
-            },
             "experimental": {
                 "childWindows": true,
                 "analytics": true
@@ -71,7 +68,7 @@
                                     "componentName": "view",
                                     "componentState": {
                                         "processAffinity": "ps_1",
-                                        "url": "https://cdn.openfin.co/health/deployment/index.html"
+                                        "url": "https://distill.pub/2017/feature-visualization/"
                                     }
                                 },
                                 {
