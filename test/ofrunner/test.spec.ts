@@ -36,17 +36,11 @@ describe('Close Health Check page', function() {
 
     it("Click Close tab button", async () => {
         const lmTabs = await WebDriver.findElementsByPath('//li[contains(@class, "lm_tab")]');
-        console.log('lmTabs', lmTabs);
-        const prop = await lmTabs[0].getProperty('title');
-        console.log('lmTab prop', prop);
         return new Promise((resolve) => {
             lmTabs.forEach(async (element) => {
-                console.log('lmTab getAttribute');
                 const title = await element.getAttribute('title');
-                console.log('lmTab', title);
                 if (title === healthCheckTitle) {                    
                     const closeDiv = await element.findElements('xpath', '//div[@class="lm_close_tab"]');
-                    console.log('lmTabs closeDiv', closeDiv);
                     await closeDiv[0].click();
                     resolve();
                 }
