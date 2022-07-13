@@ -9,7 +9,7 @@ import {  WebDriver } from '@openfin/automation-helpers';
 describe('Click Re-Run button in Health Check page', function() {
         const healthCheckTitle = 'OpenFin Deployment Health Check';
         it(`Switch to ${healthCheckTitle}`, async () => {
-            await WebDriver.waitForWindow(healthCheckTitle, 5000);
+            await WebDriver.waitForWindow('title', healthCheckTitle, 5000);
             const title = await WebDriver.getTitle();
             assert.strictEqual(title,  healthCheckTitle);
         });
@@ -29,7 +29,7 @@ describe('Close Health Check page', function() {
     const healthCheckTitle = 'OpenFin Deployment Health Check';
     const providerPageTitle = 'Platform Window Template';
     it(`Switch to ${providerPageTitle}`, async () => {
-        await WebDriver.switchToWindow(providerPageTitle);
+        await WebDriver.switchToWindow('title', providerPageTitle);
         const title = await WebDriver.getTitle();
         assert.equal(title,  providerPageTitle);
     });
@@ -37,9 +37,13 @@ describe('Close Health Check page', function() {
     it("Click Close tab button", async () => {
         const lmTabs = await WebDriver.findElementsByPath('//li[contains(@class, "lm_tab")]');
         console.log('lmTabs', lmTabs);
+        const prop = await lmTabs[0].getProperty('title');
+        console.log('lmTab prop', prop);
         return new Promise((resolve) => {
             lmTabs.forEach(async (element) => {
+                console.log('lmTab getAttribute');
                 const title = await element.getAttribute('title');
+                console.log('lmTab', title);
                 if (title === healthCheckTitle) {                    
                     const closeDiv = await element.findElements('xpath', '//div[@class="lm_close_tab"]');
                     console.log('lmTabs closeDiv', closeDiv);
@@ -54,7 +58,7 @@ describe('Close Health Check page', function() {
 describe('Close App', function() {
     const providerUrl = 'http://localhost:5555/provider.html';
     it(`Switch to ${providerUrl}`, async () => {
-        await WebDriver.switchToWindowByUrl(providerUrl);
+        await WebDriver.switchToWindow('url', providerUrl);
         const url = await WebDriver.getUrl();
         assert.strictEqual(url,  providerUrl);
         await WebDriver.callMethod('fin.desktop.System.exit', undefined, false);

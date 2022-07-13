@@ -8,7 +8,8 @@
       "allowSyntheticDefaultImports": true,
       "esModuleInterop": true,
       "target": "es2020",
-      "types" : []
+      "types" : [],
+      "sourceMap": true
     },
     "include": ["./*.ts"],
     "exclude": ["node_modules"]
