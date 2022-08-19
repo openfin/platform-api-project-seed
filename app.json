@@ -29,8 +29,8 @@
             "url": "http://localhost:5555/platform-window.html",
             "contextMenuSettings": {
                 "reload": false,
-                "devtools": false,
-                "enable": false
+                "devtools": true,
+                "enable": true
             },
             "defaultWidth": 900,
             "defaultHeight": 720,
