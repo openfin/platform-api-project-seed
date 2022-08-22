@@ -14,6 +14,7 @@ class topMenu {
     get lockView () {return ('//div[contains(@class, "button layout-locked")]')}
     get unlockView () {return ('//div[contains(@class, "button")]')}
 
+
  // Click theme on top menu bar   
  async clickTheme(){
     const toggleTheme = await WebDriver.findElementById('theme-button');
@@ -49,7 +50,7 @@ class topMenu {
     expect(noLeftMenu).to.exist;
     await WebDriver.sleep(1000);
 }
-// Verify click Lock button on top menu
+// click Lock button on top menu
  async clickLock(){
     const toggleLock = await WebDriver.findElementById('lock-button');
     toggleLock.click();
@@ -65,6 +66,12 @@ class topMenu {
     const unlocked = await WebDriver.findElementsByPath(this.unlockView);
     expect(unlocked).to.exist;
     await WebDriver.sleep(1000);
+}
+
+// Verify click Lock button on top menu
+async clickExpandWindow(){
+    const toggleLock = await WebDriver.findElementById('expand-button');
+    toggleLock.click();
 }
 
 }

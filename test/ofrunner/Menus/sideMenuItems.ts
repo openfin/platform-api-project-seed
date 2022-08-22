@@ -58,6 +58,18 @@ async clickViewTab(title){
     await this.verifyOFChartOpened(); 
 }
 
+// Close View Tab
+async closeViewTab(title){
+    const tab = await WebDriver.findElementByPath(`//li[contains(@title, "${title}")]`)
+    expect(tab).to.exist;
+    await tab?.click();
+    const attr = await tab.getAttribute("class");
+    expect(attr).to.contain("lm_active");
+    const close = await WebDriver.findElementByCssSelector('li.lm_tab.lm_active.focused_tab>div.lm_close_tab')
+    expect(close).to.exist;
+    await close?.click() 
+}
+
 
 // Click on Tradeview button on Side menubar
 async clickoTradeView(){
@@ -383,24 +395,23 @@ async verifyofWindowOpened(){
     await this.verifyOFChartOpened();
     let body = await WebDriver.findElementByTag("body");
     await body.click();
-    await body.sendKeys(WebDriverKeys.Alt+WebDriverKeys.F4);
-    await WebDriver.sleep(2000)
-    //await this.getWindowsTest();
-    // await mouse.move(
-    //     straightTo(
-    //         centerOf(
-    //             new Region(0, 0, 10, 10)
-    //         )
-    //     )
-    // );
-    // await mouse.move(
-    //     straightTo(
-    //         centerOf(
-    //             new Region(755, 215, 10, 10)
-    //         )
-    //     )
-    // );
-    // await mouse.leftClick();
+    // await body.sendKeys(WebDriverKeys.Alt+WebDriverKeys.F4);
+    // await WebDriver.sleep(2000)
+    await mouse.move(
+        straightTo(
+            centerOf(
+                new Region(0, 0, 10, 10)
+            )
+        )
+    );
+    await mouse.move(
+        straightTo(
+            centerOf(
+                new Region(755, 215, 10, 10)
+            )
+        )
+    );
+    await mouse.leftClick();
     await WebDriver.sleep (2000)
     await WebDriver.switchToWindow("identityString", ["Seed Window", "platform_customization_local"]);
 }
@@ -536,6 +547,18 @@ async dragWindowToVIew(){
         )
     );
     await mouse.drag(left(257))
+}
+
+// Resize eWindow
+async resizeWindow(){
+    await mouse.move(
+        straightTo(
+            centerOf(
+                new Region(877, 708, 10, 10)
+            )
+        )
+    );
+    await mouse.drag(down(100))
 }
 
 }

@@ -187,7 +187,7 @@ describe('Drag Window into View', function () {
 
 });
 
-describe('Layout Grid,  Clone Layout, Save Layout, Save snapshot', function() {
+describe('Layout Grid,  Clone Layout, Save Layout', function() {
     it('Apply Grid layout and take screenshot and Save layout and Open', async () => {
         await WebDriver.switchToWindow('url', "http://localhost:5555/platform-window.html");
         await sideMenuIns.clickGridView();
@@ -228,6 +228,29 @@ describe('Layout Tab and Clone Layout', function() {
     });
 });
 
+describe('Maximize Window, close view, minimize window, resize window', function() {
+    it('Apply Grid layout and take screenshot and Save layout and Open', async () => {
+        await WebDriver.switchToWindow('url', "http://localhost:5555/platform-window.html");
+        await sideMenuIns.clickGridView();
+        await topMenuIns.clickExpandWindow();
+        await WebDriver.sleep(1000)
+        await WebDriver.saveScreenshot();
+        await topMenuIns.clickExpandWindow();
+        await WebDriver.sleep(1000)
+        await WebDriver.saveScreenshot();
+    });
+    it('Apply Grid layout, close view, resize Window', async () => {
+        await WebDriver.switchToWindow('url', "http://localhost:5555/platform-window.html");
+        await sideMenuIns.clickGridView();
+        await sideMenuIns.closeViewTab("Google")
+        await WebDriver.sleep(1000)
+        await WebDriver.saveScreenshot();
+        await WebDriver.sleep(1000)
+        await sideMenuIns.resizeWindow();
+        await WebDriver.sleep(1000)
+        await WebDriver.saveScreenshot();
+    });
+});
 
 
 describe('Launch Platform window and OF window', function() {
