@@ -15,6 +15,10 @@ const sideMenuIns = new sideMenu();
 
 describe('Click Re-Run button in Health Check page', function() {
         const healthCheckTitle = 'OpenFin Deployment Health Check';
+        it('validate runtime status and version', async () => {
+            await topMenuIns.validateRuntimeStatus("26.102.71.7");
+        });
+
         it(`Switch to ${healthCheckTitle}`, async () => {
             await WebDriver.waitForWindow('title', healthCheckTitle, 5000);
             const title = await WebDriver.getTitle();

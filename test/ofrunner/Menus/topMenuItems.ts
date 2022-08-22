@@ -2,7 +2,7 @@ import assert from 'assert';
 import 'mocha';
 import 'chai';
 
-import {  WebDriver } from '@openfin/automation-helpers';
+import {  OpenFinSystem, OpenFinHome, WebDriver } from '@openfin/automation-helpers';
 import { expect } from 'chai';
 
 class topMenu {
@@ -73,6 +73,14 @@ async clickExpandWindow(){
     const toggleLock = await WebDriver.findElementById('expand-button');
     toggleLock.click();
 }
+
+async validateRuntimeStatus(expectedRuntime) {
+    const isReady = await OpenFinSystem.waitForReady(10000);
+    expect(isReady).to.equal(true); 
+
+    let runtimeVersion = await OpenFinSystem.getVersion();
+    expect(expectedRuntime).to.equal(runtimeVersion);
+};
 
 }
 
