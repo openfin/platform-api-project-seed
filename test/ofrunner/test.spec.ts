@@ -99,14 +99,14 @@ describe('Create Multiple Views', function() {
 
     it('Click Trade View', async () => {
         await WebDriver.switchToWindow('url', "http://localhost:5555/platform-window.html");
-        await sideMenuIns.clickoTradeView();
+        await sideMenuIns.clickTradeView();
         await sideMenuIns.verifyTradeViewOpened();     
         //await sideMenuIns.closeoFChartView("view");
     });
 
     it('Click News', async () => {
         await WebDriver.switchToWindow('url', "http://localhost:5555/platform-window.html");
-        await sideMenuIns.clickoNews();
+        await sideMenuIns.clickNews();
         await sideMenuIns.verifyNewsOpened();     
         //await sideMenuIns.closeoFChartView("view");
     });

@@ -72,11 +72,11 @@ async closeViewTab(title){
 
 
 // Click on Tradeview button on Side menubar
-async clickoTradeView(){
+async clickTradeView(){
     const bttnClick = await WebDriver.findElementByPath(this.tradeView);
     expect(bttnClick).to.exist;
     await bttnClick?.click()
-   await WebDriver.sleep(2000)
+   await WebDriver.sleep(3000)
 }
 // Verify TradeView opened
 async verifyTradeViewOpened(){
@@ -85,20 +85,31 @@ async verifyTradeViewOpened(){
 }
 // VerifyTradeView opened Detail checks
 async verifyTradeViewViewOpened(){
-    await WebDriver.sleep(2000)
-    await WebDriver.switchToWindow("url", "https://www.tradingview.com/chart/?symbol=NASDAQ:AAPL");
-     const chart = await WebDriver.findElementByPath('//body[@class="chart-page unselectable i-no-scroll"]')
-     expect(chart).to.exist;
-     await chart?.click()    
+    await WebDriver.sleep(4000)
+    const wins = await WebDriver.getWindows();
+    for (const element of wins) {
+        const id = element.url;
+        //console.log(id);
+        if (id.includes("https://www.tradingview.com/"))
+        {
+            //console.log("yes it is! :)", id.name)
+            await WebDriver.switchToWindow('handle', element.handle);
+            const chart = await WebDriver.findElementByPath('//body[@class="chart-page unselectable i-no-scroll"]')
+            expect(chart).to.exist;
+            await chart?.click()  
+            break;
+        }
+    };
+       
 }
 
 
 // Click on News button on Side menubar
-async clickoNews(){
+async clickNews(){
     const bttnClick = await WebDriver.findElementByPath(this.news);
     expect(bttnClick).to.exist;
     await bttnClick?.click()
-   await WebDriver.sleep(2000)
+   await WebDriver.sleep(3000)
 }
 
 // Verify News View opened
@@ -108,11 +119,21 @@ async verifyNewsOpened(){
 }
 // Verify News View opened Detail checks
 async verifyNewsViewOpened(){
-    await WebDriver.sleep(2000)
-    await WebDriver.switchToWindow("url", "https://www.google.com/search?q=INDEXDJX*");
-     const chart = await WebDriver.findElementByPath('//input[@name="q"][@value="INDEXDJX: .DJI"]')
-     expect(chart).to.exist;
-     await chart?.click()    
+    await WebDriver.sleep(4000)
+    const wins = await WebDriver.getWindows();
+    for (const element of wins) {
+        const id = element.url;
+        //console.log(id);
+        if (id.includes("https://www.google.com/search?q=INDEXDJX"))
+        {
+            //console.log("yes it is! :)", id.name)
+            await WebDriver.switchToWindow('handle', element.handle);
+            const chart = await WebDriver.findElementByPath('//input[@name="q"][@value="INDEXDJX: .DJI"]');
+            expect(chart).to.exist;
+            await chart?.click()  
+            break;
+        }
+    };  
 }
 
 //
