@@ -85,7 +85,7 @@ async verifyTradeViewOpened(){
 }
 // VerifyTradeView opened Detail checks
 async verifyTradeViewViewOpened(){
-    await WebDriver.sleep(1000)
+    await WebDriver.sleep(2000)
     await WebDriver.switchToWindow("url", "https://www.tradingview.com/chart/?symbol=NASDAQ:AAPL");
      const chart = await WebDriver.findElementByPath('//body[@class="chart-page unselectable i-no-scroll"]')
      expect(chart).to.exist;
@@ -108,7 +108,7 @@ async verifyNewsOpened(){
 }
 // Verify News View opened Detail checks
 async verifyNewsViewOpened(){
-    await WebDriver.sleep(1000)
+    await WebDriver.sleep(2000)
     await WebDriver.switchToWindow("url", "https://www.google.com/search?q=INDEXDJX*");
      const chart = await WebDriver.findElementByPath('//input[@name="q"][@value="INDEXDJX: .DJI"]')
      expect(chart).to.exist;
