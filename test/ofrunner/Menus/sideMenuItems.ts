@@ -325,7 +325,7 @@ async verifyLayout(name, layout){
     const bttn = await WebDriver.findElementByPath(`//left-menu//button[contains(text(), "${name}")]`);
     expect(bttn).to.exist;
     await bttn?.click();
-
+    await WebDriver.sleep(1000)
     //const view = await WebDriver.findElementByClass("lm_item lm_stack")
     const view = await WebDriver.findElementByClass(layout)
      expect(view).to.exist;
@@ -416,23 +416,25 @@ async verifyofWindowOpened(){
     await this.verifyOFChartOpened();
     let body = await WebDriver.findElementByTag("body");
     await body.click();
-    // await body.sendKeys(WebDriverKeys.Alt+WebDriverKeys.F4);
-    // await WebDriver.sleep(2000)
-    await mouse.move(
-        straightTo(
-            centerOf(
-                new Region(0, 0, 10, 10)
-            )
-        )
-    );
-    await mouse.move(
-        straightTo(
-            centerOf(
-                new Region(755, 215, 10, 10)
-            )
-        )
-    );
-    await mouse.leftClick();
+    await keyboard.pressKey(Key.LeftAlt, Key.F4);
+    await keyboard.releaseKey(Key.LeftAlt, Key.F4);
+    //await body.sendKeys(WebDriverKeys.Alt+WebDriverKeys.F4);
+    await WebDriver.sleep(2000)
+    // await mouse.move(
+    //     straightTo(
+    //         centerOf(
+    //             new Region(0, 0, 10, 10)
+    //         )
+    //     )
+    // );
+    // await mouse.move(
+    //     straightTo(
+    //         centerOf(
+    //             new Region(755, 215, 10, 10)
+    //         )
+    //     )
+    // );
+    //await mouse.leftClick();
     await WebDriver.sleep (2000)
     await WebDriver.switchToWindow("identityString", ["Seed Window", "platform_customization_local"]);
 }

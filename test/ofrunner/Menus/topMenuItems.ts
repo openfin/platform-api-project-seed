@@ -82,6 +82,15 @@ async validateRuntimeStatus(expectedRuntime) {
     expect(expectedRuntime).to.equal(runtimeVersion);
 };
 
+async clickMinimizeWindow(){
+    const toggleLock = await WebDriver.findElementById('minimize-button');
+    toggleLock.click();
+    await WebDriver.sleep(1000)
+    await WebDriver.saveScreenshot()
+    // await WebDriver.callMethod('Window.show', undefined, false);
+    // await WebDriver.sleep(2000); 
+}
+
 }
 
 export {topMenu}

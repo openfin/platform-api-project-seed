@@ -246,6 +246,10 @@ describe('Maximize Window, close view, minimize window, resize window', function
         await topMenuIns.clickExpandWindow();
         await WebDriver.sleep(1000)
         await WebDriver.saveScreenshot();
+        await topMenuIns. clickMinimizeWindow()
+        await WebDriver.sleep(1000)
+        await WebDriver.saveScreenshot();
+
     });
     it('Apply Grid layout, close view, resize Window', async () => {
         await WebDriver.switchToWindow('url', "http://localhost:5555/platform-window.html");
@@ -281,7 +285,9 @@ describe('Launch Platform window and OF window', function() {
 
 describe('Save Snapshot', function() {
     it('Save a snapshot, close the current window and open in a new window', async () => {
+        await WebDriver.switchToWindow('url', "http://localhost:5555/platform-window.html");
         await WebDriver.switchToWindow("identityString", ["Seed Window", "platform_customization_local"]);
+        //await topMenuIns.clickToggleSidebar();
         await sideMenuIns.verifyLayout("GridLayout", "lm_item lm_column")  
         await sideMenuIns.clickSaveSnapshot();
         await sideMenuIns.enterSnapShotInfo("GridSnapshot", "y");  
