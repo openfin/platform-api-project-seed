@@ -149,6 +149,7 @@ describe('Drag Views in Grid Layout', function () {
         await sideMenuIns.dragViewLeft()
         await WebDriver.sleep(2000)
         await WebDriver.saveScreenshot() 
+        //await WebDriver.closeWindow();
     });
 
 });
@@ -163,7 +164,8 @@ describe('Drag Views in Tab Layout', function () {
         await WebDriver.sleep(500)
         await sideMenuIns.dragViewLeftTab()
         await WebDriver.sleep(2000)  
-        await WebDriver.saveScreenshot()  
+        await WebDriver.saveScreenshot();
+        //await WebDriver.closeWindow();  
     });
 
 });
@@ -176,6 +178,7 @@ describe('Drag View out of window', function () {
         await sideMenuIns.dragViewtoWindow()
         await WebDriver.sleep(2000)
         await WebDriver.saveScreenshot() 
+        //await WebDriver.closeWindow();
     });
 
 });
@@ -187,6 +190,7 @@ describe('Drag Window into View', function () {
         await WebDriver.sleep(2000) 
         await WebDriver.saveScreenshot() 
         await WebDriver.sleep(3000) 
+        //await WebDriver.closeWindow();
     });
 
 });

@@ -447,7 +447,7 @@ async dragWindow(){
         )
     );
     //mouse.pressButton(left)
-    await mouse.drag(right(1000))
+    await mouse.drag(right(500))
 }
 //Refocus on a view
 async refocus(){
