@@ -75,11 +75,9 @@ async clickExpandWindow(){
 }
 
 async validateRuntimeStatus(expectedRuntime) {
-    const isReady = await OpenFinSystem.waitForReady(10000);
-    expect(isReady).to.equal(true); 
-
-    let runtimeVersion = await OpenFinSystem.getVersion();
-    expect(expectedRuntime).to.equal(runtimeVersion);
+    const version = await OpenFinSystem.getVersion()
+        //const version = await fin.System.getVersion();
+        expect(expectedRuntime).to.equal(version);
 };
 
 async clickMinimizeWindow(){

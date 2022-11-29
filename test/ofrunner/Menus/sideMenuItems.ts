@@ -231,11 +231,12 @@ async verifyViewsGridLayout(win){
     {
         await WebDriver.switchToWindow('url', "http://localhost:5555/platform-window.html");
     }
-     const view = await WebDriver.findElementByClass("lm_item lm_column")
+     const view = await (await WebDriver.findElementByClass("lm_item lm_column"))
      expect(view).to.exist;
      await view?.click()  
      await WebDriver.sleep(2000)
      await WebDriver.saveScreenshot()
+     
      //await this.getWindowsTest();
      
 }
@@ -243,7 +244,6 @@ async verifyViewsGridLayout(win){
 async closeWindow(){
     await WebDriver.switchToWindow("identityString", ["internal-generated-window(.*)", "platform_customization_local"]);
     await WebDriver.sleep(2000)
-    
     const wins = await WebDriver.getWindows();
         for (const element of wins) {
             const id = element.identity;
@@ -584,6 +584,55 @@ async resizeWindow(){
     await mouse.drag(down(100))
 }
 
+async clickBody(){
+    await WebDriver.switchToWindow("identityString", ["internal-generated-window(.*)", "platform_customization_local"]);
+    await this.verifyOFChartOpened();
+    let body = await WebDriver.findElementByTag("body");
+    await body.click();
+}
+
+
+async devtools(){
+    await keyboard.pressKey(Key.LeftControl, Key.LeftShift, Key.I);
+    await keyboard.releaseKey(Key.LeftControl, Key.LeftShift, Key.I);
+}
+
+async refreshCntrlR(){
+    await keyboard.pressKey(Key.LeftControl, Key.R);
+    await keyboard.releaseKey(Key.LeftControl, Key.R);
+}
+
+async refreshF5(){
+    await keyboard.pressKey(Key.F5);
+    await keyboard.releaseKey(Key.F5);
+}
+
+async zoomInCntrlPlus(num){
+    
+    for(let i=0; i<=num; i++)
+    {
+        await keyboard.pressKey(Key.LeftControl, Key.Add);
+    }
+    await keyboard.releaseKey(Key.LeftControl, Key.Add);
+}
+
+async zoomOutCntrlMinus(num){
+    for(let i=0; i<=num; i++)
+    {
+        await keyboard.pressKey(Key.LeftControl, Key.Subtract);
+    }
+    await keyboard.releaseKey(Key.LeftControl, Key.Subtract);
+}
+
+async zoomReset(){
+    await keyboard.pressKey(Key.LeftControl, Key.Num0);
+    await keyboard.releaseKey(Key.LeftControl, Key.Num0);
+}
+
+async close(){
+    await keyboard.pressKey(Key.LeftAlt, Key.F4);
+    await keyboard.releaseKey(Key.LeftAlt, Key.F4);
+}
 }
 
 export {sideMenu}

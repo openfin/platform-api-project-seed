@@ -15,15 +15,18 @@ const sideMenuIns = new sideMenu();
 
 describe('Click Re-Run button in Health Check page', function() {
         const healthCheckTitle = 'OpenFin Deployment Health Check';
-        it('validate runtime status and version', async () => {
-            await topMenuIns.validateRuntimeStatus("26.102.71.7");
-        });
-
+       
         it(`Switch to ${healthCheckTitle}`, async () => {
             await WebDriver.waitForWindow('title', healthCheckTitle, 5000);
             const title = await WebDriver.getTitle();
             assert.strictEqual(title,  healthCheckTitle);
         });
+
+        it('validate runtime status and version', async () => {
+            await WebDriver.sleep(5000)
+            await topMenuIns.validateRuntimeStatus("28.106.72.14");
+        });
+
 
         it('Wait for OpenFin API ready', async () => {
             await WebDriver.waitForObjectExisting('fin.desktop', 5000);
@@ -133,6 +136,45 @@ describe('Create Multiple Views', function() {
         //await sideMenuIns.closeoFChartView("view");
     });
 
+});
+
+describe('Colors View, accelerators test', function() {
+
+    it('Click colors view - open dev tools using keyboard', async () => {
+        await WebDriver.switchToWindow('url', "http://localhost:5555/platform-window.html");
+        await sideMenuIns.clickColors();
+        await sideMenuIns.verifyColorsOpened();    
+        await sideMenuIns.devtools();
+        await sideMenuIns.close();
+    });
+
+    it('Colors View - Refresh Control+R', async () => { 
+        await WebDriver.switchToWindow('url', "http://localhost:5555/platform-window.html");
+        await sideMenuIns.clickColors();
+        await sideMenuIns.verifyColorsOpened();  
+        await sideMenuIns.verifyColorsViewOpened("blue");
+        await sideMenuIns.refreshCntrlR();
+    });
+
+    it('Colors View - Refresh F5', async () => {
+        await WebDriver.switchToWindow('url', "http://localhost:5555/platform-window.html");
+        await sideMenuIns.refreshF5();
+    });
+
+    it('Colors View - Zoom In Control ++', async () => {
+        await WebDriver.switchToWindow('url', "http://localhost:5555/platform-window.html");   
+        await sideMenuIns.zoomInCntrlPlus(5);
+    });
+
+    it('Colors View - Zoom out Control --', async () => {
+        await WebDriver.switchToWindow('url', "http://localhost:5555/platform-window.html");
+        await sideMenuIns.zoomOutCntrlMinus(2);
+    });
+
+    it('Colors View - Zoom Reset Control + 0', async () => {  
+        await WebDriver.switchToWindow('url', "http://localhost:5555/platform-window.html");
+        await sideMenuIns.zoomReset();
+    });
 });
 
 describe('Drag Views in Grid Layout', function () {
@@ -282,6 +324,44 @@ describe('Launch Platform window and OF window', function() {
         await sideMenuIns.verifyofWindowOpened();    
     });
 });
+
+describe('Launch OF window, accelerators test', function() {
+
+    it('Launch OF window - open dev tools using keyboard', async () => {
+        await WebDriver.switchToWindow('url', "http://localhost:5555/platform-window.html");
+        await sideMenuIns.clickofWindow();
+        await sideMenuIns.clickBody();   
+        await sideMenuIns.devtools();
+        await sideMenuIns.close();
+    });
+
+    it('Launch OF window - Refresh Control+R', async () => {
+        await sideMenuIns.clickBody();   
+        await sideMenuIns.refreshCntrlR();
+    });
+
+    it('Launch OF window - Refresh F5', async () => {
+        await sideMenuIns.clickBody();   
+        await sideMenuIns.refreshF5();
+    });
+
+    it('Launch OF window - Zoom In Control ++', async () => {;
+        await sideMenuIns.clickBody();   
+        await sideMenuIns.zoomInCntrlPlus(5);
+    });
+
+    it('Launch OF window - Zoom out Control --', async () => {
+        await sideMenuIns.clickBody();   
+        await sideMenuIns.zoomOutCntrlMinus(2);
+    });
+
+    it('Launch OF window - Zoom Reset Control + 0', async () => {
+        await sideMenuIns.clickBody();   
+        await sideMenuIns.zoomReset();
+        await sideMenuIns.verifyofWindowOpened();   
+    });
+});
+
 
 describe('Save Snapshot', function() {
     it('Save a snapshot, close the current window and open in a new window', async () => {

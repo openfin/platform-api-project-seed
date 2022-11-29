@@ -1,7 +1,7 @@
 {
     "runtime": {
         "arguments": "--v=1 --inspect",
-        "version": "stable"
+        "version": "28.106.72.14"
     },
     "shortcut": {
         "company": "OpenFin",
@@ -30,7 +30,14 @@
             "contextMenuSettings": {
                 "reload": false,
                 "devtools": true,
-                "enable": true
+                "enable": true,
+                "zoom": true
+            },
+            "accelerator": {
+                "reload": true,
+                "devtools": true,
+                "reloadIgnoringCache":false,
+                "zoom": true
             },
             "defaultWidth": 900,
             "defaultHeight": 720,
@@ -48,6 +55,12 @@
             "experimental": {
                 "childWindows": true,
                 "analytics": true
+            },
+            "accelerator": {
+                "reload": true,
+                "devtools": true,
+                "reloadIgnoringCache":false,
+                "zoom": true
             }
         },
         "commands": [
@@ -55,7 +68,12 @@
                 "command": "stack.nextTab",
                 "keys": "Ctrl+Tab"
             }
-        ]
+        ],
+        "viewVisibility": {
+            "showViewsOnSplitterDrag": { "enabled": true },
+            "showViewsOnWindowResize": { "enabled": true, "paintIntervalMs": 0 },
+            "showViewsOnTabDrag": { "enabled": true }
+        }
     },
     "snapshot": {
         "windows": [
