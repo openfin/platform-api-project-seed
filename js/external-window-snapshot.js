@@ -21,7 +21,7 @@ async function getExternalWindowInfo(name, title) {
 }
 
 async function generateExternalWindowSnapshot(externalWins) {
-    return await Promise.all(externalWins.map(async (i) => await getExternalWindowInfo(i.name, i.title)));
+    return await Promise.all(externalWins.map(async (i) => await getExternalWindowInfo(i.name, i.title)).filter(e => !!e));
 }
 
 async function restoreExternalWindowPositionAndState(info) {
