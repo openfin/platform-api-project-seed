@@ -48,6 +48,11 @@
             "experimental": {
                 "childWindows": true,
                 "analytics": true
+            },
+            "spellCheck": true,
+            "contextMenuOptions": {
+                "template": ["spellCheck", "separator", "cut", "copy", "paste", "separator", "reload", "navigateForward", "navigateBack", "separator", "inspect", "print"],
+                "enabled": true
             }
         },
         "commands": [
