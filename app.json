@@ -27,10 +27,10 @@
         },
         "defaultWindowOptions": {
             "url": "http://localhost:5555/platform-window.html",
-            "contextMenuSettings": {
-                "reload": false,
-                "devtools": false,
-                "enable": false
+            "contextMenuOptions": {
+                "template": [
+                    "inspect"
+                ]
             },
             "defaultWidth": 900,
             "defaultHeight": 720,
