@@ -2,14 +2,16 @@
     "name": "platform-example",
     "version": "1.0.0",
     "scripts": {
-        "test": "of-automation http://localhost:5555/app.json ./build/*.spec.js",
+        "test": "of-automation --chromeDriverOverride 113 http://localhost:5555/app.json ./build/*.spec.js",
+        "test:offline": "of-automation --offline --storageFolder=./offline-storage http://localhost:5555/app.json ./build/*.spec.js",
         "build": "tsc"
     },
     "devDependencies": {
-        "@openfin/automation-cli": "^0.3.4",
-        "@openfin/automation-helpers": "^0.3.4",
+        "@openfin/automation-cli": "^1.0.11",
+        "@openfin/automation-helpers": "^1.0.11",
+        "@openfin/core": "31.75.4",
         "@types/mocha": "^9.1.0",
         "mocha": "^9.2.2",
-        "typescript": "4.6.3"
+        "typescript": "^4.7.4"
     }
 }
