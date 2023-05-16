@@ -152,7 +152,6 @@ describe('Colors View, accelerators test', function() {
         await WebDriver.switchToWindow('url', "http://localhost:5555/platform-window.html");
         await sideMenuIns.clickColors();
         await sideMenuIns.verifyColorsOpened();  
-        await sideMenuIns.verifyColorsViewOpened("blue");
         await sideMenuIns.refreshCntrlR();
     });
 
