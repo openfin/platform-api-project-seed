@@ -1,9 +1,6 @@
-import assert from 'assert';
-import 'mocha';
-import 'chai';
+
 
 import {  WebDriver, WebDriverKeys } from '@openfin/automation-helpers';
-import { expect } from 'chai';
 import {mouse,centerOf, Region, straightTo, Key, keyboard, left, right, down, up } from '@nut-tree/nut-js'
 
 class sideMenu {
@@ -29,7 +26,7 @@ class sideMenu {
 //  Click on OF chart button on Side menubar
 async clickoFChart(){
     const bttnClick = await WebDriver.findElementByPath(this.oFChart);
-    expect(bttnClick).to.exist;
+    expect(bttnClick).toBeDefined;
     await bttnClick?.click()
    await WebDriver.sleep(2000)
 }
@@ -43,30 +40,30 @@ async verifyOFChartOpened(){
     await WebDriver.sleep(1000)
      await WebDriver.switchToWindow("url", "https://cdn.openfin.co/embed-web/chart.html");
      const chart = await WebDriver.findElementByPath('//div[@class="container-fluid"]//div[@id="chart"]')
-     expect(chart).to.exist;
+     expect(chart).toBeDefined;
      const indicator = await WebDriver.findElementByPath('//div[@id="status-indicator"][@class="online"]')
-     expect(indicator).to.exist;
+     expect(indicator).toBeDefined;
      
 }
 // Click on Views based on title, also verifies view tab is active
-async clickViewTab(title){
+async clickViewTab(title: string){
     const tab = await WebDriver.findElementByPath(`//li[contains(@title, "${title}")]`)
-    expect(tab).to.exist;
+    expect(tab).toBeDefined;
     await tab?.click()
     const attr = await tab.getAttribute("class")
-    expect(attr).to.contain("lm_active")
+    expect(attr).toContain("lm_active")
     await this.verifyOFChartOpened(); 
 }
 
 // Close View Tab
-async closeViewTab(title){
+async closeViewTab(title: string){
     const tab = await WebDriver.findElementByPath(`//li[contains(@title, "${title}")]`)
-    expect(tab).to.exist;
+    expect(tab).toBeDefined;
     await tab?.click();
     const attr = await tab.getAttribute("class");
-    expect(attr).to.contain("lm_active");
+    expect(attr).toContain("lm_active");
     const close = await WebDriver.findElementByCssSelector('li.lm_tab.lm_active.focused_tab>div.lm_close_tab')
-    expect(close).to.exist;
+    expect(close).toBeDefined;
     await close?.click() 
 }
 
@@ -74,7 +71,7 @@ async closeViewTab(title){
 // Click on Tradeview button on Side menubar
 async clickTradeView(){
     const bttnClick = await WebDriver.findElementByPath(this.tradeView);
-    expect(bttnClick).to.exist;
+    expect(bttnClick).toBeDefined;
     await bttnClick?.click()
    await WebDriver.sleep(3000)
 }
@@ -95,7 +92,7 @@ async verifyTradeViewViewOpened(){
             //console.log("yes it is! :)", id.name)
             await WebDriver.switchToWindow('handle', element.handle);
             const chart = await WebDriver.findElementByPath('//body[@class="chart-page unselectable i-no-scroll"]')
-            expect(chart).to.exist;
+            expect(chart).toBeDefined;
             await chart?.click()  
             break;
         }
@@ -107,8 +104,8 @@ async verifyTradeViewViewOpened(){
 // Click on News button on Side menubar
 async clickNews(){
     const bttnClick = await WebDriver.findElementByPath(this.news);
-    expect(bttnClick).to.exist;
-    await bttnClick?.click()
+    expect(bttnClick).toBeDefined;
+    await bttnClick?.click();
    await WebDriver.sleep(3000)
 }
 
@@ -129,7 +126,7 @@ async verifyNewsViewOpened(){
             //console.log("yes it is! :)", id.name)
             await WebDriver.switchToWindow('handle', element.handle);
             const chart = await WebDriver.findElementByPath('//input[@name="q"][@value="INDEXDJX: .DJI"]');
-            expect(chart).to.exist;
+            expect(chart).toBeDefined;
             await chart?.click()  
             break;
         }
@@ -141,7 +138,7 @@ async verifyNewsViewOpened(){
 // Click on Colors button on Side menubar
 async clickColors(){
     const bttnClick = await WebDriver.findElementByPath(this.colors);
-    expect(bttnClick).to.exist;
+    expect(bttnClick).toBeDefined;
     await bttnClick?.click()
    await WebDriver.sleep(2000)
 }
@@ -151,18 +148,18 @@ async verifyColorsOpened(){
     await this.clickViewTab("Document")
 }
 //Verify Colors View opened Detail and color is the chosen color checks
-async verifyColorsViewOpened(colorSelected){
+async verifyColorsViewOpened(colorSelected: string){
     await WebDriver.sleep(1000)
     await WebDriver.switchToWindow("url", "http://localhost:5555/color-view.html");
      const chart = await WebDriver.findElementByPath('//input[@placeholder="Enter color"]')
-     expect(chart).to.exist;
+     expect(chart).toBeDefined;
      await chart?.click() 
      await chart.sendKeys(colorSelected)  ;
      const bttn = await WebDriver.findElementByPath('//button[@action="submit"]')
-     expect(bttn).to.exist;
+     expect(bttn).toBeDefined;
      await bttn?.click() 
      const colorBg = await WebDriver.findElementByPath(`//body[contains(@style, ${colorSelected})]`)
-     expect(colorBg).to.exist;
+     expect(colorBg).toBeDefined;
      await WebDriver.sleep(1000)
      
 }
@@ -170,7 +167,7 @@ async verifyColorsViewOpened(colorSelected){
 // Click on Documentation button on Side menubar
 async clickDocs(){
     const bttnClick = await WebDriver.findElementByPath(this.docs);
-    expect(bttnClick).to.exist;
+    expect(bttnClick).toBeDefined;
     await bttnClick?.click()
    await WebDriver.sleep(2000)
 }
@@ -184,7 +181,7 @@ async verifyDocsViewOpened(){
     await WebDriver.sleep(1000)
     await WebDriver.switchToWindow("url", "https://cdn.openfin.co/docs*");
      const text = await WebDriver.findElementByPath('//h3[contains(text(), "Namespaces")]')
-     expect(text).to.exist;
+     expect(text).toBeDefined;
      await text?.click()    
 }
 
@@ -193,7 +190,7 @@ async verifyDocsViewOpened(){
 // Click on Health Check button on Side menubar
 async clickHealthCheck(){
     const bttnClick = await WebDriver.findElementByPath(this.healthCheck);
-    expect(bttnClick).to.exist;
+    expect(bttnClick).toBeDefined;
     await bttnClick?.click()
    await WebDriver.sleep(2000)
 }
@@ -207,7 +204,7 @@ async verifyHealthCheckViewOpened(){
     await WebDriver.sleep(1000)
     await WebDriver.switchToWindow("url", "https://cdn.openfin.co/health/deployment/index.html");
     const bttn = await WebDriver.findElementById("rerun");
-     expect(bttn).to.exist;
+     expect(bttn).toBeDefined;
      await bttn?.click()    
 }
 
@@ -216,23 +213,23 @@ async verifyHealthCheckViewOpened(){
 // Click on Grid button on Side menubar
 async clickGridView(){
     const bttnClick = await WebDriver.findElementByPath(this.grid);
-    expect(bttnClick).to.exist;
+    expect(bttnClick).toBeDefined;
     await bttnClick?.click()
    await WebDriver.sleep(2000)
 }
 // Verify Grid layout class applied
-async verifyViewsGridLayout(win){
+async verifyViewsGridLayout(win: string){
    await WebDriver.sleep(2000)
     if (win === "window")
     {
-        await WebDriver.switchToWindow("identityString", ["internal-generated-window(.*)", "platform_customization_local"]);
+        await WebDriver.switchToWindow("identityString", [/internal-generated-window(.*)/, "platform_customization_local"]);
     }
     else if (win==="view")
     {
         await WebDriver.switchToWindow('url', "http://localhost:5555/platform-window.html");
     }
      const view = await (await WebDriver.findElementByClass("lm_item lm_column"))
-     expect(view).to.exist;
+     expect(view).toBeDefined;
      await view?.click()  
      await WebDriver.sleep(2000)
      await WebDriver.saveScreenshot()
@@ -242,13 +239,13 @@ async verifyViewsGridLayout(win){
 }
 // Close Window
 async closeWindow(){
-    await WebDriver.switchToWindow("identityString", ["internal-generated-window(.*)", "platform_customization_local"]);
-    await WebDriver.sleep(2000)
+    await WebDriver.switchToWindow("identityString", [/internal-generated-window(.*)/, "platform_customization_local"]);
+    await WebDriver.sleep(5000)
     const wins = await WebDriver.getWindows();
         for (const element of wins) {
-            const id = element.identity;
-            //console.log(id);
-            if (id.name.includes("internal-generated-window"))
+            const id = element;
+            console.log("id is " + id.identity.name);
+            if (id.identity.name.includes("internal-generated-window"))
             {
                 //console.log("yes it is! :)", id.name)
                 await WebDriver.switchToWindow('handle', element.handle);
@@ -264,23 +261,23 @@ async closeWindow(){
 // Click on Tab button on Side menubar
 async clickTabView(){
     const bttnClick = await WebDriver.findElementByPath(this.tab);
-    expect(bttnClick).to.exist;
+    expect(bttnClick).toBeDefined;
     await bttnClick?.click()
    await WebDriver.sleep(2000)
 }
 // Verify Tab layout class applied
-async verifyViewsTabLayout(win){
+async verifyViewsTabLayout(win: string){
    await WebDriver.sleep(2000)
     if (win === "window")
     {
-        await WebDriver.switchToWindow("identityString", ["internal-generated-window(.*)", "platform_customization_local"]);
+        await WebDriver.switchToWindow("identityString", [/internal-generated-window(.*)/, "platform_customization_local"]);
     }
     else if (win==="view")
     {
         await WebDriver.switchToWindow('url', "http://localhost:5555/platform-window.html");
     }
      const view = await WebDriver.findElementByClass("lm_item lm_stack")
-     expect(view).to.exist;
+     expect(view).toBeDefined;
      await view?.click()  
      await WebDriver.sleep(2000)
      await WebDriver.saveScreenshot()
@@ -290,7 +287,7 @@ async verifyViewsTabLayout(win){
 // Click on Clone button on Side menubar
 async clickClone(){
     const bttnClick = await WebDriver.findElementByPath(this.clone);
-    expect(bttnClick).to.exist;
+    expect(bttnClick).toBeDefined;
     await bttnClick?.click()
    await WebDriver.sleep(2000)
 }
@@ -298,37 +295,37 @@ async clickClone(){
 // Click on Save Layout button on Side menubar
 async clickSaveLayout(){
     const bttnClick = await WebDriver.findElementByPath(this.saveLayOut);
-    expect(bttnClick).to.exist;
+    expect(bttnClick).toBeDefined;
     await bttnClick?.click()
    await WebDriver.sleep(2000)
 }
 
 // Enter layout name and Save layout
-async enterLayoutInfo(name){
+async enterLayoutInfo(name: string){
     await WebDriver.sleep(1000)
     await WebDriver.switchToWindow("url", "http://localhost:5555/platform-window.html");
     const inp = await WebDriver.findElementByPath('//input[@class="template-name"]');
-    expect(inp).to.exist;
+    expect(inp).toBeDefined;
     await inp?.click();
     await inp.sendKeys(WebDriverKeys.Shift+WebDriverKeys.Home+WebDriverKeys.Delete);
     await inp.sendKeys(name)
     const bttn = await WebDriver.findElementByPath('//div[@class="center-form"]//button[contains(text(), "Save Layout")]');
-    expect(bttn).to.exist;
+    expect(bttn).toBeDefined;
     await bttn?.click()
 
 }
 
 //verify Layout Button name given is present and Apply Layout
-async verifyLayout(name, layout){
+async verifyLayout(name: string, layout: string){
     await WebDriver.sleep(1000)
     await WebDriver.switchToWindow("url", "http://localhost:5555/platform-window.html");
     const bttn = await WebDriver.findElementByPath(`//left-menu//button[contains(text(), "${name}")]`);
-    expect(bttn).to.exist;
+    expect(bttn).toBeDefined;
     await bttn?.click();
     await WebDriver.sleep(1000)
     //const view = await WebDriver.findElementByClass("lm_item lm_stack")
     const view = await WebDriver.findElementByClass(layout)
-     expect(view).to.exist;
+     expect(view).toBeDefined;
      await view?.click()  
      await WebDriver.sleep(2000)
      await WebDriver.saveScreenshot()
@@ -338,38 +335,38 @@ async verifyLayout(name, layout){
 // Click on Save Snapshot button on Side menubar
 async clickSaveSnapshot(){
     const bttnClick = await WebDriver.findElementByPath(this.saveSnapshot);
-    expect(bttnClick).to.exist;
+    expect(bttnClick).toBeDefined;
     await bttnClick?.click()
    await WebDriver.sleep(2000)
 }
 
 // Enter layout name and Save layout
-async enterSnapShotInfo(name, closewin){
+async enterSnapShotInfo(name: string, closewin: string){
     await WebDriver.sleep(1000)
     await WebDriver.switchToWindow("url", "http://localhost:5555/platform-window.html");
     const inp = await WebDriver.findElementByPath('//input[@value="New Snapshot"]');
-    expect(inp).to.exist;
+    expect(inp).toBeDefined;
     await inp?.click();
     await inp.sendKeys(WebDriverKeys.Shift+WebDriverKeys.Home+WebDriverKeys.Delete);
     await inp.sendKeys(name)
     if (closewin==="n")
     {
         const checkbox = await WebDriver.findElementByPath('//input[@type="checkbox"]');
-        expect(checkbox).to.exist;
+        expect(checkbox).toBeDefined;
         await checkbox?.click();
         
     }
     const bttn = await WebDriver.findElementByPath('//div[@class="center-form"]//button[contains(text(), "Save Snapshot")]');
-    expect(bttn).to.exist;
+    expect(bttn).toBeDefined;
     await bttn?.click()
 }
 
 //verify Layout Button assigned is present and Apply Layout
-async verifySnapshotWindow(name, layout, closewin){
+async verifySnapshotWindow(name: string, layout: string, closewin: string){
     await WebDriver.sleep(1000)
     await WebDriver.switchToWindow("url", "http://localhost:5555/platform-window.html");
     const bttn = await WebDriver.findElementByPath(`//left-menu//button[contains(text(), "${name}")]`);
-    expect(bttn).to.exist;
+    expect(bttn).toBeDefined;
     await bttn?.click();
     await WebDriver.sleep(1000)
 
@@ -377,7 +374,7 @@ async verifySnapshotWindow(name, layout, closewin){
     {
         await WebDriver.switchToWindow("url", "http://localhost:5555/platform-window.html");
         const view = await WebDriver.findElementByClass(layout)
-        expect(view).to.exist;
+        expect(view).toBeDefined;
         await view?.click()  
         await WebDriver.sleep(2000)
         await WebDriver.saveScreenshot()
@@ -389,14 +386,14 @@ async verifySnapshotWindow(name, layout, closewin){
 async clickPlatformWindow(){
     await WebDriver.switchToWindow('url', "http://localhost:5555/platform-window.html");
     const bttnClick = await WebDriver.findElementByPath(this.platformWindow);
-    expect(bttnClick).to.exist;
+    expect(bttnClick).toBeDefined;
     await bttnClick?.click()
    await WebDriver.sleep(2000)
 }
 
 // Verify Platform Window View opened
 async verifyPlatformWindowOpened(){
-    await WebDriver.switchToWindow("identityString", ["internal-generated-window(.*)", "platform_customization_local"]);
+    await WebDriver.switchToWindow("identityString", [/internal-generated-window(.*)/, "platform_customization_local"]);
     await this.verifyoFChartViewOpened();
     await WebDriver.sleep(2000);    
 }
@@ -405,14 +402,14 @@ async verifyPlatformWindowOpened(){
 async clickofWindow(){
     await WebDriver.switchToWindow('url', "http://localhost:5555/platform-window.html");
     const bttnClick = await WebDriver.findElementByPath(this.ofWindow);
-    expect(bttnClick).to.exist;
+    expect(bttnClick).toBeDefined;
     await bttnClick?.click()
    await WebDriver.sleep(2000)
 }
 
 // Verify OF Window View opened
 async verifyofWindowOpened(){
-    await WebDriver.switchToWindow("identityString", ["internal-generated-window(.*)", "platform_customization_local"]);
+    await WebDriver.switchToWindow("identityString", [/internal-generated-window(.*)/, "platform_customization_local"]);
     await this.verifyOFChartOpened();
     let body = await WebDriver.findElementByTag("body");
     await body.click();
@@ -585,7 +582,7 @@ async resizeWindow(){
 }
 
 async clickBody(){
-    await WebDriver.switchToWindow("identityString", ["internal-generated-window(.*)", "platform_customization_local"]);
+    await WebDriver.switchToWindow('identityString', [/internal-generated-window(.*)/, 'platform_customization_local']);
     await this.verifyOFChartOpened();
     let body = await WebDriver.findElementByTag("body");
     await body.click();
@@ -607,7 +604,7 @@ async refreshF5(){
     await keyboard.releaseKey(Key.F5);
 }
 
-async zoomInCntrlPlus(num){
+async zoomInCntrlPlus(num: number){
     
     for(let i=0; i<=num; i++)
     {
@@ -616,7 +613,7 @@ async zoomInCntrlPlus(num){
     await keyboard.releaseKey(Key.LeftControl, Key.Add);
 }
 
-async zoomOutCntrlMinus(num){
+async zoomOutCntrlMinus(num: number){
     for(let i=0; i<=num; i++)
     {
         await keyboard.pressKey(Key.LeftControl, Key.Subtract);

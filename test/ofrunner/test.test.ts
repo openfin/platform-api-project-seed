@@ -1,10 +1,6 @@
 
-import assert from 'assert';
-import 'mocha';
-import 'chai';
-
 import {  WebDriver } from '@openfin/automation-helpers';
-import { expect } from 'chai';
+//import { expect } from 'chai';
 import { topMenu } from './Menus/topMenuItems'
 import { sideMenu } from './Menus/sideMenuItems'
 const topMenuIns = new topMenu();
@@ -15,16 +11,17 @@ const sideMenuIns = new sideMenu();
 
 describe('Click Re-Run button in Health Check page', function() {
         const healthCheckTitle = 'OpenFin Deployment Health Check';
-       
+
         it(`Switch to ${healthCheckTitle}`, async () => {
             await WebDriver.waitForWindow('title', healthCheckTitle, 5000);
             const title = await WebDriver.getTitle();
-            assert.strictEqual(title,  healthCheckTitle);
+            expect(title).toBe(healthCheckTitle);
+            //assert.(title,  healthCheckTitle);
         });
 
         it('validate runtime status and version', async () => {
             await WebDriver.sleep(5000)
-            await topMenuIns.validateRuntimeStatus("28.106.72.14");
+            await topMenuIns.validateRuntimeStatus("31.112.75.7");
         });
 
 
@@ -33,8 +30,10 @@ describe('Click Re-Run button in Health Check page', function() {
         });
 
         it("Click Run Again button", async () => {
+            await WebDriver.sleep(5000)
             const rerunButton = await WebDriver.findElementById("rerun");
             await rerunButton.click();
+            await WebDriver.sleep(5000)
         });
     });
 
@@ -45,7 +44,8 @@ describe('Close Health Check page', function() {
     it(`Switch to ${providerPageTitle}`, async () => {
         await WebDriver.switchToWindow('title', providerPageTitle);
         const title = await WebDriver.getTitle();
-        assert.equal(title,  providerPageTitle);
+        expect(title).toBe(providerPageTitle);
+       
     });
 
     it("Click Close tab button", async () => {
@@ -108,6 +108,7 @@ describe('Create Multiple Views', function() {
     });
 
     it('Click News', async () => {
+        await WebDriver.sleep(3000)
         await WebDriver.switchToWindow('url', "http://localhost:5555/platform-window.html");
         await sideMenuIns.clickNews();
         await sideMenuIns.verifyNewsOpened();     
@@ -379,7 +380,7 @@ describe('Close App', function() {
     it(`Switch to ${providerUrl}`, async () => {
         await WebDriver.switchToWindow('url', providerUrl);
         const url = await WebDriver.getUrl();
-        assert.strictEqual(url,  providerUrl);
+        expect(url).toBe(providerUrl);
         await WebDriver.callMethod('fin.desktop.System.exit', undefined, false);
         await WebDriver.sleep(2000);  // pause here to give Runtime time to exit
     });

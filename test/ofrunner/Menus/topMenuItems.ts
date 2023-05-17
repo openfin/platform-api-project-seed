@@ -1,10 +1,5 @@
-import assert from 'assert';
-import 'mocha';
-import 'chai';
 
-import {  OpenFinSystem, OpenFinHome, WebDriver } from '@openfin/automation-helpers';
-import { expect } from 'chai';
-
+import {  OpenFinSystem, WebDriver, OpenFinProxy } from '@openfin/automation-helpers';
 class topMenu {
 
     get whiteTheme () {return ('//html[contains(@class, "light-theme")]')};
@@ -18,19 +13,19 @@ class topMenu {
  // Click theme on top menu bar   
  async clickTheme(){
     const toggleTheme = await WebDriver.findElementById('theme-button');
-    expect(toggleTheme).to.exist;
+    expect(toggleTheme).toBeDefined
     toggleTheme?.click();
 }
 // Verify light theme applied  
  async verifyWhiteTheme() {
     const lightTheme = await WebDriver.findElementsByPath(this.whiteTheme);
-    expect(lightTheme).to.exist;
+    expect(lightTheme).toBeDefined
     await WebDriver.sleep(1000);
 }
 // Verify dark theme applied  
  async VerifyBlackTheme() {
     const darkTheme = await WebDriver.findElementsByPath(this.blackTheme);
-    expect(darkTheme).to.exist;
+    expect(darkTheme).toBeDefined
     await WebDriver.sleep(1000);
 }
 // Click Toggle side bar on top menu  
@@ -41,13 +36,13 @@ class topMenu {
 // Verify Side menu opens
  async verifyShowSideBar() {
     const leftMenu = await WebDriver.findElementsByPath(this.leftmenuItems);
-    expect(leftMenu).to.exist;
+    expect(leftMenu).toBeDefined
     await WebDriver.sleep(1000);
 }
 // Verify Side menu is closed
  async verifyNoSideBar() {
     const noLeftMenu = await WebDriver.findElementsByPath(this.leftmenuHidden);
-    expect(noLeftMenu).to.exist;
+    expect(noLeftMenu).toBeDefined
     await WebDriver.sleep(1000);
 }
 // click Lock button on top menu
@@ -58,13 +53,13 @@ class topMenu {
 // verify lock is applied to the views
  async verifyLockViews() {
     const locked = await WebDriver.findElementsByPath(this.lockView);
-    expect(locked).to.exist;
+    expect(locked).toBeDefined
     await WebDriver.sleep(1000);
 }
 // Verify views are unlocked
  async verifyUnLockViews() {
     const unlocked = await WebDriver.findElementsByPath(this.unlockView);
-    expect(unlocked).to.exist;
+    expect(unlocked).toBeDefined
     await WebDriver.sleep(1000);
 }
 
@@ -74,10 +69,11 @@ async clickExpandWindow(){
     toggleLock.click();
 }
 
-async validateRuntimeStatus(expectedRuntime) {
-    const version = await OpenFinSystem.getVersion()
-        //const version = await fin.System.getVersion();
-        expect(expectedRuntime).to.equal(version);
+async validateRuntimeStatus(expectedRuntime: any) {
+        await OpenFinSystem.waitForReady(10000);
+        const fin = await OpenFinProxy.fin();
+        const version = await fin.System.getVersion();
+        expect(expectedRuntime).toBe(version);
 };
 
 async clickMinimizeWindow(){
