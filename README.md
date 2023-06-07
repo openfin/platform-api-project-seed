@@ -52,9 +52,15 @@ Provides examples of the following functionality:
 * Applying a preset arrangement on the current window (Grid, Tabs, Rows)
 
 ##### title-bar
-Provides examples of the following functionality:
-* Draggable area
-* Close/Maximize/Minimize buttons
+Title Bar Contains Buttons to reproduce the bug described in ticket https://openfin.jira.com/browse/CD-2
+To Reproduce Bug:
+Hit 1 button on title bar to create a window
+Hit 2 button on title bar to hide the window you just created
+Hit 3A button on the title bar to change the background color of the window to red
+Hit 4 button to show the window (observe the flash showing previous color before new background color paints)
+If the flash is not obvious, then you can start again from step 3 and instead click the 3B button to see a greater contrast flash (red -> blue)
+
+The flash is super fast and you may need to toggle between changing the background red and blue a few times to actually see it. 
 
 ### Provider
 Our [custom Provider](js/platform-provider.js) includes an [extension](js/external-window-snapshot.js) that will look for a pre-configured list of [externalWindows](https://cdn.openfin.co/docs/javascript/15.80.49.21/ExternalWindow.html) (the default being the provided [my_platform_notes.txt](my_platform_notes.txt) file opened in notepad.exe) and:
