@@ -40,12 +40,9 @@ class TitleBar extends HTMLElement {
                     <div id="title"></div>
                 </div>
                 <div id="buttons-wrapper">
-                    <div class="button" title="Toggle Theme" id="theme-button" @click=${this.toggleTheme}></div>
-                    <div class="button" title="Toggle Sidebar" id="menu-button" @click=${this.toggleMenu}></div>
-                    <div class="button" title="Toggle Layout Lock" id="lock-button" @click=${this.toggleLockedLayout}></div>
-                    <div class="button" title="Minimize Window" id="minimize-button" @click=${() => fin.me.minimize().catch(console.error)}></div>
-                    <div class="button" title="Maximize Window" id="expand-button" @click=${() => this.maxOrRestore().catch(console.error)}></div>
-                    <div class="button" title="Close Window" id="close-button" @click=${() => fin.me.close().catch(console.error)}></div>
+                    <div class="button" title="Create Window" id="create-window-button" @click=${this.createWindow}></div>
+                    <div class="button" title="Change Color to Red" id="change-color-red" @click=${this.changeColor('red')}></div>
+                    <div class="button" title="Create Color to Blue" id="change-color-blue" @click=${this.changeColor('blue')}></div>
                 </div>`;
         return render(titleBar, this);
     }
@@ -92,6 +89,25 @@ class TitleBar extends HTMLElement {
             themeName = this.LIGHT_THEME;
         }
         this.setTheme(themeName);
+    }
+
+    createWindow = async () => {
+        const winOption = {
+            uuid: 'test',
+            name: 'test',
+            defaultWidth: 300,
+            defaultHeight: 300,
+            url: 'https://cdn.openfin.co/docs/javascript/stable/tutorial-Window.create.html',
+            frame: true,
+            autoShow: true,
+            backgroundThrottling: false,
+        };
+        await fin.Window.create(winOption);
+    }
+
+    changeColor = async (color) => {
+        const testWin = await fin.Window.wrap({uuid: 'test', name: 'test'});
+        testWin.document.body.backgroundColor = color;
     }
 
     setTheme = async (theme) => {

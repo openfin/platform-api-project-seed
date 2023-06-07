@@ -105,6 +105,15 @@ fieldset label {
     margin-top: 10px;
 }
 
+#create-window-button:after {
+    content: "";
+    background-color: var(--of-default-grey-light);
+    padding: 5px;
+    display: inline-block;
+    margin-left: 10px;
+    margin-top: 10px;
+}
+
 #menu-button {
     background-image: var(--menu-icon);
     background-size: 12px;
