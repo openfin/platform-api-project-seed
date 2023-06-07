@@ -105,9 +105,44 @@ fieldset label {
     margin-top: 10px;
 }
 
-#create-window-button:after {
+#create-window-button {
     content: "";
-    background-color: var(--of-default-grey-light);
+    background-color: green;
+    padding: 5px;
+    display: inline-block;
+    margin-left: 10px;
+    margin-top: 10px;
+}
+
+#show-window {
+    content: "";
+    color: black;
+    background-color: white;
+    padding: 5px;
+    display: inline-block;
+    margin-left: 10px;
+    margin-top: 10px;
+}
+
+#hide-window {
+    content: "";
+    background-color: black;
+    padding: 5px;
+    display: inline-block;
+    margin-left: 10px;
+    margin-top: 10px;
+}
+#red-btn {
+    content: "";
+    background-color: red;
+    padding: 5px;
+    display: inline-block;
+    margin-left: 10px;
+    margin-top: 10px;
+}
+#blue-btn {
+    content: "";
+    background-color: blue;
     padding: 5px;
     display: inline-block;
     margin-left: 10px;

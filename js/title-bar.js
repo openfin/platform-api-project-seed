@@ -22,16 +22,16 @@ class TitleBar extends HTMLElement {
             }
         });
 
-        fin.me.on('layout-ready', async () => {
-            // Whenever a new layout is ready on this window (on init, replace, or applyPreset)
-            const { settings } = await fin.Platform.Layout.getCurrentSync().getConfig();
-            // determine whether it is locked and update the icon
-            if(settings.hasHeaders && settings.reorderEnabled) {
-                document.getElementById('lock-button').classList.remove('layout-locked');
-            } else {
-                document.getElementById('lock-button').classList.add('layout-locked');
-            }
-        });
+        // fin.me.on('layout-ready', async () => {
+        //     // Whenever a new layout is ready on this window (on init, replace, or applyPreset)
+        //     const { settings } = await fin.Platform.Layout.getCurrentSync().getConfig();
+        //     // determine whether it is locked and update the icon
+        //     if(settings.hasHeaders && settings.reorderEnabled) {
+        //         document.getElementById('lock-button').classList.remove('layout-locked');
+        //     } else {
+        //         document.getElementById('lock-button').classList.add('layout-locked');
+        //     }
+        // });
     }
 
     render = async () => {
@@ -40,9 +40,15 @@ class TitleBar extends HTMLElement {
                     <div id="title"></div>
                 </div>
                 <div id="buttons-wrapper">
-                    <div class="button" title="Create Window" id="create-window-button" @click=${this.createWindow}></div>
-                    <div class="button" title="Change Color to Red" id="change-color-red" @click=${this.changeColor('red')}></div>
-                    <div class="button" title="Create Color to Blue" id="change-color-blue" @click=${this.changeColor('blue')}></div>
+                    <div class="button" title="Create Window" id="create-window-button" @click=${this.createWindow}>1</div>
+                    <div class="button" title="Hide Window" id="hide-window" @click=${this.hideWindow}>2</div>
+                    <div class="button" title="Change Background to Red" id="red-btn" @click=${this.changeToRed}>3A</div>
+                    <div class="button" title="Change Background to Blue" id="blue-btn" @click=${this.changeToBlue}>3B</div>
+                    <div class="button" title="Show Window" id="show-window" @click=${this.showWindow}>4</div>
+
+                    <div class="button" title="Minimize Window" id="minimize-button" @click=${() => fin.me.minimize().catch(console.error)}></div>
+                    <div class="button" title="Maximize Window" id="expand-button" @click=${() => this.maxOrRestore().catch(console.error)}></div>
+                    <div class="button" title="Close Window" id="close-button" @click=${() => fin.me.close().catch(console.error)}></div>
                 </div>`;
         return render(titleBar, this);
     }
@@ -93,7 +99,6 @@ class TitleBar extends HTMLElement {
 
     createWindow = async () => {
         const winOption = {
-            uuid: 'test',
             name: 'test',
             defaultWidth: 300,
             defaultHeight: 300,
@@ -104,10 +109,25 @@ class TitleBar extends HTMLElement {
         };
         await fin.Window.create(winOption);
     }
+    
+        hideWindow= async () => {
+            const testWin = await fin.Window.wrap({uuid: 'platform_customization_local', name: 'test'});
+            await testWin.hide();
+        }
 
-    changeColor = async (color) => {
-        const testWin = await fin.Window.wrap({uuid: 'test', name: 'test'});
-        testWin.document.body.backgroundColor = color;
+    showWindow = async () => {
+        const testWin = await fin.Window.wrap({uuid: 'platform_customization_local', name: 'test'});
+        await testWin.show();
+    }
+
+    changeToRed = async () => {
+        const testWin = await fin.Window.wrap({uuid: 'platform_customization_local', name: 'test'});
+        testWin.executeJavaScript(`document.body.style.backgroundColor = 'red'`)
+    }
+
+    changeToBlue = async () => {
+        const testWin = await fin.Window.wrap({uuid: 'platform_customization_local', name: 'test'});
+        testWin.executeJavaScript(`document.body.style.backgroundColor = 'blue'`)
     }
 
     setTheme = async (theme) => {
