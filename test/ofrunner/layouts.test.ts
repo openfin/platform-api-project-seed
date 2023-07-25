@@ -21,7 +21,7 @@ describe('Click Re-Run button in Health Check page', function() {
 
         it('validate runtime status and version', async () => {
             await WebDriver.sleep(5000)
-            await topMenuIns.validateRuntimeStatus("32.114.76.10");
+            await topMenuIns.validateRuntimeStatus("33.116.77.2");
         });
 
 

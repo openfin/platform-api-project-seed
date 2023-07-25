@@ -24,15 +24,15 @@
                 "readRegistryValue": false,
                 "terminateExternalProcess": true,
                 "launchExternalProcess": {
-                    "enabled": true,
+                    "enabled": false,
                     "assets": {
-                        "enabled": true
+                        "enabled": false
                     },
                     "downloads": {
-                        "enabled": true
+                        "enabled": false
                     },
                     "executables": {
-                        "enabled": true
+                        "enabled": false
                     }
                 }
             }
@@ -41,15 +41,15 @@
             "permissions": {
                 "System": {
                     "launchExternalProcess": {
-                        "enabled": true,
+                        "enabled": false,
                         "assets": {
-                            "enabled": true
+                            "enabled": false
                         },
                         "downloads": {
-                            "enabled": true
+                            "enabled": false
                         },
                         "executables": {
-                            "enabled": true
+                            "enabled": false
                         }
                     },
                     "readRegistryValue": false,
@@ -85,15 +85,15 @@
             "permissions": {
                 "System": {
                     "launchExternalProcess": {
-                        "enabled": true,
+                        "enabled": false,
                         "assets": {
-                            "enabled": true
+                            "enabled": false
                         },
                         "downloads": {
-                            "enabled": true
+                            "enabled": false
                         },
                         "executables": {
-                            "enabled": true
+                            "enabled": false
                         }
                     },
                     "readRegistryValue": false,

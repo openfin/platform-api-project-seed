@@ -44,6 +44,11 @@ class LeftMenu extends HTMLElement {
                 url: `https://cdn.openfin.co/health/deployment/index.html`,
                 printName: "Health check",
                 processAffinity: 'ps_1'
+            },
+            {
+                url: window.location.href.replace('platform-window', 'index-copy'),
+                printName: "File download",
+                processAffinity: 'ps_1'
             }
         ];
 
@@ -97,11 +102,14 @@ class LeftMenu extends HTMLElement {
         <ul>
             <li><button @click=${() => this.layoutWindow().catch(console.error)}>Platform Window</button></li>
             <li><button @click=${() => this.nonLayoutWindow().catch(console.error)}>OF Window</button></li>
+            <li><button @click=${() => this.nonLayoutWindow2().catch(console.error)}>File Download</button></li>
         </ul>
         <span>Layouts</span>
         <ul>
             <li><button @click=${() => this.toGrid().catch(console.error)}>Grid</button></li>
             <li><button @click=${() => this.toTabbed().catch(console.error)}>Tab</button></li>
+            <li><button @click=${() => this.toRows().catch(console.error)}>Rows</button></li>
+            <li><button @click=${() => this.toCols().catch(console.error)}>Column</button></li>
             ${layoutTemplates.map((item) => html`<li>
                   <button @click=${() => this.replaceLayoutFromTemplate(item.name)}>${item.name}</button>
               </li>`)}
@@ -182,6 +190,18 @@ class LeftMenu extends HTMLElement {
                 saveWindowState: false,
                 url: CHART_URL,
                 contextMenu: true
+            }]
+        });
+    }
+
+    nonLayoutWindow2 = async () => {
+        return fin.Platform.getCurrentSync().applySnapshot({
+            windows: [{
+                defaultWidth: 600,
+                defaultHeight: 600,
+                url: window.location.href.replace('platform-window', 'index-copy'),
+                contextMenu: true
+                
             }]
         });
     }

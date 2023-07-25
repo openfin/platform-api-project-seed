@@ -11,9 +11,12 @@ class sideMenu {
     get colors () {return ('//button[contains(text(), "Colors")]')};
     get docs () {return ('//button[contains(text(), "Documentation")]')};
     get healthCheck () {return ('//button[contains(text(), "Health check")]')};
+    get Fdl () {return ('//button[contains(text(), "File download")]')};
+
 
     get platformWindow () {return ('//button[contains(text(), "Platform Window")]')};
     get ofWindow () {return ('//button[contains(text(), "OF Window")]')};
+    get FdWin () {return ('//button[contains(text(), "File Download")]')};
 
     get grid () {return ('//button[contains(text(), "Grid")]')};
     get tab () {return ('//button[contains(text(), "Tab")]')};
@@ -630,6 +633,43 @@ async close(){
     await keyboard.pressKey(Key.LeftAlt, Key.F4);
     await keyboard.releaseKey(Key.LeftAlt, Key.F4);
 }
+
+async clickLaunchAssets(){
+    const bttnClick = await WebDriver.findElementByPath(this.Fdl);
+    expect(bttnClick).toBeDefined;
+    await bttnClick?.click();
+   await WebDriver.sleep(3000)
+}
+
+async clickLaunchAssetsWindow(){
+    const bttnClick = await WebDriver.findElementByPath(this.FdWin);
+    expect(bttnClick).toBeDefined;
+    await bttnClick?.click();
+   await WebDriver.sleep(3000)
+}
+
+async save(){
+    await mouse.move(
+        straightTo(
+            centerOf(
+                new Region(820, 510, 5, 5)
+            )
+        )
+    );
+    await mouse.leftClick();
+}
+
+async saveConfirm(){
+    await mouse.move(
+        straightTo(
+            centerOf(
+                new Region(1020, 540, 5, 5)
+            )
+        )
+    );
+    await mouse.leftClick();
+}
+
 }
 
 export {sideMenu}

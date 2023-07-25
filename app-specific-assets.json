@@ -26,13 +26,41 @@
                 "launchExternalProcess": {
                     "enabled": true,
                     "assets": {
-                        "enabled": true
+                        "enabled": true,
+                        "srcRules": [
+                            {
+                                "match": [
+                                    "*://built-on-openfin.github.io/*"
+                                ],
+                                "behavior": "allow"
+                            },
+                            {
+                                "match": [
+                                     "<all_urls>"
+                                ],
+                                "behavior": "block"
+                            }
+                        ]
                     },
                     "downloads": {
-                        "enabled": true
+                        "enabled": false
                     },
                     "executables": {
-                        "enabled": true
+                        "enabled": true,
+                        "pathRules": [
+                            {
+                                "match": [
+                                    "*/Windows/System32/*.exe"
+                                ],
+                                "behavior": "allow"
+                            },
+                            {
+                                "match": [
+                                    "*.exe"
+                                ],
+                                "behavior": "block"
+                            }
+                        ]
                     }
                 }
             }
@@ -43,13 +71,41 @@
                     "launchExternalProcess": {
                         "enabled": true,
                         "assets": {
-                            "enabled": true
+                            "enabled": true,
+                            "srcRules": [
+                                {
+                                    "match": [
+                                        "*://built-on-openfin.github.io/*"
+                                    ],
+                                    "behavior": "allow"
+                                },
+                                {
+                                    "match": [
+                                         "<all_urls>"
+                                    ],
+                                    "behavior": "block"
+                                }
+                            ]
                         },
                         "downloads": {
-                            "enabled": true
+                            "enabled": false
                         },
                         "executables": {
-                            "enabled": true
+                            "enabled": true,
+                            "pathRules": [
+                                {
+                                    "match": [
+                                        "*/Windows/System32/*.exe"
+                                    ],
+                                    "behavior": "allow"
+                                },
+                                {
+                                    "match": [
+                                        "*.exe"
+                                    ],
+                                    "behavior": "block"
+                                }
+                            ]
                         }
                     },
                     "readRegistryValue": false,
@@ -85,15 +141,15 @@
             "permissions": {
                 "System": {
                     "launchExternalProcess": {
-                        "enabled": true,
+                        "enabled": false,
                         "assets": {
-                            "enabled": true
+                            "enabled": false
                         },
                         "downloads": {
-                            "enabled": true
+                            "enabled": false
                         },
                         "executables": {
-                            "enabled": true
+                            "enabled": false
                         }
                     },
                     "readRegistryValue": false,
