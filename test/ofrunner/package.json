@@ -12,8 +12,8 @@
     },
     "devDependencies": {
         "@openfin/core": "^33.77.2",
-        "@openfin/automation-cli": "^1.1.0",
-        "@openfin/automation-helpers": "1.1.0",
+        "@openfin/automation-cli": "^1.1.1",
+        "@openfin/automation-helpers": "1.1.1",
         "typescript": "4.6.3"
     },
     "dependencies": {
