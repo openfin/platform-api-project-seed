@@ -68,12 +68,10 @@ describe('Click Re-Run button in Health Check page', function() {
             const fin = await OpenFinProxy.fin();
             const result = await fin.System.launchExternalProcess({alias:'cwdTest'}) 
             expect(result.uuid).toBeDefined();
-            const platform = await fin.Platform.getCurrent();
-            platform.closeView(fin.me.identity);
             
         });
 
-        it.skip("launch external process - download csv file", async () => {
+        it("launch external process - download csv file", async () => {
             await WebDriver.switchToWindow('title', 'Platform Window Template');
             //const healthCheckTitle = 'OpenFin Template File download';
             await WebDriver.switchToWindow('url', 'http://localhost:5555/index-copy.html');
@@ -84,6 +82,9 @@ describe('Click Re-Run button in Health Check page', function() {
            //await WebDriver.executeAsync("arguments[0].click()")
             await sideMenuIns.save()
             await sideMenuIns.saveConfirm()
+            const fin = await OpenFinProxy.fin();
+           const platform = await fin.Platform.getCurrent();
+           platform.closeView(fin.me.identity);
 
 
         });

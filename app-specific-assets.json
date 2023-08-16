@@ -1,7 +1,7 @@
 {
     "runtime": {
         "arguments": "--v=1 --inspect",
-        "version": "33.116.77.2"
+        "version": "33.116.77.3"
     },
     "shortcut": {
         "company": "OpenFin",
