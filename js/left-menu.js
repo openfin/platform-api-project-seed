@@ -2,6 +2,7 @@ import { html, render } from 'https://unpkg.com/lit-html@1.0.0/lit-html.js';
 import { getTemplates, getTemplateByName, onStoreUpdate } from './template-store.js';
 import { CONTAINER_ID } from './platform-window.js';
 
+
 const CHART_URL = 'https://cdn.openfin.co/embed-web/chart.html';
 const LAYOUT_STORE_KEY  = 'LayoutForm';
 const SNAPSHOT_STORE_KEY = 'SnapshotForm';
@@ -49,7 +50,8 @@ class LeftMenu extends HTMLElement {
                 url: window.location.href.replace('platform-window', 'index-copy'),
                 printName: "File download",
                 processAffinity: 'ps_1'
-            }
+            },
+            
         ];
 
         this.snapshotForm = document.querySelector('snapshot-form');

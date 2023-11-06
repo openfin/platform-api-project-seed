@@ -25,6 +25,10 @@ class sideMenu {
 
     get saveSnapshot () {return ('//button[@class="snapshot-button"]')};
 
+    get mtp_downloadapi () {return ('//button[contains(text(), "download-api")]')};
+    get mtp_car_button () {return ('//a[contains(@href,"car")]')};
+    get mtp_vercel_button () {return ('//a[contains(@href,"vercel")]')};
+
 
 //  Click on OF chart button on Side menubar
 async clickoFChart(){
@@ -668,6 +672,107 @@ async saveConfirm(){
         )
     );
     await mouse.leftClick();
+}
+
+async paste(){
+    await mouse.move(
+        straightTo(
+            centerOf(
+                new Region(820, 510, 5, 5)
+            )
+        )
+    );
+    await mouse.leftClick();
+    await keyboard.pressKey(Key.LeftControl, Key.V);
+}
+
+async dont_save(){
+    await mouse.move(
+        straightTo(
+            centerOf(
+                new Region(1900, 10, 5, 5)
+            )
+        )
+    );
+    await mouse.leftClick();
+    await keyboard.pressKey(Key.LeftControl, Key.V);
+}
+
+async copyImage(){
+    await mouse.move(
+        straightTo(
+            centerOf(
+                new Region(260, 510, 5, 5)
+            )
+        )
+    );
+    await mouse.rightClick();
+    await keyboard.pressKey(Key.Down);
+    await keyboard.pressKey(Key.Down);
+    await keyboard.pressKey(Key.Down);
+    await keyboard.pressKey(Key.Enter);
+}
+
+async clickDownloadapi(){
+    const bttnClick = await WebDriver.findElementByPath(this.mtp_downloadapi);
+    expect(bttnClick).toBeDefined;
+    await bttnClick?.click()
+   await WebDriver.sleep(2000)
+}
+
+async clickCarButton(){
+    const bttnClick = await WebDriver.findElementByPath(this.mtp_car_button);
+    expect(bttnClick).toBeDefined;
+    await bttnClick?.click()
+   await WebDriver.sleep(2000)
+}
+
+async clickVercelButton(){
+    const bttnClick = await WebDriver.findElementByPath(this.mtp_vercel_button);
+    expect(bttnClick).toBeDefined;
+    await bttnClick?.click()
+   await WebDriver.sleep(2000)
+}
+
+async clickCloseView(title: string){
+    const tab = await WebDriver.findElementByPath(`//li[contains(@title, "${title}")]`)
+    expect(tab).toBeDefined;
+    await tab?.click()
+    const attr = await tab.getAttribute("class")
+    expect(attr).toContain("lm_active")
+    const tabClose = await WebDriver.findElementByPath(`//div[@class="lm_close_tab"]`)
+    await tabClose.click()
+}
+
+// Drag View down
+async dragViewRightTab(){
+    await mouse.move(
+        straightTo(
+            centerOf(
+                new Region(340, 38, 10, 10)
+            )
+        )
+    );
+    //mouse.pressButton(left)
+    await mouse.drag(down(80));
+}
+
+// Drag View down
+async dragViewRightOutWin(){
+    await mouse.move(
+        straightTo(
+            centerOf(
+                new Region(200, 38, 10, 10)
+            )
+        )
+    );
+    //mouse.pressButton(left)
+    await mouse.drag(right(700));
+}
+
+// Drag View down
+async dragViewToWin(){
+    await mouse.drag(left(100));
 }
 
 }

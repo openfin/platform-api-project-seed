@@ -14,6 +14,9 @@ module.exports = {
         '^.+\\.(js|jsx|ts|tsx)$': ['babel-jest', { presets: ['next/babel'] }],
         '\\.(css|less|scss|sass)$': 'jest-transform-css'
     },
+    transformIgnorePatterns: [
+        "<rootDir>/node_modules/(?!clipboardy/browser)"
+      ],
     moduleNameMapper: {
         '^.+\\.svg$': path.join(__dirname, '/src/__mocks__/svgr.ts'),
         '^.+\\.(css|less|scss)$': 'identity-obj-proxy',
