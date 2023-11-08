@@ -1,93 +1,12 @@
 {
     "runtime": {
-        "arguments": "--v=1 --inspect",
-        "version": "stable"
+        "version": "31.112.75.4"
     },
-    "shortcut": {
-        "company": "OpenFin",
-        "description": "Platform app seed local",
-        "icon": "https://openfin.github.io/golden-prototype/favicon.ico",
-        "name": "Platform app seed local"
-    },
-    "platform": {
-        "uuid": "platform_customization_local",
-        "applicationIcon": "https://openfin.github.io/golden-prototype/favicon.ico",
-        "autoShow": false,
-        "providerUrl": "http://localhost:5555/provider.html",
-        "permissions": {
-            "ExternalWindow": {
-              	"wrap": true
-            },
-            "System": {
-                "getAllExternalWindows": true,
-                "launchExternalProcess": true,
-                "readRegistryValue": false,
-                "terminateExternalProcess": true
-            }
-        },
-        "defaultWindowOptions": {
-            "url": "http://localhost:5555/platform-window.html",
-            "contextMenuSettings": {
-                "reload": false,
-                "devtools": false,
-                "enable": false
-            },
-            "defaultWidth": 900,
-            "defaultHeight": 720,
-            "defaultLeft": 0,
-            "defaultTop": 0,
-            "saveWindowState": false,
-            "backgroundThrottling": true,
-            "minHeight": 445,
-            "minWidth": 354,
-            "experimental": {
-                "analytics": true
-            }
-        },
-        "defaultViewOptions": {
-            "experimental": {
-                "childWindows": true,
-                "analytics": true
-            }
-        },
-        "commands": [
-            {
-                "command": "stack.nextTab",
-                "keys": "Ctrl+Tab"
-            }
-        ]
-    },
-    "snapshot": {
-        "windows": [
-            {
-                "name": "Seed Window",
-                "layout": {
-                    "content": [
-                        {
-                            "type": "stack",
-                            "id": "no-drop-target",
-                            "content": [
-                                {
-                                    "type": "component",
-                                    "componentName": "view",
-                                    "componentState": {
-                                        "processAffinity": "ps_1",
-                                        "url": "https://cdn.openfin.co/health/deployment/index.html"
-                                    }
-                                },
-                                {
-                                    "type": "component",
-                                    "componentName": "view",
-                                    "componentState": {
-                                        "processAffinity": "ps_1",
-                                        "url": "https://google.com"
-                                    }
-                                }
-                            ]
-                        }
-                    ]
-                }
-            }
-        ]
+    "startup_app": {
+        "name": "OpenFin appseed",
+        "uuid": "testing app",
+        "description": "A vanilla appseed for OpenFin applications",
+        "url": "http://localhost:5555/support-265.html",
+        "autoShow": true
     }
 }

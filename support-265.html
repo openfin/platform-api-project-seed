@@ -1,0 +1,13 @@
+<script type="text/javascript" charset="utf-8">
+async function create_view() {
+  const me = await fin.Window.getCurrent();
+  const view = await fin.View.create({
+      name: 'my_view',
+      target: me.identity,
+      bounds: {top: 10, left: 10, width: 100, height: 100}
+  });
+  await view.hide();
+  await view.navigate('http://localhost:5555/alert.html');
+}
+</script>
+<button onclick="create_view();">Reproduce</button>
